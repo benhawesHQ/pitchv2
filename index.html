@@ -46,13 +46,6 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
   }
 
-  .card h2 {
-    font-family: 'Poppins', sans-serif;
-    margin-top: 0;
-    margin-bottom: 30px;
-    font-size: 28px;
-  }
-
   input {
     width: 100%;
     padding: 16px;
@@ -65,28 +58,6 @@
 
   input:focus {
     outline: none;
-    border-color: #F04A00;
-  }
-
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 30px;
-  }
-
-  .pill {
-    padding: 10px 18px;
-    border-radius: 999px;
-    background: #EFE9DF;
-    border: 1px solid #E2DBD1;
-    cursor: pointer;
-    font-size: 14px;
-  }
-
-  .pill.active {
-    background: #F04A00;
-    color: white;
     border-color: #F04A00;
   }
 
@@ -109,6 +80,17 @@
   #status {
     margin-top: 20px;
     font-size: 15px;
+    text-align: center;
+  }
+
+  .loading {
+    font-size: 24px;
+    animation: bounce 1s infinite;
+  }
+
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
   }
 
   #results {
@@ -116,8 +98,8 @@
   }
 
   .venue {
-    padding: 20px;
-    background: #FFFFFF;
+    padding: 24px;
+    background: white;
     border-radius: 16px;
     margin-bottom: 20px;
     border: 1px solid #E2DBD1;
@@ -131,12 +113,25 @@
   .meta {
     font-size: 14px;
     color: #5A5147;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   .score {
     font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+  }
+
+  .actions {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .actions a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #F04A00;
   }
 
 </style>
@@ -152,23 +147,14 @@
   </h1>
 
   <div class="subtext">
-    Stop relying on stale Reddit lists. Pitch surfaces 15 active venues so you can focus on planning the show.
+    Pitch replaces stale Reddit lists with active venues so you can focus on planning the show.
   </div>
 
   <div class="card">
 
-    <h2>Find your next gig 🎶</h2>
-
     <form id="searchForm">
       <input type="text" id="city" placeholder="City" required>
       <input type="number" id="audience" placeholder="Audience size" required>
-
-      <div class="filters">
-        <div class="pill" data-filter="blackOwned">✊🏾 Black-owned</div>
-        <div class="pill" data-filter="queerFriendly">🌈 Queer-friendly</div>
-        <div class="pill" data-filter="intimate">🎤 20–150 cap rooms</div>
-      </div>
-
       <button type="submit">Find venues →</button>
     </form>
 
@@ -182,22 +168,11 @@
 const form = document.getElementById("searchForm");
 const status = document.getElementById("status");
 const results = document.getElementById("results");
-const pills = document.querySelectorAll(".pill");
-
-let activeFilters = {};
-
-pills.forEach(pill => {
-  pill.addEventListener("click", () => {
-    const key = pill.dataset.filter;
-    activeFilters[key] = !activeFilters[key];
-    pill.classList.toggle("active");
-  });
-});
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  status.innerText = "Searching active venues...";
+  status.innerHTML = '<div class="loading">🎶 🎵 🎶</div>';
   results.innerHTML = "";
 
   const city = document.getElementById("city").value;
@@ -207,21 +182,12 @@ form.addEventListener("submit", async (e) => {
     const response = await fetch("/api/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        city,
-        audience,
-        ...activeFilters
-      })
+      body: JSON.stringify({ city, audience })
     });
 
     const data = await response.json();
 
-    if (!data.venues) {
-      status.innerText = "Something went wrong.";
-      return;
-    }
-
-    status.innerText = "";
+    status.innerHTML = "";
 
     data.venues.forEach((venue) => {
       const div = document.createElement("div");
@@ -234,21 +200,24 @@ form.addEventListener("submit", async (e) => {
         <div class="score">
           🔥 Reply Likelihood: ${venue.replyLikelihood}%
         </div>
-        <div style="margin-bottom:6px;">
-          ⚡ ${venue.activitySignal}
-        </div>
-        <div style="margin-bottom:6px;">
-          🎶 ${venue.whyThisFits}
-        </div>
-        <div style="color:#F04A00; font-weight:600;">
+        <div>⚡ ${venue.activitySignal}</div>
+        <div style="margin-top:6px;">🎶 ${venue.whyThisFits}</div>
+        <div style="margin-top:6px; font-weight:600; color:#F04A00;">
           💡 ${venue.bookingTip}
+        </div>
+
+        <div class="actions">
+          ${venue.website ? `<a href="${venue.website}" target="_blank">🌐 Website</a>` : ""}
+          ${venue.instagram ? `<a href="${venue.instagram}" target="_blank">📸 Instagram</a>` : ""}
+          ${venue.email ? `<a href="mailto:${venue.email}">✉️ Email</a>` : ""}
+          ${venue.phone ? `<a href="tel:${venue.phone}">📞 Call</a>` : ""}
         </div>
       `;
       results.appendChild(div);
     });
 
   } catch {
-    status.innerText = "Error connecting to server.";
+    status.innerHTML = "Something went wrong.";
   }
 });
 </script>
