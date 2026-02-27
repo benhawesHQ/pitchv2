@@ -51,22 +51,14 @@
       align-items: center;
       justify-content: center;
       padding: 120px 20px 80px 20px;
-      background: #0f0f12;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: url('rainbow-paper.jpg') center center / cover no-repeat;
-      opacity: 0.25;
+      background: url('https://images.unsplash.com/photo-people-watching-band-performing-on-stage-QmX5lw8StoQ?auto=format&fit=crop&w=2000&q=80') center center / cover no-repeat;
     }
 
     .hero::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(15,15,18,0.95), rgba(15,15,18,0.85));
+      background: rgba(0,0,0,0.6);
     }
 
     .hero-content {
@@ -78,7 +70,7 @@
 
     .hero h1 {
       font-family: 'Poppins', sans-serif;
-      font-size: 72px;
+      font-size: 68px;
       line-height: 1.05;
       margin-bottom: 30px;
     }
@@ -89,9 +81,9 @@
 
     .hero p {
       font-size: 22px;
-      opacity: 0.9;
+      opacity: 0.95;
       margin-bottom: 60px;
-      max-width: 700px;
+      max-width: 750px;
       margin-left: auto;
       margin-right: auto;
     }
@@ -99,8 +91,8 @@
     /* SEARCH PANEL */
 
     .search-panel {
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(20px);
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(18px);
       padding: 45px;
       border-radius: 30px;
       box-shadow: 0 30px 80px rgba(0,0,0,0.5);
@@ -115,7 +107,7 @@
       border: none;
       margin-bottom: 18px;
       font-size: 16px;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.12);
       color: white;
     }
 
@@ -139,9 +131,9 @@
     .pill {
       padding: 10px 18px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.12);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: transform 0.2s ease;
       font-size: 14px;
     }
 
@@ -168,43 +160,6 @@
 
     button:hover {
       transform: translateY(-2px);
-    }
-
-    /* ENERGY SECTION */
-
-    .energy-section {
-      position: relative;
-      height: 75vh;
-      background: url('crowd.jpg') center center / cover no-repeat;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .energy-section::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.45);
-    }
-
-    .energy-inner {
-      position: relative;
-      z-index: 2;
-      max-width: 900px;
-      text-align: center;
-      padding: 0 20px;
-    }
-
-    .energy-inner h2 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 48px;
-      margin-bottom: 20px;
-    }
-
-    .energy-inner p {
-      font-size: 20px;
-      opacity: 0.95;
     }
 
     /* RESULTS */
@@ -317,10 +272,6 @@
       .search-panel {
         padding: 25px;
       }
-
-      .energy-inner h2 {
-        font-size: 32px;
-      }
     }
 
   </style>
@@ -335,11 +286,11 @@
 <section class="hero">
   <div class="hero-content">
     <h1>
-      Build the show.<br>
-      We’ll find the <span>rooms.</span>
+      Stop searching.<br>
+      Start <span>reaching out.</span>
     </h1>
     <p>
-      Real venues. Real contacts. No outdated lists. Focus on the art.
+      Pitch helps you quickly find real venues in your city so you can spend less time digging and more time sending the emails that move your show forward.
     </p>
 
     <div class="search-panel">
@@ -365,15 +316,6 @@
       <button onclick="searchVenues()">Find 15 Venues →</button>
       <div id="status"></div>
     </div>
-  </div>
-</section>
-
-<section class="energy-section">
-  <div class="energy-inner">
-    <h2>Rooms are meant to be full.</h2>
-    <p>
-      Stop guessing. Start booking. Build shows people talk about on the way home.
-    </p>
   </div>
 </section>
 
