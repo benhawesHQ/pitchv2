@@ -1,263 +1,181 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Pitch – Venue Finder</title>
+  <title>Pitch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background: #f3efe9;
+      font-family: 'Open Sans', sans-serif;
+      color: #2d1f17;
+    }
 
-<style>
-body {
-  margin: 0;
-  background: #F3EFE7;
-  font-family: 'Open Sans', sans-serif;
-  color: #2A1F16;
-}
+    .container {
+      max-width: 850px;
+      margin: 80px auto;
+      padding: 40px;
+    }
 
-.wrapper {
-  max-width: 1000px;
-  margin: 80px auto;
-  padding: 0 40px;
-}
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
 
-h1 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 64px;
-  line-height: 1.05;
-  margin-bottom: 20px;
-}
+    .highlight {
+      color: #ff4d00;
+    }
 
-.accent { color: #F04A00; }
+    .sub {
+      color: #6d5f57;
+      margin-bottom: 40px;
+    }
 
-.subtext {
-  font-size: 18px;
-  max-width: 600px;
-  color: #5A5147;
-  margin-bottom: 60px;
-}
+    input, textarea, select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: #e8e1d9;
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
 
-.card {
-  background: #F8F5EF;
-  padding: 50px;
-  border-radius: 28px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-}
+    button {
+      background: #ff4d00;
+      color: white;
+      border: none;
+      padding: 16px;
+      width: 100%;
+      border-radius: 16px;
+      font-size: 18px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
 
-input, textarea {
-  width: 100%;
-  padding: 16px;
-  margin-bottom: 20px;
-  border-radius: 14px;
-  border: 1px solid #E2DBD1;
-  font-size: 16px;
-  background: #EFE9DF;
-  resize: none;
-}
+    button:hover {
+      opacity: 0.9;
+    }
 
-input:focus, textarea:focus {
-  outline: none;
-  border-color: #F04A00;
-}
+    .loading {
+      text-align: center;
+      margin: 30px 0;
+      font-size: 24px;
+      animation: bounce 1s infinite alternate;
+    }
 
-.filters {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
+    @keyframes bounce {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-8px); }
+    }
 
-.pill {
-  padding: 10px 16px;
-  border-radius: 999px;
-  background: #EFE9DF;
-  border: 1px solid #E2DBD1;
-  cursor: pointer;
-  font-size: 14px;
-}
+    .venue-card {
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+    }
 
-.pill.active {
-  background: #F04A00;
-  color: white;
-  border-color: #F04A00;
-}
+    .venue-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
 
-button {
-  width: 100%;
-  padding: 20px;
-  border-radius: 18px;
-  border: none;
-  font-family: 'Poppins', sans-serif;
-  font-size: 18px;
-  background: #F04A00;
-  color: white;
-  cursor: pointer;
-}
+    .contact-stack {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-button:hover { opacity: 0.9; }
+    .contact-stack a {
+      background: #ff4d00;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 14px;
+    }
 
-#status {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.loading {
-  font-size: 26px;
-  animation: bounce 1s infinite;
-}
-
-@keyframes bounce {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-#results { margin-top: 40px; }
-
-.venue {
-  padding: 24px;
-  background: white;
-  border-radius: 16px;
-  margin-bottom: 20px;
-  border: 1px solid #E2DBD1;
-}
-
-.venue h3 {
-  margin: 0 0 8px 0;
-  font-family: 'Poppins', sans-serif;
-}
-
-.meta {
-  font-size: 14px;
-  color: #5A5147;
-  margin-bottom: 8px;
-}
-
-.score {
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-
-.actions {
-  margin-top: 14px;
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.actions a {
-  text-decoration: none;
-  font-weight: 600;
-  color: #F04A00;
-}
-</style>
+  </style>
 </head>
 
 <body>
 
-<div class="wrapper">
+<div class="container">
+  <h1>Find venues that actually <span class="highlight">reply.</span></h1>
+  <div class="sub">Stop digging through old Reddit threads. Focus on planning the show.</div>
 
-<h1>
-Find venues<br>
-that actually <span class="accent">reply.</span>
-</h1>
+  <input id="city" placeholder="City (SF, San Fran, NYC...)" />
+  <input id="capacity" placeholder="Capacity (ex: 80)" />
+  <input id="genre" placeholder="Genre / vibe (rock, cabaret, indie pop...)" />
+  <textarea id="extra" placeholder="Anything else feel important?"></textarea>
 
-<div class="subtext">
-Pitch replaces stale Reddit lists with active venues so you can focus on planning the show.
-</div>
+  <button onclick="searchVenues()">Find venues →</button>
 
-<div class="card">
-
-<form id="searchForm">
-
-<input type="text" id="city" placeholder="City" required>
-<input type="number" id="audience" placeholder="Audience size" required>
-
-<div class="filters">
-<div class="pill" data-filter="blackOwned">✊🏾 Black-owned</div>
-<div class="pill" data-filter="queerFriendly">🌈 Queer-friendly</div>
-<div class="pill" data-filter="intimate">🎤 Intimate rooms</div>
-<div class="pill" data-filter="highLikelihood">🔥 Only high reply likelihood</div>
-</div>
-
-<textarea id="extra" rows="3" placeholder="Anything else feel important? (All-ages? DIY vibe? Not a bar? Piano required?)"></textarea>
-
-<button type="submit">Find venues →</button>
-
-</form>
-
-<div id="status"></div>
-<div id="results"></div>
-
-</div>
+  <div id="status"></div>
+  <div id="results"></div>
 </div>
 
 <script>
-const form = document.getElementById("searchForm");
-const status = document.getElementById("status");
-const results = document.getElementById("results");
-const pills = document.querySelectorAll(".pill");
-
-let activeFilters = {};
-
-pills.forEach(pill => {
-  pill.addEventListener("click", () => {
-    const key = pill.dataset.filter;
-    activeFilters[key] = !activeFilters[key];
-    pill.classList.toggle("active");
-  });
-});
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  status.innerHTML = '<div class="loading">🎶 🎵 🎶</div>';
-  results.innerHTML = "";
+async function searchVenues() {
 
   const city = document.getElementById("city").value;
-  const audience = document.getElementById("audience").value;
+  const capacity = document.getElementById("capacity").value;
+  const genre = document.getElementById("genre").value;
   const extra = document.getElementById("extra").value;
+
+  const status = document.getElementById("status");
+  const results = document.getElementById("results");
+
+  status.innerHTML = '<div class="loading">🎵 Searching for your next gig...</div>';
+  results.innerHTML = "";
 
   const response = await fetch("/api/search", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       city,
-      audience,
+      capacity,
+      genre,
       extra,
-      ...activeFilters
+      filters: []
     })
   });
 
-  const data = await response.json();
+  if (!response.ok) {
+    status.innerHTML = "Something went wrong.";
+    return;
+  }
 
+  const data = await response.json();
   status.innerHTML = "";
 
-  data.venues.forEach((venue) => {
-    if (activeFilters.highLikelihood && venue.replyLikelihood < 70) return;
+  data.venues.forEach(v => {
 
-    const div = document.createElement("div");
-    div.className = "venue";
-    div.innerHTML = `
-      <h3>🎤 ${venue.name}</h3>
-      <div class="meta">📍 ${venue.neighborhood} · ${venue.capacity}</div>
-      <div class="score">🔥 Reply Likelihood: ${venue.replyLikelihood}%</div>
-      <div>⚡ ${venue.activitySignal}</div>
-      <div style="margin-top:6px;">🎶 ${venue.whyThisFits}</div>
-      <div style="margin-top:6px; font-weight:600; color:#F04A00;">
-        💡 ${venue.bookingTip}
-      </div>
+    const card = document.createElement("div");
+    card.className = "venue-card";
 
-      <div class="actions">
-        ${venue.website ? `<a href="${venue.website}" target="_blank">🌐 Website</a>` : ""}
-        ${venue.instagram ? `<a href="${venue.instagram}" target="_blank">📸 Instagram</a>` : ""}
-        ${venue.email ? `<a href="mailto:${venue.email}">✉️ Email</a>` : ""}
-        ${venue.phone ? `<a href="tel:${venue.phone}">📞 Call</a>` : ""}
+    card.innerHTML = `
+      <div class="venue-name">${v.name}</div>
+      <div>${v.description}</div>
+      <div><strong>Capacity:</strong> ${v.capacity || "Unknown"}</div>
+
+      <div class="contact-stack">
+        ${v.website ? `<a href="${v.website}" target="_blank">Website</a>` : ""}
+        ${v.instagram ? `<a href="${v.instagram}" target="_blank">Instagram</a>` : ""}
+        ${v.email ? `<a href="mailto:${v.email}">Email</a>` : ""}
+        ${v.phone ? `<a href="tel:${v.phone}">Call</a>` : ""}
       </div>
     `;
-    results.appendChild(div);
-  });
 
-});
+    results.appendChild(card);
+  });
+}
 </script>
 
 </body>
