@@ -16,17 +16,20 @@ export default async function handler(req, res) {
     apiKey: process.env.OPENAI_API_KEY
   });
 
-  const vibe = genre ? genre : "live music";
+  const vibe = genre || "live music";
 
   const likelihoodNote = likely
-    ? "Focus on venues that are known to book emerging or independent artists."
-    : "Include a mix of established and emerging venues.";
+    ? "Focus on venues that book emerging or independent artists."
+    : "Include a mix of established and smaller venues.";
 
   const prompt = `
 Generate 6 real venues in ${city} that host ${vibe} performances.
 ${likelihoodNote}
 
-Return as JSON with this exact structure:
+Respond ONLY with valid JSON.
+No explanation.
+
+Format:
 
 {
   "results": [
@@ -39,9 +42,6 @@ Return as JSON with this exact structure:
     }
   ]
 }
-
-Only return valid JSON.
-Do not explain anything.
 `;
 
   try {
@@ -54,11 +54,15 @@ Do not explain anything.
 
     const text = completion.choices[0].message.content;
 
-    const json = JSON.parse(text);
+    // Safely extract JSON if AI wraps it in code blocks
+    const cleaned = text.replace(/```json|```/g, "").trim();
+
+    const json = JSON.parse(cleaned);
 
     res.status(200).json(json);
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "AI search failed." });
   }
 }
