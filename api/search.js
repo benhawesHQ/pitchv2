@@ -1,37 +1,36 @@
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-
   try {
-    const { city, audience, shortlistSize, filters } = req.body;
+    const { city, audience, blackOwned, topLikely } = req.body;
 
     const prompt = `
-You are an expert live music venue researcher.
+Return ONLY valid JSON.
+No backticks.
+No explanation.
+No text outside JSON.
 
-Find ${shortlistSize} real live music venues in ${city} that fit an audience size of approximately ${audience} people.
+Format:
+{
+  "venues": [
+    {
+      "name": "Venue Name",
+      "neighborhood": "Area",
+      "capacity": "Approx capacity",
+      "why": "Why it's a fit"
+    }
+  ]
+}
 
-Apply filters if provided: ${JSON.stringify(filters)}
-
-Return ONLY valid JSON in this exact format:
-
-[
-  {
-    "name": "Venue Name",
-    "neighborhood": "Neighborhood",
-    "capacity": "Estimated capacity",
-    "whyFit": "Short explanation of why this venue is a strong fit"
-  }
-]
-
-No commentary. JSON only.
+City: ${city}
+Audience size: ${audience}
+Black owned preferred: ${blackOwned}
+Top likely fit: ${topLikely}
 `;
 
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
         model: "gpt-4.1-mini",
@@ -41,25 +40,18 @@ No commentary. JSON only.
 
     const data = await response.json();
 
-    if (!response.ok) {
-      console.error(data);
-      return res.status(500).json({ error: "OpenAI API error" });
-    }
+    const text = data.output[0].content[0].text;
 
-    const text = data.output_text;
+    const clean = text
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
 
-    let parsed;
-    try {
-      parsed = JSON.parse(text);
-    } catch {
-      console.error("Bad JSON:", text);
-      return res.status(500).json({ error: "Invalid JSON from model" });
-    }
+    const parsed = JSON.parse(clean);
 
-    return res.status(200).json(parsed);
+    res.status(200).json(parsed);
 
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: error.message });
   }
 }
