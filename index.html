@@ -2,26 +2,28 @@
 <html>
 <head>
   <title>Pitch</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
-      background: #f3efe9;
-      font-family: 'Open Sans', sans-serif;
-      color: #2d1f17;
+      background: #f4efe9;
+      font-family: 'Inter', sans-serif;
+      color: #2b1d14;
     }
 
     .container {
-      max-width: 850px;
+      max-width: 900px;
       margin: 80px auto;
       padding: 40px;
     }
 
     h1 {
       font-family: 'Poppins', sans-serif;
-      font-size: 48px;
-      margin-bottom: 10px;
+      font-size: 54px;
+      line-height: 1.1;
+      margin-bottom: 12px;
     }
 
     .highlight {
@@ -29,64 +31,87 @@
     }
 
     .sub {
-      color: #6d5f57;
+      font-size: 18px;
+      color: #6a5d55;
       margin-bottom: 40px;
     }
 
-    input, textarea, select {
+    input {
       width: 100%;
-      padding: 14px;
-      border-radius: 12px;
+      padding: 16px;
+      border-radius: 16px;
       border: none;
-      background: #e8e1d9;
-      margin-bottom: 16px;
+      background: #e9e2da;
       font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .pill {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #e9e2da;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .pill.active {
+      background: #ff4d00;
+      color: white;
     }
 
     button {
       background: #ff4d00;
       color: white;
       border: none;
-      padding: 16px;
+      padding: 18px;
       width: 100%;
-      border-radius: 16px;
+      border-radius: 20px;
       font-size: 18px;
+      font-weight: 600;
       cursor: pointer;
-      font-family: 'Poppins', sans-serif;
+      transition: all 0.2s ease;
     }
 
     button:hover {
-      opacity: 0.9;
+      transform: translateY(-2px);
     }
 
     .loading {
       text-align: center;
-      margin: 30px 0;
-      font-size: 24px;
-      animation: bounce 1s infinite alternate;
+      margin: 40px 0;
+      font-size: 22px;
+      animation: pulse 1s infinite alternate;
     }
 
-    @keyframes bounce {
-      from { transform: translateY(0px); }
-      to { transform: translateY(-8px); }
+    @keyframes pulse {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
     }
 
     .venue-card {
       background: white;
-      padding: 20px;
-      border-radius: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+      padding: 24px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
     }
 
     .venue-name {
       font-family: 'Poppins', sans-serif;
-      font-size: 20px;
+      font-size: 22px;
       margin-bottom: 8px;
     }
 
     .contact-stack {
-      margin-top: 10px;
+      margin-top: 16px;
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
@@ -95,10 +120,11 @@
     .contact-stack a {
       background: #ff4d00;
       color: white;
-      padding: 8px 12px;
-      border-radius: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
       text-decoration: none;
       font-size: 14px;
+      font-weight: 500;
     }
 
   </style>
@@ -107,32 +133,77 @@
 <body>
 
 <div class="container">
-  <h1>Find venues that actually <span class="highlight">reply.</span></h1>
-  <div class="sub">Stop digging through old Reddit threads. Focus on planning the show.</div>
+
+  <h1>
+    Find venues that actually <span class="highlight">reply.</span>
+  </h1>
+
+  <div class="sub">
+    Stop digging through old Reddit lists. Focus on building the show.
+  </div>
 
   <input id="city" placeholder="City (SF, San Fran, NYC...)" />
-  <input id="capacity" placeholder="Capacity (ex: 80)" />
-  <input id="genre" placeholder="Genre / vibe (rock, cabaret, indie pop...)" />
-  <textarea id="extra" placeholder="Anything else feel important?"></textarea>
+  <input id="capacity" placeholder="Audience size (ex: 80)" />
+
+  <div style="font-weight:600;margin-bottom:8px;">Genre / vibe</div>
+  <div class="pill-group" id="genreGroup">
+    <div class="pill">Rock</div>
+    <div class="pill">Cabaret</div>
+    <div class="pill">Indie Pop</div>
+    <div class="pill">Acoustic</div>
+    <div class="pill">Comedy</div>
+    <div class="pill">Experimental</div>
+  </div>
+
+  <div style="font-weight:600;margin-bottom:8px;">Filters</div>
+  <div class="pill-group" id="filterGroup">
+    <div class="pill">Queer-owned</div>
+    <div class="pill">Black-owned</div>
+    <div class="pill">Most likely to reply</div>
+  </div>
 
   <button onclick="searchVenues()">Find venues →</button>
 
   <div id="status"></div>
   <div id="results"></div>
+
 </div>
 
 <script>
+
+let selectedGenre = "";
+let selectedFilters = [];
+
+document.querySelectorAll("#genreGroup .pill").forEach(pill => {
+  pill.addEventListener("click", () => {
+    document.querySelectorAll("#genreGroup .pill").forEach(p => p.classList.remove("active"));
+    pill.classList.add("active");
+    selectedGenre = pill.innerText;
+  });
+});
+
+document.querySelectorAll("#filterGroup .pill").forEach(pill => {
+  pill.addEventListener("click", () => {
+    pill.classList.toggle("active");
+    const value = pill.innerText;
+
+    if (selectedFilters.includes(value)) {
+      selectedFilters = selectedFilters.filter(f => f !== value);
+    } else {
+      selectedFilters.push(value);
+    }
+  });
+});
+
 async function searchVenues() {
 
   const city = document.getElementById("city").value;
   const capacity = document.getElementById("capacity").value;
-  const genre = document.getElementById("genre").value;
-  const extra = document.getElementById("extra").value;
 
   const status = document.getElementById("status");
   const results = document.getElementById("results");
 
-  status.innerHTML = '<div class="loading">🎵 Searching for your next gig...</div>';
+  status.innerHTML = '<div class="loading">👏 Finding rooms that want you...</div>';
   results.innerHTML = "";
 
   const response = await fetch("/api/search", {
@@ -141,14 +212,14 @@ async function searchVenues() {
     body: JSON.stringify({
       city,
       capacity,
-      genre,
-      extra,
-      filters: []
+      genre: selectedGenre,
+      filters: selectedFilters,
+      extra: ""
     })
   });
 
   if (!response.ok) {
-    status.innerHTML = "Something went wrong.";
+    status.innerHTML = "Search failed.";
     return;
   }
 
@@ -176,6 +247,7 @@ async function searchVenues() {
     results.appendChild(card);
   });
 }
+
 </script>
 
 </body>
