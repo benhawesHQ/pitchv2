@@ -446,6 +446,44 @@ Build my shortlist →
 </section>
 
 </div>
+<script>
+async function searchVenues() {
+  const city = document.getElementById("city").value;
+  const audience = document.getElementById("audience").value;
 
+  const res = await fetch("/api/search", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ city, audience })
+  });
+
+  const data = await res.json();
+
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "<h2>Your Shortlist</h2>";
+
+  try {
+    const venues = JSON.parse(data.output[0].content[0].text);
+
+    venues.forEach(v => {
+      resultsDiv.innerHTML += `
+        <div style="border:1px solid #ddd; padding:16px; margin:12px 0; border-radius:12px;">
+          <h3>${v.name} (${v.likelihood_score}/100)</h3>
+          <p><strong>Neighborhood:</strong> ${v.neighborhood}</p>
+          <p><strong>Capacity:</strong> ${v.capacity}</p>
+          <p>${v.reason}</p>
+        </div>
+      `;
+    });
+
+  } catch (e) {
+    resultsDiv.innerHTML += "<p>Something went wrong parsing results.</p>";
+  }
+}
+
+document.getElementById("searchBtn").addEventListener("click", searchVenues);
+</script>
 </body>
 </html>
