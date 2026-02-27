@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pitch</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 :root{
@@ -29,14 +29,12 @@ background:var(--bg);
 color:var(--text);
 }
 
-/* Layout Container */
 .container{
 max-width:1100px;
 margin:0 auto;
 padding:0 40px 80px 40px;
 }
 
-/* Header */
 header{
 max-width:1100px;
 margin:0 auto;
@@ -53,44 +51,28 @@ font-size:24px;
 color:var(--orange);
 }
 
-/* Hero */
 .hero{
 margin-top:40px;
 }
 
 .hero h1{
 font-family:'Poppins';
-font-size:72px;
+font-size:64px;
 line-height:1.05;
 margin:0;
-letter-spacing:-1px;
 }
 
 .hero .accent{
 color:var(--orange);
-position:relative;
-}
-
-.hero .accent::after{
-content:"";
-position:absolute;
-left:0;
-bottom:8px;
-width:100%;
-height:10px;
-background:var(--warn);
-z-index:-1;
 }
 
 .hero p{
-margin-top:24px;
+margin-top:20px;
 font-size:18px;
 color:var(--muted);
 max-width:600px;
-line-height:1.6;
 }
 
-/* Form Section */
 .form-section{
 margin-top:60px;
 background:var(--card);
@@ -98,32 +80,6 @@ border-radius:28px;
 padding:48px;
 border:1px solid var(--border);
 box-shadow:0 10px 30px rgba(0,0,0,0.04);
-}
-
-.toggle{
-display:flex;
-gap:8px;
-margin-bottom:32px;
-background:#FFF7F4;
-padding:6px;
-border-radius:999px;
-border:1px solid var(--border);
-width:fit-content;
-}
-
-.toggle button{
-padding:10px 18px;
-border-radius:999px;
-border:none;
-background:transparent;
-cursor:pointer;
-font-weight:600;
-font-size:14px;
-}
-
-.toggle button.active{
-background:var(--orange);
-color:white;
 }
 
 .form-grid{
@@ -149,88 +105,11 @@ width:100%;
 padding:14px 16px;
 border-radius:14px;
 border:1px solid var(--border);
-background:white;
 font-size:14px;
 }
 
-/* Chips */
-.chips{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-}
-
-.chip{
-padding:8px 14px;
-border-radius:999px;
-border:1px solid var(--border);
-background:white;
-cursor:pointer;
-font-size:13px;
-transition:.15s;
-}
-
-.chip.active{
-background:var(--orange);
-color:white;
-border-color:var(--orange);
-}
-
-/* Priority Toggle */
-.response-priority{
-margin-top:8px;
-}
-
-.priority-toggle{
-display:flex;
-align-items:center;
-gap:12px;
-cursor:pointer;
-font-weight:500;
-color:var(--text);
-}
-
-.priority-toggle input{
-display:none;
-}
-
-.slider{
-width:44px;
-height:24px;
-background:#E8E3DC;
-border-radius:999px;
-position:relative;
-transition:.2s;
-}
-
-.slider::before{
-content:"";
-position:absolute;
-width:18px;
-height:18px;
-background:white;
-border-radius:50%;
-top:3px;
-left:4px;
-transition:.2s;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
-}
-
-.priority-toggle input:checked + .slider{
-background:var(--orange);
-}
-
-.priority-toggle input:checked + .slider::before{
-transform:translateX(18px);
-}
-
-.priority-text{
-font-size:14px;
-}
-
-/* Button */
 .search-btn{
-margin-top:40px;
+margin-top:30px;
 width:100%;
 padding:18px;
 border:none;
@@ -241,23 +120,10 @@ font-family:'Poppins';
 font-weight:600;
 font-size:16px;
 cursor:pointer;
-transition:.2s;
 }
 
-.search-btn:hover{
-transform:translateY(-2px);
-box-shadow:0 8px 20px rgba(255,60,0,0.25);
-}
-
-/* Results */
 .results{
 margin-top:80px;
-}
-
-.results h2{
-font-family:'Poppins';
-font-size:28px;
-margin-bottom:30px;
 }
 
 .venue{
@@ -293,69 +159,14 @@ color:white;
 .mid{background:var(--warn);color:#111}
 .low{background:var(--danger)}
 
-textarea{
-width:100%;
-margin-top:14px;
-border-radius:14px;
-padding:12px;
-border:1px solid var(--border);
-min-height:100px;
-font-size:13px;
+.loading{
+opacity:.6;
 }
 
-.pitch-btn{
-margin-top:10px;
-padding:8px 14px;
-border-radius:10px;
-border:1px solid var(--border);
-background:white;
-cursor:pointer;
-font-weight:500;
-font-size:13px;
-}
-
-.status{
-margin-top:10px;
-padding:8px;
-border-radius:10px;
-border:1px solid var(--border);
-}
-
-/* Responsive */
-@media (max-width: 900px){
-
-header{
-padding:24px;
-}
-
-.container{
-padding:0 24px 60px 24px;
-}
-
-.hero h1{
-font-size:48px;
-}
-
-.hero p{
-font-size:16px;
-}
-
-.form-section{
-padding:32px;
-border-radius:20px;
-}
-
-.form-grid{
-grid-template-columns:1fr;
-}
-
-.full{
-grid-column:span 1;
-}
-
-.search-btn{
-padding:16px;
-}
+@media (max-width:900px){
+.hero h1{font-size:42px;}
+.form-grid{grid-template-columns:1fr;}
+.full{grid-column:span 1;}
 }
 </style>
 </head>
@@ -373,117 +184,123 @@ padding:16px;
 Find venues that actually <span class="accent">want you.</span>
 </h1>
 <p>
-Stop cold emailing into the void. Discover rooms aligned with your show and focus on high-response venues.
+Stop cold emailing into the void. Discover rooms aligned with your show.
 </p>
 </section>
 
 <section class="form-section">
 
-<div class="toggle">
-<button class="active">One Show</button>
-<button>Tour</button>
-</div>
-
 <div class="form-grid">
 
 <div>
 <label>Target city</label>
-<input placeholder="Brooklyn, NY">
+<input id="city" placeholder="Brooklyn, NY">
 </div>
 
 <div>
 <label>Audience size</label>
-<input placeholder="20–50">
+<input id="audience" placeholder="20–50">
 </div>
 
-<div>
-<label>Date 1</label>
-<input type="date">
-</div>
-
-<div>
-<label>Date 2</label>
-<input type="date">
-</div>
-
-<div>
+<div class="full">
 <label>Shortlist size</label>
-<select>
-<option>6 venues</option>
-<option>10 venues</option>
-<option>15 venues</option>
-<option>20 venues</option>
+<select id="count">
+<option value="6">6 venues</option>
+<option value="10">10 venues</option>
+<option value="15">15 venues</option>
+<option value="20">20 venues</option>
 </select>
 </div>
 
 <div class="full">
-<label>Community preferences</label>
-<div class="chips">
-<div class="chip">🖤 Black-owned</div>
-<div class="chip">🌈 Queer spaces</div>
-<div class="chip">👩‍🎤 Women-owned</div>
-<div class="chip">🎸 DIY spaces</div>
-<div class="chip">🎭 Cabaret</div>
-</div>
-</div>
-
-<div class="full response-priority">
-<label class="priority-toggle">
-<input type="checkbox">
-<span class="slider"></span>
-<span class="priority-text">🔥 Prioritize high-response rooms</span>
-</label>
-</div>
-
-<button class="search-btn">
+<button id="searchBtn" class="search-btn">
 Build my shortlist →
 </button>
-
 </div>
 
-<section class="results">
-<h2>Your shortlist</h2>
+</div>
 </section>
 
+<section id="results" class="results"></section>
+
 </div>
+
 <script>
-async function searchVenues() {
-  const city = document.getElementById("city").value;
-  const audience = document.getElementById("audience").value;
+document.addEventListener("DOMContentLoaded", function(){
 
-  const res = await fetch("/api/search", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ city, audience })
-  });
+const button = document.getElementById("searchBtn");
+const resultsDiv = document.getElementById("results");
 
-  const data = await res.json();
+button.addEventListener("click", async function(){
 
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "<h2>Your Shortlist</h2>";
+const city = document.getElementById("city").value.trim();
+const audience = document.getElementById("audience").value.trim();
+const count = document.getElementById("count").value;
 
-  try {
-    const venues = JSON.parse(data.output[0].content[0].text);
-
-    venues.forEach(v => {
-      resultsDiv.innerHTML += `
-        <div style="border:1px solid #ddd; padding:16px; margin:12px 0; border-radius:12px;">
-          <h3>${v.name} (${v.likelihood_score}/100)</h3>
-          <p><strong>Neighborhood:</strong> ${v.neighborhood}</p>
-          <p><strong>Capacity:</strong> ${v.capacity}</p>
-          <p>${v.reason}</p>
-        </div>
-      `;
-    });
-
-  } catch (e) {
-    resultsDiv.innerHTML += "<p>Something went wrong parsing results.</p>";
-  }
+if(!city || !audience){
+resultsDiv.innerHTML = "<p>Please enter city and audience size.</p>";
+return;
 }
 
-document.getElementById("searchBtn").addEventListener("click", searchVenues);
+resultsDiv.innerHTML = "<p class='loading'>Searching venues…</p>";
+
+try{
+
+const res = await fetch("/api/search",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body: JSON.stringify({ city, audience, count })
+});
+
+if(!res.ok){
+throw new Error("API error");
+}
+
+const data = await res.json();
+
+let textOutput = "";
+
+if(data.output && data.output[0] && data.output[0].content){
+textOutput = data.output[0].content[0].text;
+}else{
+throw new Error("Unexpected API format");
+}
+
+const venues = JSON.parse(textOutput);
+
+resultsDiv.innerHTML = "<h2>Your shortlist</h2>";
+
+venues.forEach(v=>{
+
+let scoreClass="low";
+if(v.likelihood_score>=75) scoreClass="high";
+else if(v.likelihood_score>=50) scoreClass="mid";
+
+resultsDiv.innerHTML += `
+<div class="venue">
+<div class="venue-header">
+<div class="venue-name">${v.name}</div>
+<div class="score ${scoreClass}">
+${v.likelihood_score}/100
+</div>
+</div>
+<p><strong>Neighborhood:</strong> ${v.neighborhood}</p>
+<p><strong>Capacity:</strong> ${v.capacity}</p>
+<p>${v.reason}</p>
+</div>
+`;
+
+});
+
+}catch(err){
+resultsDiv.innerHTML = "<p>Something went wrong. Check API setup.</p>";
+console.error(err);
+}
+
+});
+
+});
 </script>
+
 </body>
 </html>
