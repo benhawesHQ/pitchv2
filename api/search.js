@@ -1,64 +1,76 @@
+function normalizeCity(input) {
+  if (!input) return "";
+
+  let city = input
+    .toLowerCase()
+    .trim()
+    .replace(/\./g, "")
+    .replace(/\s+/g, " ");
+
+  city = city
+    .replace("city of ", "")
+    .replace("downtown ", "")
+    .replace("metro ", "");
+
+  city = city
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+  return city;
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "POST only" });
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const body = req.body || {};
+    const {
+      city: rawCity,
+      capacity,
+      genre = "",
+      filters = [],
+      extra = ""
+    } = req.body;
 
-    const city = body.city || "";
-    const audience = body.audience || "";
-    const blackOwned = body.blackOwned || false;
-    const queerFriendly = body.queerFriendly || false;
-    const intimate = body.intimate || false;
-    const extra = body.extra || "";
+    const city = normalizeCity(rawCity);
 
-    if (!city || !audience) {
-      return res.status(400).json({ error: "Missing city or audience" });
+    if (!city) {
+      return res.status(400).json({ error: "City required" });
     }
 
+    const filterText =
+      filters.length > 0
+        ? `Must match these filters if applicable: ${filters.join(", ")}.`
+        : "";
+
     const prompt = `
-You are helping an indie musician book shows.
+You are a venue research assistant for indie touring musicians.
 
-Return EXACTLY 15 REAL venues in ${city}.
+Return 15 REAL venues in ${city}.
+Capacity around ${capacity}.
+Genre or vibe: ${genre}.
 
-Audience draw: ${audience} people.
+${filterText}
 
-If audience is small (<150), prioritize 20–200 capacity rooms.
-If large (>1000), include larger venues.
-
-Filters:
-- Black-owned: ${blackOwned}
-- Queer-friendly: ${queerFriendly}
-- Intimate rooms: ${intimate}
-
-If Black-owned is true, prioritize venues publicly identified as Black-owned.
-If Queer-friendly is true, prioritize venues publicly identified as queer-friendly.
-If Intimate is true, prioritize smaller capacity rooms.
-
-Additional artist notes:
+Additional artist context:
 ${extra}
 
-Return ONLY valid JSON.
-No markdown.
-No backticks.
+These venues should be likely to respond to emerging indie artists.
 
-Format:
+Return JSON ONLY in this format:
 
 {
   "venues": [
     {
-      "name": "Venue Name",
-      "neighborhood": "Area",
-      "capacity": "Approx capacity range",
-      "replyLikelihood": 1-100,
-      "activitySignal": "Why they seem active recently",
-      "whyThisFits": "Why this venue matches the request",
-      "bookingTip": "How to approach them",
-      "instagram": "Instagram URL if known or null",
-      "email": "Booking email if known or null",
-      "phone": "Public phone number if known or null",
-      "website": "Official website URL if known or null"
+      "name": "",
+      "description": "",
+      "capacity": "",
+      "email": "",
+      "phone": "",
+      "website": "",
+      "instagram": ""
     }
   ]
 }
@@ -77,59 +89,27 @@ Format:
       })
     });
 
-    const data = await response.json();
-    const text = data.output?.[0]?.content?.[0]?.text || "";
+    if (!response.ok) {
+      return res.status(500).json({ error: "OpenAI failed" });
+    }
 
-    const cleaned = text
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
+    const data = await response.json();
+
+    const outputText = data.output?.[0]?.content?.[0]?.text || "";
+
+    const cleaned = outputText.replace(/```json|```/g, "").trim();
 
     let parsed;
-
     try {
       parsed = JSON.parse(cleaned);
-    } catch (e) {
-      console.error("AI returned invalid JSON:", text);
-      return res.status(500).json({
-        error: "AI returned invalid JSON"
-      });
+    } catch (err) {
+      return res.status(500).json({ error: "Invalid JSON returned" });
     }
 
-    if (!parsed.venues || !Array.isArray(parsed.venues)) {
-      return res.status(500).json({
-        error: "Invalid venue structure"
-      });
-    }
+    return res.status(200).json(parsed);
 
-    // Ensure exactly 15
-    parsed.venues = parsed.venues.slice(0, 15);
-
-    // Normalize missing fields
-    parsed.venues = parsed.venues.map(v => ({
-      name: v.name || "Unknown Venue",
-      neighborhood: v.neighborhood || "—",
-      capacity: v.capacity || "—",
-      replyLikelihood: typeof v.replyLikelihood === "number" ? v.replyLikelihood : 50,
-      activitySignal: v.activitySignal || "",
-      whyThisFits: v.whyThisFits || "",
-      bookingTip: v.bookingTip || "",
-      instagram: v.instagram || null,
-      email: v.email || null,
-      phone: v.phone || null,
-      website: v.website || null
-    }));
-
-    // Sort highest reply likelihood first
-    parsed.venues.sort((a, b) => b.replyLikelihood - a.replyLikelihood);
-
-    return res.status(200).json({ venues: parsed.venues });
-
-  } catch (error) {
-    console.error("Search error:", error);
-    return res.status(500).json({
-      error: "Search failed",
-      details: error.message
-    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Search failed" });
   }
 }
