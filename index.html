@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pitch</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+--orange:#FF3C00;
+--bg:#FFF1EA;
+--text:#111111;
+--muted:#3F3F3F;
+--border:#E6E1DA;
+--card:#FFFFFF;
+--success:#1DB954;
+--warn:#FFC700;
+--danger:#E63946;
+}
+
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:'Inter',sans-serif;
+background:var(--bg);
+color:var(--text);
+}
+
+/* Layout Container */
+.container{
+max-width:1100px;
+margin:0 auto;
+padding:0 40px 80px 40px;
+}
+
+/* Header */
+header{
+max-width:1100px;
+margin:0 auto;
+padding:32px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+font-family:'Poppins';
+font-weight:800;
+font-size:24px;
+color:var(--orange);
+}
+
+/* Hero */
+.hero{
+margin-top:40px;
+}
+
+.hero h1{
+font-family:'Poppins';
+font-size:72px;
+line-height:1.05;
+margin:0;
+letter-spacing:-1px;
+}
+
+.hero .accent{
+color:var(--orange);
+position:relative;
+}
+
+.hero .accent::after{
+content:"";
+position:absolute;
+left:0;
+bottom:8px;
+width:100%;
+height:10px;
+background:var(--warn);
+z-index:-1;
+}
+
+.hero p{
+margin-top:24px;
+font-size:18px;
+color:var(--muted);
+max-width:600px;
+line-height:1.6;
+}
+
+/* Form Section */
+.form-section{
+margin-top:60px;
+background:var(--card);
+border-radius:28px;
+padding:48px;
+border:1px solid var(--border);
+box-shadow:0 10px 30px rgba(0,0,0,0.04);
+}
+
+.toggle{
+display:flex;
+gap:8px;
+margin-bottom:32px;
+background:#FFF7F4;
+padding:6px;
+border-radius:999px;
+border:1px solid var(--border);
+width:fit-content;
+}
+
+.toggle button{
+padding:10px 18px;
+border-radius:999px;
+border:none;
+background:transparent;
+cursor:pointer;
+font-weight:600;
+font-size:14px;
+}
+
+.toggle button.active{
+background:var(--orange);
+color:white;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:24px;
+}
+
+.full{
+grid-column:span 2;
+}
+
+label{
+font-size:12px;
+font-weight:600;
+color:var(--muted);
+margin-bottom:8px;
+display:block;
+}
+
+input, select{
+width:100%;
+padding:14px 16px;
+border-radius:14px;
+border:1px solid var(--border);
+background:white;
+font-size:14px;
+}
+
+/* Chips */
+.chips{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.chip{
+padding:8px 14px;
+border-radius:999px;
+border:1px solid var(--border);
+background:white;
+cursor:pointer;
+font-size:13px;
+transition:.15s;
+}
+
+.chip.active{
+background:var(--orange);
+color:white;
+border-color:var(--orange);
+}
+
+/* Priority Toggle */
+.response-priority{
+margin-top:8px;
+}
+
+.priority-toggle{
+display:flex;
+align-items:center;
+gap:12px;
+cursor:pointer;
+font-weight:500;
+color:var(--text);
+}
+
+.priority-toggle input{
+display:none;
+}
+
+.slider{
+width:44px;
+height:24px;
+background:#E8E3DC;
+border-radius:999px;
+position:relative;
+transition:.2s;
+}
+
+.slider::before{
+content:"";
+position:absolute;
+width:18px;
+height:18px;
+background:white;
+border-radius:50%;
+top:3px;
+left:4px;
+transition:.2s;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.priority-toggle input:checked + .slider{
+background:var(--orange);
+}
+
+.priority-toggle input:checked + .slider::before{
+transform:translateX(18px);
+}
+
+.priority-text{
+font-size:14px;
+}
+
+/* Button */
+.search-btn{
+margin-top:40px;
+width:100%;
+padding:18px;
+border:none;
+border-radius:18px;
+background:var(--orange);
+color:white;
+font-family:'Poppins';
+font-weight:600;
+font-size:16px;
+cursor:pointer;
+transition:.2s;
+}
+
+.search-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(255,60,0,0.25);
+}
+
+/* Results */
+.results{
+margin-top:80px;
+}
+
+.results h2{
+font-family:'Poppins';
+font-size:28px;
+margin-bottom:30px;
+}
+
+.venue{
+background:white;
+border:1px solid var(--border);
+border-radius:24px;
+padding:28px;
+margin-bottom:24px;
+}
+
+.venue-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:12px;
+}
+
+.venue-name{
+font-family:'Poppins';
+font-weight:600;
+font-size:18px;
+}
+
+.score{
+padding:6px 12px;
+border-radius:999px;
+font-size:12px;
+font-weight:600;
+color:white;
+}
+
+.high{background:var(--success)}
+.mid{background:var(--warn);color:#111}
+.low{background:var(--danger)}
+
+textarea{
+width:100%;
+margin-top:14px;
+border-radius:14px;
+padding:12px;
+border:1px solid var(--border);
+min-height:100px;
+font-size:13px;
+}
+
+.pitch-btn{
+margin-top:10px;
+padding:8px 14px;
+border-radius:10px;
+border:1px solid var(--border);
+background:white;
+cursor:pointer;
+font-weight:500;
+font-size:13px;
+}
+
+.status{
+margin-top:10px;
+padding:8px;
+border-radius:10px;
+border:1px solid var(--border);
+}
+
+/* Responsive */
+@media (max-width: 900px){
+
+header{
+padding:24px;
+}
+
+.container{
+padding:0 24px 60px 24px;
+}
+
+.hero h1{
+font-size:48px;
+}
+
+.hero p{
+font-size:16px;
+}
+
+.form-section{
+padding:32px;
+border-radius:20px;
+}
+
+.form-grid{
+grid-template-columns:1fr;
+}
+
+.full{
+grid-column:span 1;
+}
+
+.search-btn{
+padding:16px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">pitch.</div>
+</header>
+
+<div class="container">
+
+<section class="hero">
+<h1>
+Find venues that actually <span class="accent">want you.</span>
+</h1>
+<p>
+Stop cold emailing into the void. Discover rooms aligned with your show and focus on high-response venues.
+</p>
+</section>
+
+<section class="form-section">
+
+<div class="toggle">
+<button class="active">One Show</button>
+<button>Tour</button>
+</div>
+
+<div class="form-grid">
+
+<div>
+<label>Target city</label>
+<input placeholder="Brooklyn, NY">
+</div>
+
+<div>
+<label>Audience size</label>
+<input placeholder="20–50">
+</div>
+
+<div>
+<label>Date 1</label>
+<input type="date">
+</div>
+
+<div>
+<label>Date 2</label>
+<input type="date">
+</div>
+
+<div>
+<label>Shortlist size</label>
+<select>
+<option>6 venues</option>
+<option>10 venues</option>
+<option>15 venues</option>
+<option>20 venues</option>
+</select>
+</div>
+
+<div class="full">
+<label>Community preferences</label>
+<div class="chips">
+<div class="chip">🖤 Black-owned</div>
+<div class="chip">🌈 Queer spaces</div>
+<div class="chip">👩‍🎤 Women-owned</div>
+<div class="chip">🎸 DIY spaces</div>
+<div class="chip">🎭 Cabaret</div>
+</div>
+</div>
+
+<div class="full response-priority">
+<label class="priority-toggle">
+<input type="checkbox">
+<span class="slider"></span>
+<span class="priority-text">🔥 Prioritize high-response rooms</span>
+</label>
+</div>
+
+<button class="search-btn">
+Build my shortlist →
+</button>
+
+</div>
+
+<section class="results">
+<h2>Your shortlist</h2>
+</section>
+
+</div>
+
+</body>
+</html>
