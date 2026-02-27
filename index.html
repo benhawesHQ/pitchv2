@@ -103,7 +103,7 @@
       backdrop-filter: blur(20px);
       padding: 45px;
       border-radius: 30px;
-      box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
       max-width: 850px;
       margin: 0 auto;
     }
@@ -134,7 +134,6 @@
       flex-wrap: wrap;
       gap: 12px;
       margin-bottom: 20px;
-      justify-content: flex-start;
     }
 
     .pill {
@@ -142,7 +141,7 @@
       border-radius: 999px;
       background: rgba(255,255,255,0.1);
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
       font-size: 14px;
     }
 
@@ -152,7 +151,6 @@
 
     .pill.active {
       background: #ff4d00;
-      box-shadow: 0 0 20px rgba(255,77,0,0.5);
     }
 
     button {
@@ -165,12 +163,48 @@
       background: #ff4d00;
       color: white;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform 0.2s ease;
     }
 
     button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 20px 60px rgba(255,77,0,0.6);
+      transform: translateY(-2px);
+    }
+
+    /* ENERGY SECTION */
+
+    .energy-section {
+      position: relative;
+      height: 75vh;
+      background: url('crowd.jpg') center center / cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .energy-section::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+    }
+
+    .energy-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .energy-inner h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .energy-inner p {
+      font-size: 20px;
+      opacity: 0.95;
     }
 
     /* RESULTS */
@@ -192,11 +226,11 @@
       border-radius: 24px;
       margin-bottom: 30px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.07);
-      transition: all 0.25s ease;
+      transition: transform 0.25s ease;
     }
 
     .venue-card:hover {
-      transform: translateY(-6px);
+      transform: translateY(-4px);
     }
 
     .venue-name {
@@ -219,23 +253,60 @@
       border-radius: 12px;
       text-decoration: none;
       font-size: 14px;
-      transition: all 0.2s ease;
+      transition: background 0.2s ease;
     }
 
     .contact-stack a:hover {
       background: #ff4d00;
     }
 
-    .loading {
-      text-align: center;
-      font-size: 22px;
-      margin-top: 50px;
-      animation: pulse 1s infinite alternate;
+    /* FOOTER */
+
+    .site-footer {
+      background: #0f0f12;
+      padding: 80px 20px;
+      border-top: 1px solid rgba(255,255,255,0.08);
     }
 
-    @keyframes pulse {
-      from { opacity: 0.4; }
-      to { opacity: 1; }
+    .footer-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .footer-logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .footer-logo span {
+      color: #ff4d00;
+    }
+
+    .footer-brand p {
+      margin-top: 10px;
+      opacity: 0.7;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      opacity: 1;
     }
 
     @media (max-width: 768px) {
@@ -247,8 +318,8 @@
         padding: 25px;
       }
 
-      .nav {
-        padding: 20px;
+      .energy-inner h2 {
+        font-size: 32px;
       }
     }
 
@@ -268,7 +339,7 @@
       We’ll find the <span>rooms.</span>
     </h1>
     <p>
-      Real venues. Real contacts. No outdated Reddit lists. Focus on the art.
+      Real venues. Real contacts. No outdated lists. Focus on the art.
     </p>
 
     <div class="search-panel">
@@ -292,15 +363,39 @@
       </div>
 
       <button onclick="searchVenues()">Find 15 Venues →</button>
-
       <div id="status"></div>
     </div>
+  </div>
+</section>
+
+<section class="energy-section">
+  <div class="energy-inner">
+    <h2>Rooms are meant to be full.</h2>
+    <p>
+      Stop guessing. Start booking. Build shows people talk about on the way home.
+    </p>
   </div>
 </section>
 
 <section class="results-section">
   <div id="results" class="results-container"></div>
 </section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">Pitch<span>.</span></div>
+      <p>Created by Ben Hawes in NYC.</p>
+    </div>
+
+    <div class="footer-links">
+      <a href="https://www.benhawesHQ.com" target="_blank">www.benhawesHQ.com</a>
+      <a href="https://instagram.com/benhawesHQ" target="_blank">@benhawesHQ</a>
+      <a href="https://tiktok.com/@benhawesHQ" target="_blank">tiktok.com/@benhawesHQ</a>
+      <a href="mailto:ben@benhawesHQ.com">ben@benhawesHQ.com</a>
+    </div>
+  </div>
+</footer>
 
 <script src="script.js"></script>
 
