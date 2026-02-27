@@ -1,128 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Venue Finder</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 60px auto;
-      padding: 20px;
-    }
+<title>Pitch – Venue Finder</title>
 
-    h1 {
-      font-size: 32px;
-      margin-bottom: 30px;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
 
-    .form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 30px;
-    }
+<style>
+  body {
+    margin: 0;
+    background: #F3EFE7;
+    font-family: 'Open Sans', sans-serif;
+    color: #2A1F16;
+  }
 
-    input[type="text"],
-    input[type="number"] {
-      padding: 10px;
-      font-size: 16px;
-    }
+  .wrapper {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 0 40px;
+  }
 
-    label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+  h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 64px;
+    line-height: 1.05;
+    margin: 0 0 20px 0;
+  }
 
-    button {
-      padding: 12px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+  .accent {
+    color: #F04A00;
+  }
 
-    .venue {
-      border: 1px solid #ddd;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
-  </style>
+  .subtext {
+    font-size: 18px;
+    max-width: 600px;
+    color: #5A5147;
+    margin-bottom: 60px;
+  }
+
+  .card {
+    background: #F8F5EF;
+    padding: 50px;
+    border-radius: 28px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  }
+
+  .card h2 {
+    font-family: 'Poppins', sans-serif;
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 28px;
+  }
+
+  input {
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    border: 1px solid #E2DBD1;
+    font-size: 16px;
+    background: #EFE9DF;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #F04A00;
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+
+  .pill {
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: #EFE9DF;
+    border: 1px solid #E2DBD1;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .pill.active {
+    background: #F04A00;
+    color: white;
+    border-color: #F04A00;
+  }
+
+  button {
+    width: 100%;
+    padding: 20px;
+    border-radius: 18px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    background: #F04A00;
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  #status {
+    margin-top: 20px;
+    font-size: 15px;
+  }
+
+  #results {
+    margin-top: 40px;
+  }
+
+  .venue {
+    padding: 20px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    border: 1px solid #E2DBD1;
+  }
+
+  .venue h3 {
+    margin: 0 0 8px 0;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .meta {
+    font-size: 14px;
+    color: #5A5147;
+    margin-bottom: 10px;
+  }
+
+</style>
 </head>
+
 <body>
 
-  <h1>Find venues that actually want you.</h1>
+<div class="wrapper">
 
-  <div class="form">
-    <input id="city" type="text" placeholder="Target city" value="Brooklyn" />
-    <input id="audience" type="number" placeholder="Audience size" value="40" />
+  <h1>
+    Find venues<br>
+    that actually <span class="accent">want you.</span>
+  </h1>
 
-    <label>
-      <input type="checkbox" id="blackOwned" />
-      Black owned
-    </label>
-
-    <label>
-      <input type="checkbox" id="topLikely" />
-      Top likely fit
-    </label>
-
-    <button id="buildBtn">Build my shortlist</button>
+  <div class="subtext">
+    Stop cold emailing into the void. Pitch searches venues in any city and surfaces the rooms most likely to book you.
   </div>
 
-  <div id="results"></div>
+  <div class="card">
 
-  <script>
-    const button = document.getElementById("buildBtn");
+    <h2>Find your next gig</h2>
 
-    button.addEventListener("click", async () => {
-      const city = document.getElementById("city").value;
-      const audience = document.getElementById("audience").value;
-      const blackOwned = document.getElementById("blackOwned").checked;
-      const topLikely = document.getElementById("topLikely").checked;
+    <form id="searchForm">
+      <input type="text" id="city" placeholder="City" required>
+      <input type="number" id="audience" placeholder="Audience size" required>
 
-      const resultsDiv = document.getElementById("results");
-      resultsDiv.innerHTML = "Searching...";
+      <div class="filters">
+        <div class="pill" data-filter="blackOwned">✊🏾 Black-owned</div>
+        <div class="pill" data-filter="queerFriendly">🌈 Queer-friendly</div>
+        <div class="pill" data-filter="topLikely">🔥 Most likely fit</div>
+        <div class="pill" data-filter="intimate">🎤 20–50 seats</div>
+      </div>
 
-      try {
-        const response = await fetch("/api/search", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            city,
-            audience,
-            shortlistSize: 5,
-            filters: {
-              blackOwned,
-              topLikely
-            }
-          })
-        });
+      <button type="submit">Find venues →</button>
+    </form>
 
-        const data = await response.json();
+    <div id="status"></div>
+    <div id="results"></div>
 
-        if (!response.ok) {
-          resultsDiv.innerHTML = "Something went wrong. Check API setup.";
-          return;
-        }
+  </div>
+</div>
 
-        resultsDiv.innerHTML = data.map(venue => `
-          <div class="venue">
-            <h3>${venue.name}</h3>
-            <p><strong>Neighborhood:</strong> ${venue.neighborhood}</p>
-            <p><strong>Capacity:</strong> ${venue.capacity}</p>
-            <p>${venue.whyFit}</p>
-          </div>
-        `).join("");
+<script>
+const form = document.getElementById("searchForm");
+const status = document.getElementById("status");
+const results = document.getElementById("results");
+const pills = document.querySelectorAll(".pill");
 
-      } catch (error) {
-        resultsDiv.innerHTML = "Something went wrong. Check API setup.";
-      }
+let activeFilters = {};
+
+pills.forEach(pill => {
+  pill.addEventListener("click", () => {
+    const key = pill.dataset.filter;
+    activeFilters[key] = !activeFilters[key];
+    pill.classList.toggle("active");
+  });
+});
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  status.innerText = "Searching...";
+  results.innerHTML = "";
+
+  const city = document.getElementById("city").value;
+  const audience = document.getElementById("audience").value;
+
+  try {
+    const response = await fetch("/api/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        city,
+        audience,
+        ...activeFilters
+      })
     });
-  </script>
+
+    const data = await response.json();
+
+    if (!data.venues) {
+      status.innerText = "Something went wrong.";
+      return;
+    }
+
+    status.innerText = "";
+
+    data.venues.forEach((venue) => {
+      const div = document.createElement("div");
+      div.className = "venue";
+      div.innerHTML = `
+        <h3>${venue.name}</h3>
+        <div class="meta">${venue.neighborhood} · Capacity: ${venue.capacity}</div>
+        <div>${venue.why}</div>
+      `;
+      results.appendChild(div);
+    });
+
+  } catch {
+    status.innerText = "Error connecting to server.";
+  }
+});
+</script>
 
 </body>
 </html>
