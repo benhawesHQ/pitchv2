@@ -7,45 +7,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
-
     body {
       margin: 0;
-      font-family: 'Open Sans', sans-serif;
-      background: #0f0f12;
+      background: #000;
       color: white;
+      font-family: 'Open Sans', sans-serif;
     }
-
-    /* NAV */
-
-    .nav {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 30px 50px;
-      z-index: 10;
-    }
-
-    .logo {
-      font-family: 'Poppins', sans-serif;
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .logo span {
-      color: #ff4d00;
-    }
-
-    /* HERO */
 
     .hero {
       position: relative;
-      min-height: 100vh;
+      height: 80vh;
+      background: url('hero.jpg') center/cover no-repeat;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 120px 20px 80px;
-      background: url('crowd.jpg') center center / cover no-repeat;
     }
 
     .hero::after {
@@ -57,259 +32,135 @@
 
     .hero-content {
       position: relative;
-      max-width: 1000px;
-      text-align: center;
       z-index: 2;
-    }
-
-    .hero h1 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 60px;
-      line-height: 1.1;
-      margin-bottom: 25px;
-    }
-
-    .hero h1 span {
-      color: #ff4d00;
-    }
-
-    .hero p {
-      font-size: 20px;
+      text-align: center;
       max-width: 700px;
-      margin: 0 auto 50px;
-      opacity: 0.95;
+      padding: 20px;
     }
 
-    /* SEARCH PANEL */
-
-    .search-panel {
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(14px);
-      padding: 40px;
-      border-radius: 28px;
-      max-width: 850px;
-      margin: 0 auto;
-    }
-
-    input {
-      width: 100%;
-      padding: 16px;
-      border-radius: 14px;
-      border: none;
-      margin-bottom: 16px;
-      font-size: 16px;
-      background: rgba(255,255,255,0.12);
-      color: white;
-    }
-
-    input::placeholder {
-      color: rgba(255,255,255,0.7);
-    }
-
-    .section-label {
-      font-weight: 600;
-      margin: 20px 0 10px;
-      text-align: left;
-    }
-
-    .pill-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 48px;
       margin-bottom: 20px;
     }
 
-    .pill {
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.15);
-      cursor: pointer;
-      font-size: 14px;
-      transition: transform 0.2s ease;
+    .sub {
+      font-size: 18px;
+      opacity: 0.9;
+      margin-bottom: 30px;
     }
 
-    .pill:hover {
-      transform: translateY(-2px);
+    .search-box {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
     }
 
-    .pill.active {
-      background: #ff4d00;
+    input, select {
+      padding: 14px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
     }
 
     button {
-      width: 100%;
-      padding: 18px;
-      border-radius: 22px;
+      padding: 14px;
+      border-radius: 8px;
       border: none;
       font-weight: 600;
       font-size: 16px;
-      background: #ff4d00;
-      color: white;
+      background: linear-gradient(90deg,#ff5f6d,#ffc371);
       cursor: pointer;
     }
 
     button:hover {
-      transform: translateY(-2px);
+      opacity: 0.9;
     }
 
-    /* RESULTS */
-
-    .results-section {
-      background: #f5f1ec;
-      color: #1f1611;
-      padding: 100px 20px;
+    .results {
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: auto;
     }
 
-    .results-container {
-      max-width: 1000px;
-      margin: 0 auto;
+    .card {
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
     }
 
-    .venue-card {
-      background: white;
-      padding: 25px;
-      border-radius: 20px;
-      margin-bottom: 25px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.07);
-    }
-
-    .venue-name {
+    .card h3 {
+      margin-top: 0;
       font-family: 'Poppins', sans-serif;
-      font-size: 22px;
-      margin-bottom: 10px;
     }
 
-    .contact-stack {
+    .stack {
       margin-top: 15px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .contact-stack a {
-      background: #1f1611;
-      color: white;
-      padding: 8px 14px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-size: 13px;
-    }
-
-    .contact-stack a:hover {
-      background: #ff4d00;
-    }
-
-    /* FOOTER */
-
-    .site-footer {
-      background: #0f0f12;
-      padding: 60px 20px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .footer-inner {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 30px;
-    }
-
-    .footer-logo {
-      font-family: 'Poppins', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .footer-logo span {
-      color: #ff4d00;
-    }
-
-    .footer-links {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
-    .footer-links a {
-      color: white;
+    .stack a {
+      color: #ffc371;
       text-decoration: none;
+    }
+
+    footer {
+      padding: 40px 20px;
+      background: #111;
+      text-align: center;
+      font-size: 14px;
       opacity: 0.8;
     }
 
-    .footer-links a:hover {
-      opacity: 1;
+    @media(max-width: 768px) {
+      h1 { font-size: 32px; }
     }
-
   </style>
 </head>
 
 <body>
 
-<div class="nav">
-  <div class="logo">Pitch<span>.</span></div>
-</div>
-
-<section class="hero">
-  <div class="hero-content">
-    <h1>
-      Stop searching.<br>
-      Start <span>reaching out.</span>
-    </h1>
-    <p>
-      Pitch helps indie artists quickly find real venues so you can spend less time digging and more time sending emails that move your show forward.
-    </p>
-
-    <div class="search-panel">
-
-      <input id="city" placeholder="🌎 City (SF, NYC, Chicago…)" />
-      <input id="capacity" placeholder="👥 Audience size (ex: 75)" />
-
-      <div class="section-label">🎭 Genre</div>
-      <div class="pill-group" id="genreGroup">
-        <div class="pill">🎸 Rock</div>
-        <div class="pill">🎤 Cabaret</div>
-        <div class="pill">😂 Comedy</div>
-        <div class="pill">🎶 Indie</div>
-        <div class="pill">🎼 Acoustic</div>
+  <div class="hero">
+    <div class="hero-content">
+      <h1>🎸 Find venues faster.</h1>
+      <div class="sub">
+        Stop digging through old Reddit threads.  
+        Start reaching out to real venues. 🚀
       </div>
 
-      <div class="section-label">✨ Priorities</div>
-      <div class="pill-group" id="filterGroup">
-        <div class="pill">🌈 Queer-owned</div>
-        <div class="pill">✊🏾 Black-owned</div>
-        <div class="pill">⚡ Most likely to reply</div>
+      <div class="search-box">
+        <input id="city" placeholder="City (SF, San Francisco, NYC, etc)">
+        <select id="genre">
+          <option value="">Select vibe 🎶</option>
+          <option value="rock">Rock</option>
+          <option value="cabaret">Cabaret</option>
+          <option value="indie">Indie</option>
+          <option value="comedy">Comedy</option>
+        </select>
+
+        <label>
+          <input type="checkbox" id="likely"> Only show likely to reply 👍
+        </label>
+
+        <button onclick="search()">Search venues</button>
       </div>
-
-      <button onclick="searchVenues()">Find 15 Venues →</button>
-
-      <div id="status"></div>
     </div>
   </div>
-</section>
 
-<section class="results-section">
-  <div id="results" class="results-container"></div>
-</section>
+  <div class="results" id="results"></div>
 
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div>
-      <div class="footer-logo">Pitch<span>.</span></div>
-      <p>Created by Ben Hawes in NYC.</p>
-    </div>
+  <footer>
+    Created by Ben Hawes in NYC<br><br>
+    @benhawesHQ<br>
+    www.benhawesHQ.com<br>
+    tiktok.com/@benhawesHQ<br>
+    ben@benhawesHQ.com
+  </footer>
 
-    <div class="footer-links">
-      <a href="https://www.benhawesHQ.com" target="_blank">www.benhawesHQ.com</a>
-      <a href="https://instagram.com/benhawesHQ" target="_blank">@benhawesHQ</a>
-      <a href="https://tiktok.com/@benhawesHQ" target="_blank">tiktok.com/@benhawesHQ</a>
-      <a href="mailto:ben@benhawesHQ.com">ben@benhawesHQ.com</a>
-    </div>
-  </div>
-</footer>
-
-<script src="script.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
