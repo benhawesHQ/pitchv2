@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 <title>Pitch – Venue Finder</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
@@ -135,6 +134,11 @@
     margin-bottom: 10px;
   }
 
+  .score {
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
 </style>
 </head>
 
@@ -144,16 +148,16 @@
 
   <h1>
     Find venues<br>
-    that actually <span class="accent">want you.</span>
+    that actually <span class="accent">reply.</span>
   </h1>
 
   <div class="subtext">
-    Stop cold emailing into the void. Pitch searches venues in any city and surfaces the rooms most likely to book you.
+    Stop relying on stale Reddit lists. Pitch surfaces 15 active venues so you can focus on planning the show.
   </div>
 
   <div class="card">
 
-    <h2>Find your next gig</h2>
+    <h2>Find your next gig 🎶</h2>
 
     <form id="searchForm">
       <input type="text" id="city" placeholder="City" required>
@@ -162,8 +166,7 @@
       <div class="filters">
         <div class="pill" data-filter="blackOwned">✊🏾 Black-owned</div>
         <div class="pill" data-filter="queerFriendly">🌈 Queer-friendly</div>
-        <div class="pill" data-filter="topLikely">🔥 Most likely fit</div>
-        <div class="pill" data-filter="intimate">🎤 20–50 seats</div>
+        <div class="pill" data-filter="intimate">🎤 20–150 cap rooms</div>
       </div>
 
       <button type="submit">Find venues →</button>
@@ -194,7 +197,7 @@ pills.forEach(pill => {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  status.innerText = "Searching...";
+  status.innerText = "Searching active venues...";
   results.innerHTML = "";
 
   const city = document.getElementById("city").value;
@@ -224,9 +227,22 @@ form.addEventListener("submit", async (e) => {
       const div = document.createElement("div");
       div.className = "venue";
       div.innerHTML = `
-        <h3>${venue.name}</h3>
-        <div class="meta">${venue.neighborhood} · Capacity: ${venue.capacity}</div>
-        <div>${venue.why}</div>
+        <h3>🎤 ${venue.name}</h3>
+        <div class="meta">
+          📍 ${venue.neighborhood} · ${venue.capacity}
+        </div>
+        <div class="score">
+          🔥 Reply Likelihood: ${venue.replyLikelihood}%
+        </div>
+        <div style="margin-bottom:6px;">
+          ⚡ ${venue.activitySignal}
+        </div>
+        <div style="margin-bottom:6px;">
+          🎶 ${venue.whyThisFits}
+        </div>
+        <div style="color:#F04A00; font-weight:600;">
+          💡 ${venue.bookingTip}
+        </div>
       `;
       results.appendChild(div);
     });
