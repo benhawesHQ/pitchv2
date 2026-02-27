@@ -2,78 +2,128 @@
 <html>
 <head>
   <title>Pitch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
-      background: #f4efe9;
       font-family: 'Inter', sans-serif;
-      color: #2b1d14;
+      background: #f5f1ec;
+      color: #1f1611;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 80px auto;
-      padding: 40px;
+    /* NAV */
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 40px;
+      font-weight: 600;
     }
 
-    h1 {
+    .logo {
       font-family: 'Poppins', sans-serif;
-      font-size: 54px;
-      line-height: 1.1;
-      margin-bottom: 12px;
+      font-size: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .logo span {
+      color: #ff4d00;
+    }
+
+    /* HERO */
+
+    .hero {
+      padding: 120px 24px 80px 24px;
+      text-align: center;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 72px;
+      line-height: 1.05;
+      margin: 0 0 20px 0;
     }
 
     .highlight {
       color: #ff4d00;
     }
 
-    .sub {
-      font-size: 18px;
-      color: #6a5d55;
-      margin-bottom: 40px;
+    .hero p {
+      font-size: 22px;
+      color: #6b5f57;
+      max-width: 650px;
+      margin: 0 auto 50px auto;
+    }
+
+    /* SEARCH PANEL */
+
+    .search-wrapper {
+      background: white;
+      padding: 40px;
+      border-radius: 32px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.07);
+      max-width: 900px;
+      margin: 0 auto 120px auto;
+    }
+
+    .search-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
 
     input {
-      width: 100%;
-      padding: 16px;
-      border-radius: 16px;
+      padding: 20px;
+      border-radius: 20px;
       border: none;
-      background: #e9e2da;
+      background: #f1ebe4;
       font-size: 16px;
-      margin-bottom: 20px;
+    }
+
+    .section-label {
+      font-weight: 600;
+      margin: 30px 0 10px 0;
     }
 
     .pill-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 24px;
+      gap: 14px;
     }
 
     .pill {
-      padding: 10px 16px;
+      padding: 10px 20px;
       border-radius: 999px;
-      background: #e9e2da;
+      background: #f1ebe4;
       cursor: pointer;
-      font-weight: 500;
       transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .pill:hover {
+      transform: translateY(-2px);
     }
 
     .pill.active {
       background: #ff4d00;
       color: white;
+      box-shadow: 0 8px 20px rgba(255,77,0,0.3);
     }
 
     button {
+      width: 100%;
+      margin-top: 40px;
+      padding: 24px;
+      border-radius: 30px;
+      border: none;
       background: #ff4d00;
       color: white;
-      border: none;
-      padding: 18px;
-      width: 100%;
-      border-radius: 20px;
       font-size: 18px;
       font-weight: 600;
       cursor: pointer;
@@ -81,14 +131,65 @@
     }
 
     button:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(255,77,0,0.4);
+    }
+
+    /* RESULTS */
+
+    .results {
+      max-width: 1000px;
+      margin: 0 auto 120px auto;
+      padding: 0 24px;
+    }
+
+    .venue-card {
+      background: white;
+      padding: 32px;
+      border-radius: 28px;
+      margin-bottom: 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+      transition: all 0.25s ease;
+    }
+
+    .venue-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.08);
+    }
+
+    .venue-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    .contact-stack {
+      margin-top: 20px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .contact-stack a {
+      background: #1f1611;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .contact-stack a:hover {
+      background: #ff4d00;
     }
 
     .loading {
       text-align: center;
-      margin: 40px 0;
       font-size: 22px;
-      animation: pulse 1s infinite alternate;
+      margin: 80px 0;
+      animation: pulse 1.2s infinite alternate;
     }
 
     @keyframes pulse {
@@ -96,35 +197,18 @@
       to { opacity: 1; }
     }
 
-    .venue-card {
-      background: white;
-      padding: 24px;
-      border-radius: 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
-    }
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 44px;
+      }
 
-    .venue-name {
-      font-family: 'Poppins', sans-serif;
-      font-size: 22px;
-      margin-bottom: 8px;
-    }
+      .search-grid {
+        grid-template-columns: 1fr;
+      }
 
-    .contact-stack {
-      margin-top: 16px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .contact-stack a {
-      background: #ff4d00;
-      color: white;
-      padding: 10px 14px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
+      .search-wrapper {
+        padding: 28px;
+      }
     }
 
   </style>
@@ -132,20 +216,27 @@
 
 <body>
 
-<div class="container">
+<div class="nav">
+  <div class="logo">Pitch<span>.</span></div>
+</div>
 
+<section class="hero">
   <h1>
-    Find venues that actually <span class="highlight">reply.</span>
+    Find venues that <span class="highlight">actually reply.</span>
   </h1>
+  <p>
+    Pitch replaces stale Reddit lists with real, active rooms so you can focus on building the show.
+  </p>
+</section>
 
-  <div class="sub">
-    Stop digging through old Reddit lists. Focus on building the show.
+<section class="search-wrapper">
+
+  <div class="search-grid">
+    <input id="city" placeholder="City (SF, NYC, Chicago…)" />
+    <input id="capacity" placeholder="Audience size (ex: 80)" />
   </div>
 
-  <input id="city" placeholder="City (SF, San Fran, NYC...)" />
-  <input id="capacity" placeholder="Audience size (ex: 80)" />
-
-  <div style="font-weight:600;margin-bottom:8px;">Genre / vibe</div>
+  <div class="section-label">Genre / vibe</div>
   <div class="pill-group" id="genreGroup">
     <div class="pill">Rock</div>
     <div class="pill">Cabaret</div>
@@ -155,22 +246,21 @@
     <div class="pill">Experimental</div>
   </div>
 
-  <div style="font-weight:600;margin-bottom:8px;">Filters</div>
+  <div class="section-label">Priorities</div>
   <div class="pill-group" id="filterGroup">
     <div class="pill">Queer-owned</div>
     <div class="pill">Black-owned</div>
     <div class="pill">Most likely to reply</div>
   </div>
 
-  <button onclick="searchVenues()">Find venues →</button>
+  <button onclick="searchVenues()">Search 15 venues →</button>
 
-  <div id="status"></div>
-  <div id="results"></div>
+</section>
 
-</div>
+<div id="status"></div>
+<section id="results" class="results"></section>
 
 <script>
-
 let selectedGenre = "";
 let selectedFilters = [];
 
@@ -186,7 +276,6 @@ document.querySelectorAll("#filterGroup .pill").forEach(pill => {
   pill.addEventListener("click", () => {
     pill.classList.toggle("active");
     const value = pill.innerText;
-
     if (selectedFilters.includes(value)) {
       selectedFilters = selectedFilters.filter(f => f !== value);
     } else {
@@ -203,7 +292,7 @@ async function searchVenues() {
   const status = document.getElementById("status");
   const results = document.getElementById("results");
 
-  status.innerHTML = '<div class="loading">👏 Finding rooms that want you...</div>';
+  status.innerHTML = '<div class="loading">🎶 Finding rooms that want you…</div>';
   results.innerHTML = "";
 
   const response = await fetch("/api/search", {
@@ -227,7 +316,6 @@ async function searchVenues() {
   status.innerHTML = "";
 
   data.venues.forEach(v => {
-
     const card = document.createElement("div");
     card.className = "venue-card";
 
@@ -243,11 +331,9 @@ async function searchVenues() {
         ${v.phone ? `<a href="tel:${v.phone}">Call</a>` : ""}
       </div>
     `;
-
     results.appendChild(card);
   });
 }
-
 </script>
 
 </body>
