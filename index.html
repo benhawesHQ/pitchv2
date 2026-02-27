@@ -8,132 +8,147 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-  body {
-    margin: 0;
-    background: #F3EFE7;
-    font-family: 'Open Sans', sans-serif;
-    color: #2A1F16;
-  }
+body {
+  margin: 0;
+  background: #F3EFE7;
+  font-family: 'Open Sans', sans-serif;
+  color: #2A1F16;
+}
 
-  .wrapper {
-    max-width: 1000px;
-    margin: 80px auto;
-    padding: 0 40px;
-  }
+.wrapper {
+  max-width: 1000px;
+  margin: 80px auto;
+  padding: 0 40px;
+}
 
-  h1 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 64px;
-    line-height: 1.05;
-    margin: 0 0 20px 0;
-  }
+h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 64px;
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
 
-  .accent {
-    color: #F04A00;
-  }
+.accent { color: #F04A00; }
 
-  .subtext {
-    font-size: 18px;
-    max-width: 600px;
-    color: #5A5147;
-    margin-bottom: 60px;
-  }
+.subtext {
+  font-size: 18px;
+  max-width: 600px;
+  color: #5A5147;
+  margin-bottom: 60px;
+}
 
-  .card {
-    background: #F8F5EF;
-    padding: 50px;
-    border-radius: 28px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-  }
+.card {
+  background: #F8F5EF;
+  padding: 50px;
+  border-radius: 28px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
 
-  input {
-    width: 100%;
-    padding: 16px;
-    margin-bottom: 20px;
-    border-radius: 14px;
-    border: 1px solid #E2DBD1;
-    font-size: 16px;
-    background: #EFE9DF;
-  }
+input, textarea {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 14px;
+  border: 1px solid #E2DBD1;
+  font-size: 16px;
+  background: #EFE9DF;
+  resize: none;
+}
 
-  input:focus {
-    outline: none;
-    border-color: #F04A00;
-  }
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #F04A00;
+}
 
-  button {
-    width: 100%;
-    padding: 20px;
-    border-radius: 18px;
-    border: none;
-    font-family: 'Poppins', sans-serif;
-    font-size: 18px;
-    background: #F04A00;
-    color: white;
-    cursor: pointer;
-  }
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
 
-  button:hover {
-    opacity: 0.9;
-  }
+.pill {
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #EFE9DF;
+  border: 1px solid #E2DBD1;
+  cursor: pointer;
+  font-size: 14px;
+}
 
-  #status {
-    margin-top: 20px;
-    font-size: 15px;
-    text-align: center;
-  }
+.pill.active {
+  background: #F04A00;
+  color: white;
+  border-color: #F04A00;
+}
 
-  .loading {
-    font-size: 24px;
-    animation: bounce 1s infinite;
-  }
+button {
+  width: 100%;
+  padding: 20px;
+  border-radius: 18px;
+  border: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  background: #F04A00;
+  color: white;
+  cursor: pointer;
+}
 
-  @keyframes bounce {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
+button:hover { opacity: 0.9; }
 
-  #results {
-    margin-top: 40px;
-  }
+#status {
+  margin-top: 20px;
+  text-align: center;
+}
 
-  .venue {
-    padding: 24px;
-    background: white;
-    border-radius: 16px;
-    margin-bottom: 20px;
-    border: 1px solid #E2DBD1;
-  }
+.loading {
+  font-size: 26px;
+  animation: bounce 1s infinite;
+}
 
-  .venue h3 {
-    margin: 0 0 8px 0;
-    font-family: 'Poppins', sans-serif;
-  }
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
 
-  .meta {
-    font-size: 14px;
-    color: #5A5147;
-    margin-bottom: 8px;
-  }
+#results { margin-top: 40px; }
 
-  .score {
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
+.venue {
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #E2DBD1;
+}
 
-  .actions {
-    margin-top: 14px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
+.venue h3 {
+  margin: 0 0 8px 0;
+  font-family: 'Poppins', sans-serif;
+}
 
-  .actions a {
-    text-decoration: none;
-    font-weight: 600;
-    color: #F04A00;
-  }
+.meta {
+  font-size: 14px;
+  color: #5A5147;
+  margin-bottom: 8px;
+}
 
+.score {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.actions a {
+  text-decoration: none;
+  font-weight: 600;
+  color: #F04A00;
+}
 </style>
 </head>
 
@@ -141,33 +156,56 @@
 
 <div class="wrapper">
 
-  <h1>
-    Find venues<br>
-    that actually <span class="accent">reply.</span>
-  </h1>
+<h1>
+Find venues<br>
+that actually <span class="accent">reply.</span>
+</h1>
 
-  <div class="subtext">
-    Pitch replaces stale Reddit lists with active venues so you can focus on planning the show.
-  </div>
+<div class="subtext">
+Pitch replaces stale Reddit lists with active venues so you can focus on planning the show.
+</div>
 
-  <div class="card">
+<div class="card">
 
-    <form id="searchForm">
-      <input type="text" id="city" placeholder="City" required>
-      <input type="number" id="audience" placeholder="Audience size" required>
-      <button type="submit">Find venues →</button>
-    </form>
+<form id="searchForm">
 
-    <div id="status"></div>
-    <div id="results"></div>
+<input type="text" id="city" placeholder="City" required>
+<input type="number" id="audience" placeholder="Audience size" required>
 
-  </div>
+<div class="filters">
+<div class="pill" data-filter="blackOwned">✊🏾 Black-owned</div>
+<div class="pill" data-filter="queerFriendly">🌈 Queer-friendly</div>
+<div class="pill" data-filter="intimate">🎤 Intimate rooms</div>
+<div class="pill" data-filter="highLikelihood">🔥 Only high reply likelihood</div>
+</div>
+
+<textarea id="extra" rows="3" placeholder="Anything else feel important? (All-ages? DIY vibe? Not a bar? Piano required?)"></textarea>
+
+<button type="submit">Find venues →</button>
+
+</form>
+
+<div id="status"></div>
+<div id="results"></div>
+
+</div>
 </div>
 
 <script>
 const form = document.getElementById("searchForm");
 const status = document.getElementById("status");
 const results = document.getElementById("results");
+const pills = document.querySelectorAll(".pill");
+
+let activeFilters = {};
+
+pills.forEach(pill => {
+  pill.addEventListener("click", () => {
+    const key = pill.dataset.filter;
+    activeFilters[key] = !activeFilters[key];
+    pill.classList.toggle("active");
+  });
+});
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -177,48 +215,48 @@ form.addEventListener("submit", async (e) => {
 
   const city = document.getElementById("city").value;
   const audience = document.getElementById("audience").value;
+  const extra = document.getElementById("extra").value;
 
-  try {
-    const response = await fetch("/api/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ city, audience })
-    });
+  const response = await fetch("/api/search", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      city,
+      audience,
+      extra,
+      ...activeFilters
+    })
+  });
 
-    const data = await response.json();
+  const data = await response.json();
 
-    status.innerHTML = "";
+  status.innerHTML = "";
 
-    data.venues.forEach((venue) => {
-      const div = document.createElement("div");
-      div.className = "venue";
-      div.innerHTML = `
-        <h3>🎤 ${venue.name}</h3>
-        <div class="meta">
-          📍 ${venue.neighborhood} · ${venue.capacity}
-        </div>
-        <div class="score">
-          🔥 Reply Likelihood: ${venue.replyLikelihood}%
-        </div>
-        <div>⚡ ${venue.activitySignal}</div>
-        <div style="margin-top:6px;">🎶 ${venue.whyThisFits}</div>
-        <div style="margin-top:6px; font-weight:600; color:#F04A00;">
-          💡 ${venue.bookingTip}
-        </div>
+  data.venues.forEach((venue) => {
+    if (activeFilters.highLikelihood && venue.replyLikelihood < 70) return;
 
-        <div class="actions">
-          ${venue.website ? `<a href="${venue.website}" target="_blank">🌐 Website</a>` : ""}
-          ${venue.instagram ? `<a href="${venue.instagram}" target="_blank">📸 Instagram</a>` : ""}
-          ${venue.email ? `<a href="mailto:${venue.email}">✉️ Email</a>` : ""}
-          ${venue.phone ? `<a href="tel:${venue.phone}">📞 Call</a>` : ""}
-        </div>
-      `;
-      results.appendChild(div);
-    });
+    const div = document.createElement("div");
+    div.className = "venue";
+    div.innerHTML = `
+      <h3>🎤 ${venue.name}</h3>
+      <div class="meta">📍 ${venue.neighborhood} · ${venue.capacity}</div>
+      <div class="score">🔥 Reply Likelihood: ${venue.replyLikelihood}%</div>
+      <div>⚡ ${venue.activitySignal}</div>
+      <div style="margin-top:6px;">🎶 ${venue.whyThisFits}</div>
+      <div style="margin-top:6px; font-weight:600; color:#F04A00;">
+        💡 ${venue.bookingTip}
+      </div>
 
-  } catch {
-    status.innerHTML = "Something went wrong.";
-  }
+      <div class="actions">
+        ${venue.website ? `<a href="${venue.website}" target="_blank">🌐 Website</a>` : ""}
+        ${venue.instagram ? `<a href="${venue.instagram}" target="_blank">📸 Instagram</a>` : ""}
+        ${venue.email ? `<a href="mailto:${venue.email}">✉️ Email</a>` : ""}
+        ${venue.phone ? `<a href="tel:${venue.phone}">📞 Call</a>` : ""}
+      </div>
+    `;
+    results.appendChild(div);
+  });
+
 });
 </script>
 
