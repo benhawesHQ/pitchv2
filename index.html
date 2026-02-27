@@ -4,7 +4,6 @@
   <title>Pitch</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
@@ -14,7 +13,6 @@
       font-family: 'Open Sans', sans-serif;
       background: #0f0f12;
       color: white;
-      overflow-x: hidden;
     }
 
     /* NAV */
@@ -25,17 +23,13 @@
       left: 0;
       width: 100%;
       padding: 30px 50px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       z-index: 10;
     }
 
     .logo {
       font-family: 'Poppins', sans-serif;
-      font-weight: 700;
       font-size: 22px;
-      letter-spacing: 1px;
+      font-weight: 700;
     }
 
     .logo span {
@@ -50,15 +44,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 120px 20px 80px 20px;
-      background: url('https://images.unsplash.com/photo-people-watching-band-performing-on-stage-QmX5lw8StoQ?auto=format&fit=crop&w=2000&q=80') center center / cover no-repeat;
+      padding: 120px 20px 80px;
+      background: url('crowd.jpg') center center / cover no-repeat;
     }
 
     .hero::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.65);
     }
 
     .hero-content {
@@ -70,9 +64,9 @@
 
     .hero h1 {
       font-family: 'Poppins', sans-serif;
-      font-size: 68px;
-      line-height: 1.05;
-      margin-bottom: 30px;
+      font-size: 60px;
+      line-height: 1.1;
+      margin-bottom: 25px;
     }
 
     .hero h1 span {
@@ -80,61 +74,58 @@
     }
 
     .hero p {
-      font-size: 22px;
+      font-size: 20px;
+      max-width: 700px;
+      margin: 0 auto 50px;
       opacity: 0.95;
-      margin-bottom: 60px;
-      max-width: 750px;
-      margin-left: auto;
-      margin-right: auto;
     }
 
     /* SEARCH PANEL */
 
     .search-panel {
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(18px);
-      padding: 45px;
-      border-radius: 30px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(14px);
+      padding: 40px;
+      border-radius: 28px;
       max-width: 850px;
       margin: 0 auto;
     }
 
     input {
       width: 100%;
-      padding: 18px;
-      border-radius: 16px;
+      padding: 16px;
+      border-radius: 14px;
       border: none;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       font-size: 16px;
       background: rgba(255,255,255,0.12);
       color: white;
     }
 
     input::placeholder {
-      color: rgba(255,255,255,0.6);
+      color: rgba(255,255,255,0.7);
     }
 
     .section-label {
       font-weight: 600;
-      margin: 25px 0 12px;
+      margin: 20px 0 10px;
       text-align: left;
     }
 
     .pill-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 20px;
     }
 
     .pill {
-      padding: 10px 18px;
+      padding: 8px 16px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.15);
       cursor: pointer;
-      transition: transform 0.2s ease;
       font-size: 14px;
+      transition: transform 0.2s ease;
     }
 
     .pill:hover {
@@ -147,15 +138,14 @@
 
     button {
       width: 100%;
-      padding: 20px;
-      border-radius: 25px;
+      padding: 18px;
+      border-radius: 22px;
       border: none;
       font-weight: 600;
-      font-size: 18px;
+      font-size: 16px;
       background: #ff4d00;
       color: white;
       cursor: pointer;
-      transition: transform 0.2s ease;
     }
 
     button:hover {
@@ -167,7 +157,7 @@
     .results-section {
       background: #f5f1ec;
       color: #1f1611;
-      padding: 120px 20px;
+      padding: 100px 20px;
     }
 
     .results-container {
@@ -177,38 +167,32 @@
 
     .venue-card {
       background: white;
-      padding: 30px;
-      border-radius: 24px;
-      margin-bottom: 30px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.07);
-      transition: transform 0.25s ease;
-    }
-
-    .venue-card:hover {
-      transform: translateY(-4px);
+      padding: 25px;
+      border-radius: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.07);
     }
 
     .venue-name {
       font-family: 'Poppins', sans-serif;
-      font-size: 24px;
+      font-size: 22px;
       margin-bottom: 10px;
     }
 
     .contact-stack {
-      margin-top: 20px;
+      margin-top: 15px;
       display: flex;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     .contact-stack a {
       background: #1f1611;
       color: white;
-      padding: 10px 16px;
-      border-radius: 12px;
+      padding: 8px 14px;
+      border-radius: 10px;
       text-decoration: none;
-      font-size: 14px;
-      transition: background 0.2s ease;
+      font-size: 13px;
     }
 
     .contact-stack a:hover {
@@ -219,7 +203,7 @@
 
     .site-footer {
       background: #0f0f12;
-      padding: 80px 20px;
+      padding: 60px 20px;
       border-top: 1px solid rgba(255,255,255,0.08);
     }
 
@@ -229,12 +213,12 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 40px;
+      gap: 30px;
     }
 
     .footer-logo {
       font-family: 'Poppins', sans-serif;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
     }
 
@@ -242,36 +226,20 @@
       color: #ff4d00;
     }
 
-    .footer-brand p {
-      margin-top: 10px;
-      opacity: 0.7;
-    }
-
     .footer-links {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .footer-links a {
       color: white;
       text-decoration: none;
       opacity: 0.8;
-      transition: opacity 0.2s ease;
     }
 
     .footer-links a:hover {
       opacity: 1;
-    }
-
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 42px;
-      }
-
-      .search-panel {
-        padding: 25px;
-      }
     }
 
   </style>
@@ -290,30 +258,32 @@
       Start <span>reaching out.</span>
     </h1>
     <p>
-      Pitch helps you quickly find real venues in your city so you can spend less time digging and more time sending the emails that move your show forward.
+      Pitch helps indie artists quickly find real venues so you can spend less time digging and more time sending emails that move your show forward.
     </p>
 
     <div class="search-panel">
-      <input id="city" placeholder="City (SF, NYC, Chicago…)" />
-      <input id="capacity" placeholder="Audience size (ex: 75)" />
 
-      <div class="section-label">Genre</div>
+      <input id="city" placeholder="🌎 City (SF, NYC, Chicago…)" />
+      <input id="capacity" placeholder="👥 Audience size (ex: 75)" />
+
+      <div class="section-label">🎭 Genre</div>
       <div class="pill-group" id="genreGroup">
-        <div class="pill">Rock</div>
-        <div class="pill">Cabaret</div>
-        <div class="pill">Comedy</div>
-        <div class="pill">Indie</div>
-        <div class="pill">Acoustic</div>
+        <div class="pill">🎸 Rock</div>
+        <div class="pill">🎤 Cabaret</div>
+        <div class="pill">😂 Comedy</div>
+        <div class="pill">🎶 Indie</div>
+        <div class="pill">🎼 Acoustic</div>
       </div>
 
-      <div class="section-label">Priorities</div>
+      <div class="section-label">✨ Priorities</div>
       <div class="pill-group" id="filterGroup">
-        <div class="pill">Queer-owned</div>
-        <div class="pill">Black-owned</div>
-        <div class="pill">Most likely to reply</div>
+        <div class="pill">🌈 Queer-owned</div>
+        <div class="pill">✊🏾 Black-owned</div>
+        <div class="pill">⚡ Most likely to reply</div>
       </div>
 
       <button onclick="searchVenues()">Find 15 Venues →</button>
+
       <div id="status"></div>
     </div>
   </div>
@@ -325,7 +295,7 @@
 
 <footer class="site-footer">
   <div class="footer-inner">
-    <div class="footer-brand">
+    <div>
       <div class="footer-logo">Pitch<span>.</span></div>
       <p>Created by Ben Hawes in NYC.</p>
     </div>
