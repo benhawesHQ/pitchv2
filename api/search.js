@@ -5,8 +5,30 @@ export default async function handler(req, res) {
 
   try {
     const body = req.body || {};
+    const city = body.city || "Utah";
+    const audience = body.audience || "";
 
-    const prompt = `Return JSON with a list of venues in ${body.city}`;
+    const prompt = `
+Return ONLY valid JSON.
+No explanation.
+No markdown.
+No backticks.
+
+Format:
+{
+  "venues": [
+    {
+      "name": "Venue Name",
+      "location": "Neighborhood or area",
+      "capacity": "Approx capacity",
+      "why": "Why it fits this artist"
+    }
+  ]
+}
+
+City: ${city}
+Audience size: ${audience}
+`;
 
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
@@ -20,16 +42,23 @@ export default async function handler(req, res) {
       })
     });
 
-    const raw = await response.text();
+    const data = await response.json();
 
-    return res.status(200).json({
-      openaiStatus: response.status,
-      rawResponse: raw
-    });
+    const text = data.output?.[0]?.content?.[0]?.text || "";
+
+    const cleaned = text
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    const parsed = JSON.parse(cleaned);
+
+    return res.status(200).json(parsed);
 
   } catch (error) {
     return res.status(500).json({
-      crash: error.message
+      error: "Parsing or OpenAI error",
+      details: error.message
     });
   }
 }
