@@ -4,30 +4,38 @@
   <title>Pitch</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
+
     body {
       margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: #f5f1ec;
-      color: #1f1611;
+      font-family: 'Open Sans', sans-serif;
+      background: #0f0f12;
+      color: white;
+      overflow-x: hidden;
     }
 
     /* NAV */
 
     .nav {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 30px 50px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 24px 40px;
-      font-weight: 600;
+      z-index: 10;
     }
 
     .logo {
       font-family: 'Poppins', sans-serif;
-      font-size: 20px;
-      letter-spacing: 0.5px;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: 1px;
     }
 
     .logo span {
@@ -37,73 +45,105 @@
     /* HERO */
 
     .hero {
-      padding: 120px 24px 80px 24px;
-      text-align: center;
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 20px 80px 20px;
+      background: #0f0f12;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('rainbow-paper.jpg') center center / cover no-repeat;
+      opacity: 0.25;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(15,15,18,0.95), rgba(15,15,18,0.85));
+    }
+
+    .hero-content {
+      position: relative;
       max-width: 1000px;
-      margin: 0 auto;
+      text-align: center;
+      z-index: 2;
     }
 
     .hero h1 {
       font-family: 'Poppins', sans-serif;
       font-size: 72px;
       line-height: 1.05;
-      margin: 0 0 20px 0;
+      margin-bottom: 30px;
     }
 
-    .highlight {
+    .hero h1 span {
       color: #ff4d00;
     }
 
     .hero p {
       font-size: 22px;
-      color: #6b5f57;
-      max-width: 650px;
-      margin: 0 auto 50px auto;
+      opacity: 0.9;
+      margin-bottom: 60px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     /* SEARCH PANEL */
 
-    .search-wrapper {
-      background: white;
-      padding: 40px;
-      border-radius: 32px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.07);
-      max-width: 900px;
-      margin: 0 auto 120px auto;
-    }
-
-    .search-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
+    .search-panel {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(20px);
+      padding: 45px;
+      border-radius: 30px;
+      box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+      max-width: 850px;
+      margin: 0 auto;
     }
 
     input {
-      padding: 20px;
-      border-radius: 20px;
+      width: 100%;
+      padding: 18px;
+      border-radius: 16px;
       border: none;
-      background: #f1ebe4;
+      margin-bottom: 18px;
       font-size: 16px;
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    input::placeholder {
+      color: rgba(255,255,255,0.6);
     }
 
     .section-label {
       font-weight: 600;
-      margin: 30px 0 10px 0;
+      margin: 25px 0 12px;
+      text-align: left;
     }
 
     .pill-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
+      margin-bottom: 20px;
+      justify-content: flex-start;
     }
 
     .pill {
-      padding: 10px 20px;
+      padding: 10px 18px;
       border-radius: 999px;
-      background: #f1ebe4;
+      background: rgba(255,255,255,0.1);
       cursor: pointer;
-      transition: all 0.2s ease;
-      font-weight: 500;
+      transition: all 0.25s ease;
+      font-size: 14px;
     }
 
     .pill:hover {
@@ -112,72 +152,73 @@
 
     .pill.active {
       background: #ff4d00;
-      color: white;
-      box-shadow: 0 8px 20px rgba(255,77,0,0.3);
+      box-shadow: 0 0 20px rgba(255,77,0,0.5);
     }
 
     button {
       width: 100%;
-      margin-top: 40px;
-      padding: 24px;
-      border-radius: 30px;
+      padding: 20px;
+      border-radius: 25px;
       border: none;
+      font-weight: 600;
+      font-size: 18px;
       background: #ff4d00;
       color: white;
-      font-size: 18px;
-      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
     }
 
     button:hover {
       transform: translateY(-3px);
-      box-shadow: 0 15px 40px rgba(255,77,0,0.4);
+      box-shadow: 0 20px 60px rgba(255,77,0,0.6);
     }
 
     /* RESULTS */
 
-    .results {
+    .results-section {
+      background: #f5f1ec;
+      color: #1f1611;
+      padding: 120px 20px;
+    }
+
+    .results-container {
       max-width: 1000px;
-      margin: 0 auto 120px auto;
-      padding: 0 24px;
+      margin: 0 auto;
     }
 
     .venue-card {
       background: white;
-      padding: 32px;
-      border-radius: 28px;
-      margin-bottom: 32px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+      padding: 30px;
+      border-radius: 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.07);
       transition: all 0.25s ease;
     }
 
     .venue-card:hover {
       transform: translateY(-6px);
-      box-shadow: 0 30px 90px rgba(0,0,0,0.08);
     }
 
     .venue-name {
       font-family: 'Poppins', sans-serif;
-      font-size: 26px;
-      margin-bottom: 8px;
+      font-size: 24px;
+      margin-bottom: 10px;
     }
 
     .contact-stack {
       margin-top: 20px;
       display: flex;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
     .contact-stack a {
       background: #1f1611;
       color: white;
-      padding: 12px 18px;
-      border-radius: 14px;
+      padding: 10px 16px;
+      border-radius: 12px;
       text-decoration: none;
       font-size: 14px;
-      font-weight: 500;
       transition: all 0.2s ease;
     }
 
@@ -188,8 +229,8 @@
     .loading {
       text-align: center;
       font-size: 22px;
-      margin: 80px 0;
-      animation: pulse 1.2s infinite alternate;
+      margin-top: 50px;
+      animation: pulse 1s infinite alternate;
     }
 
     @keyframes pulse {
@@ -199,15 +240,15 @@
 
     @media (max-width: 768px) {
       .hero h1 {
-        font-size: 44px;
+        font-size: 42px;
       }
 
-      .search-grid {
-        grid-template-columns: 1fr;
+      .search-panel {
+        padding: 25px;
       }
 
-      .search-wrapper {
-        padding: 28px;
+      .nav {
+        padding: 20px;
       }
     }
 
@@ -221,120 +262,47 @@
 </div>
 
 <section class="hero">
-  <h1>
-    Find venues that <span class="highlight">actually reply.</span>
-  </h1>
-  <p>
-    Pitch replaces stale Reddit lists with real, active rooms so you can focus on building the show.
-  </p>
-</section>
+  <div class="hero-content">
+    <h1>
+      Build the show.<br>
+      We’ll find the <span>rooms.</span>
+    </h1>
+    <p>
+      Real venues. Real contacts. No outdated Reddit lists. Focus on the art.
+    </p>
 
-<section class="search-wrapper">
+    <div class="search-panel">
+      <input id="city" placeholder="City (SF, NYC, Chicago…)" />
+      <input id="capacity" placeholder="Audience size (ex: 75)" />
 
-  <div class="search-grid">
-    <input id="city" placeholder="City (SF, NYC, Chicago…)" />
-    <input id="capacity" placeholder="Audience size (ex: 80)" />
-  </div>
-
-  <div class="section-label">Genre / vibe</div>
-  <div class="pill-group" id="genreGroup">
-    <div class="pill">Rock</div>
-    <div class="pill">Cabaret</div>
-    <div class="pill">Indie Pop</div>
-    <div class="pill">Acoustic</div>
-    <div class="pill">Comedy</div>
-    <div class="pill">Experimental</div>
-  </div>
-
-  <div class="section-label">Priorities</div>
-  <div class="pill-group" id="filterGroup">
-    <div class="pill">Queer-owned</div>
-    <div class="pill">Black-owned</div>
-    <div class="pill">Most likely to reply</div>
-  </div>
-
-  <button onclick="searchVenues()">Search 15 venues →</button>
-
-</section>
-
-<div id="status"></div>
-<section id="results" class="results"></section>
-
-<script>
-let selectedGenre = "";
-let selectedFilters = [];
-
-document.querySelectorAll("#genreGroup .pill").forEach(pill => {
-  pill.addEventListener("click", () => {
-    document.querySelectorAll("#genreGroup .pill").forEach(p => p.classList.remove("active"));
-    pill.classList.add("active");
-    selectedGenre = pill.innerText;
-  });
-});
-
-document.querySelectorAll("#filterGroup .pill").forEach(pill => {
-  pill.addEventListener("click", () => {
-    pill.classList.toggle("active");
-    const value = pill.innerText;
-    if (selectedFilters.includes(value)) {
-      selectedFilters = selectedFilters.filter(f => f !== value);
-    } else {
-      selectedFilters.push(value);
-    }
-  });
-});
-
-async function searchVenues() {
-
-  const city = document.getElementById("city").value;
-  const capacity = document.getElementById("capacity").value;
-
-  const status = document.getElementById("status");
-  const results = document.getElementById("results");
-
-  status.innerHTML = '<div class="loading">🎶 Finding rooms that want you…</div>';
-  results.innerHTML = "";
-
-  const response = await fetch("/api/search", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      city,
-      capacity,
-      genre: selectedGenre,
-      filters: selectedFilters,
-      extra: ""
-    })
-  });
-
-  if (!response.ok) {
-    status.innerHTML = "Search failed.";
-    return;
-  }
-
-  const data = await response.json();
-  status.innerHTML = "";
-
-  data.venues.forEach(v => {
-    const card = document.createElement("div");
-    card.className = "venue-card";
-
-    card.innerHTML = `
-      <div class="venue-name">${v.name}</div>
-      <div>${v.description}</div>
-      <div><strong>Capacity:</strong> ${v.capacity || "Unknown"}</div>
-
-      <div class="contact-stack">
-        ${v.website ? `<a href="${v.website}" target="_blank">Website</a>` : ""}
-        ${v.instagram ? `<a href="${v.instagram}" target="_blank">Instagram</a>` : ""}
-        ${v.email ? `<a href="mailto:${v.email}">Email</a>` : ""}
-        ${v.phone ? `<a href="tel:${v.phone}">Call</a>` : ""}
+      <div class="section-label">Genre</div>
+      <div class="pill-group" id="genreGroup">
+        <div class="pill">Rock</div>
+        <div class="pill">Cabaret</div>
+        <div class="pill">Comedy</div>
+        <div class="pill">Indie</div>
+        <div class="pill">Acoustic</div>
       </div>
-    `;
-    results.appendChild(card);
-  });
-}
-</script>
+
+      <div class="section-label">Priorities</div>
+      <div class="pill-group" id="filterGroup">
+        <div class="pill">Queer-owned</div>
+        <div class="pill">Black-owned</div>
+        <div class="pill">Most likely to reply</div>
+      </div>
+
+      <button onclick="searchVenues()">Find 15 Venues →</button>
+
+      <div id="status"></div>
+    </div>
+  </div>
+</section>
+
+<section class="results-section">
+  <div id="results" class="results-container"></div>
+</section>
+
+<script src="script.js"></script>
 
 </body>
 </html>
