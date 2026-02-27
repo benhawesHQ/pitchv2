@@ -4,11 +4,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { city, audience, ...filters } = req.body;
+    const body = req.body || {};
 
-    const activeFilters = Object.keys(filters)
-      .filter(key => filters[key] === true)
-      .join(", ");
+    const city = body.city || "";
+    const audience = body.audience || "";
+    const blackOwned = body.blackOwned || false;
+    const queerFriendly = body.queerFriendly || false;
+    const intimate = body.intimate || false;
+    const extra = body.extra || "";
+
+    if (!city || !audience) {
+      return res.status(400).json({ error: "Missing city or audience" });
+    }
 
     const prompt = `
 You are helping an indie musician book shows.
@@ -20,7 +27,17 @@ Audience draw: ${audience} people.
 If audience is small (<150), prioritize 20–200 capacity rooms.
 If large (>1000), include larger venues.
 
-If filters are selected (${activeFilters}), respect them.
+Filters:
+- Black-owned: ${blackOwned}
+- Queer-friendly: ${queerFriendly}
+- Intimate rooms: ${intimate}
+
+If Black-owned is true, prioritize venues publicly identified as Black-owned.
+If Queer-friendly is true, prioritize venues publicly identified as queer-friendly.
+If Intimate is true, prioritize smaller capacity rooms.
+
+Additional artist notes:
+${extra}
 
 Return ONLY valid JSON.
 No markdown.
@@ -36,7 +53,7 @@ Format:
       "capacity": "Approx capacity range",
       "replyLikelihood": 1-100,
       "activitySignal": "Why they seem active recently",
-      "whyThisFits": "Why this venue makes sense",
+      "whyThisFits": "Why this venue matches the request",
       "bookingTip": "How to approach them",
       "instagram": "Instagram URL if known or null",
       "email": "Booking email if known or null",
@@ -81,7 +98,7 @@ Format:
 
     if (!parsed.venues || !Array.isArray(parsed.venues)) {
       return res.status(500).json({
-        error: "Invalid venue structure from AI"
+        error: "Invalid venue structure"
       });
     }
 
@@ -93,7 +110,7 @@ Format:
       name: v.name || "Unknown Venue",
       neighborhood: v.neighborhood || "—",
       capacity: v.capacity || "—",
-      replyLikelihood: v.replyLikelihood || 50,
+      replyLikelihood: typeof v.replyLikelihood === "number" ? v.replyLikelihood : 50,
       activitySignal: v.activitySignal || "",
       whyThisFits: v.whyThisFits || "",
       bookingTip: v.bookingTip || "",
