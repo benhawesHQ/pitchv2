@@ -9,7 +9,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Confetti CDN -->
+  <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
@@ -27,10 +27,44 @@
       font-family: 'Open Sans', sans-serif;
     }
 
+    /* NAV */
+
+    .nav {
+      position: absolute;
+      top: 20px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 3;
+    }
+
+    .logo {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .guide-btn {
+      background: var(--orange);
+      color: black;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* HERO */
+
     .hero {
       position: relative;
       background: url('https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
-      padding: 120px 20px 100px;
+      padding: 140px 20px 100px;
       text-align: center;
     }
 
@@ -88,6 +122,30 @@
       margin-bottom: 28px;
     }
 
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .pill {
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: var(--soft);
+      border: 1px solid #333;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.15s ease;
+    }
+
+    .pill.active {
+      background: var(--orange);
+      color: black;
+      border-color: var(--orange);
+      font-weight: 600;
+    }
+
     .segment {
       display: flex;
       background: var(--soft);
@@ -125,8 +183,9 @@
       background: var(--orange);
       color: black;
       cursor: pointer;
-      margin-top: 10px;
     }
+
+    /* RESULTS */
 
     .results {
       padding: 60px 20px;
@@ -148,7 +207,6 @@
       cursor: pointer;
       display: flex;
       justify-content: space-between;
-      align-items: center;
     }
 
     .venue-list {
@@ -167,6 +225,12 @@
 <body>
 
 <div class="hero">
+
+  <div class="nav">
+    <div class="logo">🎸 Pitch.io</div>
+    <a href="#" class="guide-btn">Guide to pitching shows</a>
+  </div>
+
   <div class="hero-content">
     <h1>Find venues that want to see you play.</h1>
     <div class="sub">Book more shows. Play more music.</div>
@@ -182,6 +246,23 @@
       <label id="cityLabel">City</label>
       <input id="cityInput" placeholder="Nashville" />
 
+      <label>Genre</label>
+      <div class="row" id="genreRow">
+        <div class="pill">🎸 Rock</div>
+        <div class="pill">🌙 Indie</div>
+        <div class="pill">🎷 Jazz</div>
+        <div class="pill">🎭 Cabaret</div>
+        <div class="pill">🎤 Comedy</div>
+        <div class="pill">✨ Pop</div>
+      </div>
+
+      <label>Audience size</label>
+      <input id="audience" placeholder="20-30" />
+
+      <div class="row">
+        <div class="pill" id="likelyToggle">Prioritize venues likely to reply</div>
+      </div>
+
       <button class="search-btn" id="searchBtn">Search venues</button>
 
     </div>
@@ -194,33 +275,60 @@
 
 let showType = "Single show";
 
-/* Toggle show type */
 document.querySelectorAll("#showTypeSegment .segment-option").forEach(btn => {
   btn.addEventListener("click", function() {
-    document.querySelectorAll("#showTypeSegment .segment-option").forEach(b => b.classList.remove("active"));
+
+    document.querySelectorAll("#showTypeSegment .segment-option")
+      .forEach(b => b.classList.remove("active"));
+
     this.classList.add("active");
     showType = this.innerText;
 
+    if (showType === "Single show") {
+
+      // 🎤 mic burst
+      confetti({
+        particleCount: 120,
+        spread: 70,
+        origin: { y: 0.6 },
+        shapes: ['text'],
+        shapeOptions: {
+          text: { value: '🎤', font: '30px serif' }
+        }
+      });
+
+      document.getElementById("cityLabel").innerText = "City";
+      document.getElementById("cityInput").placeholder = "Nashville";
+
+    }
+
     if (showType === "Multi-city") {
 
-      // 🎉 Confetti celebration
+      // 🎉 confetti celebration
       confetti({
-        particleCount: 150,
-        spread: 70,
+        particleCount: 160,
+        spread: 90,
         origin: { y: 0.6 }
       });
+
+      setTimeout(() => {
+        confetti({
+          particleCount: 80,
+          spread: 120,
+          origin: { y: 0.5 }
+        });
+      }, 200);
 
       document.getElementById("cityLabel").innerText = "Cities";
       document.getElementById("cityInput").placeholder = "Nashville, Chicago, NYC";
 
-    } else {
-      document.getElementById("cityLabel").innerText = "City";
-      document.getElementById("cityInput").placeholder = "Nashville";
     }
+
   });
 });
 
-/* Search */
+/* Search grouped results */
+
 document.getElementById("searchBtn").addEventListener("click", async function() {
 
   const input = document.getElementById("cityInput").value;
@@ -254,7 +362,6 @@ document.getElementById("searchBtn").addEventListener("click", async function() 
       header.querySelector("span:last-child").innerText = open ? "+" : "–";
     });
 
-    // Fetch venues per city
     try {
       const res = await fetch("/api/search", {
         method: "POST",
