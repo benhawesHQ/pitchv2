@@ -4,6 +4,9 @@
   <title>Pitch | Find Your Next Stage</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Guitar Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
@@ -37,7 +40,7 @@
     .logo{
       font-family:'Poppins';
       font-weight:800;
-      font-size:22px;
+      font-size:28px;
       letter-spacing:.5px;
     }
 
@@ -46,12 +49,13 @@
     }
 
     .guide-btn{
-      background:transparent;
-      border:1px solid var(--orange);
-      color:var(--orange);
-      padding:8px 14px;
+      background:var(--orange);
+      color:black;
+      border:none;
+      padding:10px 16px;
       border-radius:6px;
       font-family:'Poppins';
+      font-weight:600;
       cursor:pointer;
     }
 
@@ -59,7 +63,7 @@
 
     .hero{
       text-align:center;
-      padding:40px 20px 60px;
+      padding:30px 20px 50px;
       max-width:900px;
       margin:auto;
     }
@@ -124,12 +128,27 @@
       cursor:pointer;
     }
 
-    /* RESULTS */
+    /* RESULTS SECTION */
 
-    .results{
+    .results-wrapper{
       max-width:1000px;
       margin:60px auto;
       padding:0 20px;
+    }
+
+    .results-header{
+      font-family:'Poppins';
+      font-size:22px;
+      margin-bottom:8px;
+    }
+
+    .results-sub{
+      opacity:.7;
+      font-size:14px;
+      margin-bottom:25px;
+    }
+
+    .results{
       display:grid;
       gap:20px;
     }
@@ -199,6 +218,20 @@
       font-size:14px;
     }
 
+    /* SUPPORT NOTE */
+
+    .support-note{
+      margin-top:40px;
+      font-size:13px;
+      opacity:.7;
+      text-align:center;
+    }
+
+    .support-note strong{
+      color:var(--orange);
+      font-weight:600;
+    }
+
     /* LOADING OVERLAY */
 
     .loading-overlay{
@@ -247,12 +280,12 @@
 
       <div class="field">
         <label>City</label>
-        <input id="cityInput" placeholder="Nashville">
+        <input id="cityInput" placeholder="Brooklyn, Nashville, Austin">
       </div>
 
       <div class="field">
-        <label>Audience Size</label>
-        <input id="audienceInput" placeholder="40, 75, 100">
+        <label>Expected Audience</label>
+        <input id="audienceInput" placeholder="35, 80, 120">
       </div>
 
       <div class="field">
@@ -266,6 +299,7 @@
           <option value="5">5 venues</option>
           <option value="10" selected>10 venues</option>
           <option value="15">15 venues</option>
+          <option value="20">20 venues</option>
         </select>
       </div>
 
@@ -276,7 +310,26 @@
     </div>
   </div>
 
-  <div id="results" class="results"></div>
+  <div class="results-wrapper">
+
+    <div class="results-header">
+      Your short list of venues
+    </div>
+
+    <div class="results-sub">
+      Reach out to any that fit your vibe. Always verify details before booking.
+    </div>
+
+    <div id="results" class="results"></div>
+
+    <div class="support-note">
+      Pitch surfaces performance spaces based on research and current programming patterns.
+      <br>
+      <strong>Want live status checks and real-time verification?</strong>
+      Support the build by downloading the guide or joining the launch campaign.
+    </div>
+
+  </div>
 
   <div id="loadingOverlay" class="loading-overlay">
     <span>🎸 🎤</span>
