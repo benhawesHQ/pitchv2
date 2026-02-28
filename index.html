@@ -23,6 +23,7 @@
       background: var(--bg);
       color: white;
       font-family: 'Open Sans', sans-serif;
+      overflow-x: hidden;
     }
 
     /* HERO */
@@ -135,6 +136,8 @@
       font-weight: 600;
     }
 
+    /* SEARCH BUTTON */
+
     .search-btn {
       width: 100%;
       padding: 16px;
@@ -146,6 +149,57 @@
       background: var(--orange);
       color: black;
       cursor: pointer;
+      position: relative;
+      transition: transform 0.1s ease;
+    }
+
+    .search-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* LOADING OVERLAY */
+
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 999;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .notes {
+      font-size: 40px;
+      animation: float 1.5s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); opacity: 0.7; }
+      50% { transform: translateY(-10px); opacity: 1; }
+      100% { transform: translateY(0); opacity: 0.7; }
+    }
+
+    .loading-text {
+      margin-top: 16px;
+      font-size: 16px;
+      opacity: 0.8;
+    }
+
+    /* Guitar pop animation */
+
+    .guitar-pop {
+      position: absolute;
+      font-size: 22px;
+      animation: pop 0.5s ease forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 0; }
     }
 
   </style>
@@ -153,39 +207,44 @@
 
 <body>
 
-  <div class="hero">
-    <div class="hero-content">
+<div class="hero">
+  <div class="hero-content">
 
-      <h1>Find venues that want to see you play.</h1>
-      <div class="sub">Book more shows. Play more music.</div>
+    <h1>Find venues that want to see you play.</h1>
+    <div class="sub">Book more shows. Play more music.</div>
 
-      <div class="search-box">
+    <div class="search-box">
 
-        <label>City</label>
-        <input id="city" placeholder="Nashville, NYC, Chicago…" />
+      <label>City</label>
+      <input id="city" placeholder="Nashville, NYC, Chicago…" />
 
-        <label>Genre</label>
-        <div class="genre-row">
-          <div class="genre-btn">🎸 Rock</div>
-          <div class="genre-btn">🌙 Indie</div>
-          <div class="genre-btn">🎷 Jazz</div>
-          <div class="genre-btn">🎭 Cabaret</div>
-          <div class="genre-btn">🎤 Comedy</div>
-          <div class="genre-btn">✨ Pop</div>
-        </div>
-
-        <label>Audience size</label>
-        <input id="audience" placeholder="20–30" />
-
-        <div class="toggle-btn" id="likelyToggle">
-          Prioritize venues likely to reply
-        </div>
-
-        <button class="search-btn" onclick="searchVenues()">Search venues</button>
-
+      <label>Genre</label>
+      <div class="genre-row">
+        <div class="genre-btn">🎸 Rock</div>
+        <div class="genre-btn">🌙 Indie</div>
+        <div class="genre-btn">🎷 Jazz</div>
+        <div class="genre-btn">🎭 Cabaret</div>
+        <div class="genre-btn">🎤 Comedy</div>
+        <div class="genre-btn">✨ Pop</div>
       </div>
+
+      <label>Audience size</label>
+      <input id="audience" placeholder="20–30" />
+
+      <div class="toggle-btn" id="likelyToggle">
+        Prioritize venues likely to reply
+      </div>
+
+      <button class="search-btn" id="searchBtn">Search venues</button>
+
     </div>
   </div>
+</div>
+
+<div class="loading-overlay" id="loading">
+  <div class="notes">🎶 🎸 🎶</div>
+  <div class="loading-text">Finding venues…</div>
+</div>
 
 <script>
 
@@ -218,7 +277,7 @@ function normalizeAudience(input) {
   return input.toLowerCase();
 }
 
-async function searchVenues() {
+document.getElementById("searchBtn").addEventListener("click", async function(e) {
 
   const city = document.getElementById("city").value;
   const audienceRaw = document.getElementById("audience").value;
@@ -228,6 +287,18 @@ async function searchVenues() {
     alert("Enter a city.");
     return;
   }
+
+  // 🎸 Guitar pop
+  const guitar = document.createElement("div");
+  guitar.className = "guitar-pop";
+  guitar.innerText = "🎸";
+  guitar.style.left = e.offsetX + "px";
+  guitar.style.top = e.offsetY + "px";
+  this.appendChild(guitar);
+  setTimeout(() => guitar.remove(), 500);
+
+  // Show loading
+  document.getElementById("loading").style.display = "flex";
 
   const res = await fetch("/api/search", {
     method: "POST",
@@ -242,7 +313,11 @@ async function searchVenues() {
 
   const data = await res.json();
   console.log(data);
-}
+
+  // Hide loading
+  document.getElementById("loading").style.display = "none";
+
+});
 
 </script>
 
