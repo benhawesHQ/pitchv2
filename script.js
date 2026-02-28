@@ -1,5 +1,10 @@
 let allVenues = [];
 let visibleCount = 0;
+let factInterval;
+
+/* =========================
+   SEARCH
+========================= */
 
 async function searchVenues() {
   const city = document.getElementById("cityInput").value.trim();
@@ -28,7 +33,7 @@ async function searchVenues() {
       return;
     }
 
-    // Deduplicate by name
+    // Remove duplicates
     const unique = [];
     const names = new Set();
 
@@ -39,7 +44,6 @@ async function searchVenues() {
       }
     });
 
-    // Apply audience filtering
     allVenues = filterByAudience(unique, audience);
 
     visibleCount = count;
@@ -47,8 +51,9 @@ async function searchVenues() {
 
     document.getElementById("resultsWrapper").style.display = "block";
     document.getElementById("resultsSub").innerText =
-      `Live performance spaces in ${city} curated for an expected audience of ${audience || "varied sizes"}.`;
+      `Curated performance spaces in ${city}. We surface the venues — you make the ask.`;
 
+    await new Promise(resolve => setTimeout(resolve, 1500));
     hideLoading();
 
   } catch (err) {
@@ -58,34 +63,72 @@ async function searchVenues() {
   }
 }
 
+/* =========================
+   CAPACITY INTELLIGENCE
+========================= */
+
+function estimateVenueScale(v) {
+  const reviews = v.user_ratings_total || 0;
+  const name = v.name.toLowerCase();
+  const types = (v.types || []).join(" ").toLowerCase();
+
+  let base;
+
+  // Review baseline (proxy for scale)
+  if (reviews < 100) base = 25;
+  else if (reviews < 300) base = 60;
+  else if (reviews < 800) base = 150;
+  else if (reviews < 2000) base = 400;
+  else base = 900;
+
+  // Small signals
+  if (name.includes("improv")) base *= 0.6;
+  if (name.includes("studio")) base *= 0.6;
+  if (name.includes("comedy")) base *= 0.7;
+  if (name.includes("basement")) base *= 0.5;
+  if (types.includes("bar")) base *= 0.8;
+
+  // Large signals
+  if (name.includes("arena")) base *= 2;
+  if (name.includes("stadium")) base *= 2;
+  if (name.includes("opera")) base *= 1.5;
+  if (name.includes("civic")) base *= 1.4;
+  if (name.includes("theatre") && reviews > 800) base *= 1.5;
+
+  return Math.round(base);
+}
+
+function getFitLabel(estimated, requested) {
+  const diff = estimated - requested;
+
+  if (Math.abs(diff) <= requested * 0.4)
+    return { text: "🎯 Great fit", class: "fit-perfect" };
+
+  if (diff > 0)
+    return { text: "🏟 Larger space", class: "fit-large" };
+
+  return { text: "🔥 Intimate room", class: "fit-small" };
+}
+
 function filterByAudience(venues, audience) {
   const size = parseInt(audience);
+  if (!size) return venues;
 
-  if (!size || size > 80) return venues;
+  return venues
+    .map(v => {
+      const estimated = estimateVenueScale(v);
+      const matchScore = Math.abs(estimated - size);
+      const fit = getFitLabel(estimated, size);
 
-  const largeWords = [
-    "theatre","theater","arena","concert hall",
-    "stadium","music hall","center","centre"
-  ];
-
-  return venues.filter(v => {
-    const name = v.name.toLowerCase();
-    return !largeWords.some(word => name.includes(word));
-  });
+      return { ...v, estimated, matchScore, fit };
+    })
+    .sort((a, b) => a.matchScore - b.matchScore)
+    .filter(v => v.matchScore < size * 3);
 }
 
-function getLikelihood(v) {
-  const rating = v.rating || 0;
-  const reviews = v.user_ratings_total || 0;
-
-  if (rating >= 4.4 && reviews > 200)
-    return { text: "Likely to reply", class: "good" };
-
-  if (rating >= 4.0)
-    return { text: "Worth reaching out", class: "medium" };
-
-  return { text: "Less likely to reply", class: "low" };
-}
+/* =========================
+   RENDER
+========================= */
 
 function renderResults() {
   const container = document.getElementById("results");
@@ -94,10 +137,9 @@ function renderResults() {
   const slice = allVenues.slice(0, visibleCount);
 
   slice.forEach(v => {
-    const likelihood = getLikelihood(v);
-
     const card = document.createElement("div");
     card.className = "venue-card";
+
     card.innerHTML = `
       <img src="${v.photo || "https://via.placeholder.com/100"}"
            class="venue-image">
@@ -109,23 +151,22 @@ function renderResults() {
           ⭐ ${v.rating || "N/A"} (${v.user_ratings_total || 0})
         </div>
 
-        <a 
-          href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.address)}"
-          target="_blank"
-          class="venue-meta"
-        >
-          ${v.address}
-        </a>
-
-        <div class="badge ${likelihood.class}">
-          ${likelihood.text}
+        <div class="fit-badge ${v.fit.class}">
+          ${v.fit.text}
         </div>
 
-        <a href="${v.website || '#'}"
-           target="_blank"
-           class="see-venue-btn">
-          See Venue
-        </a>
+        <button class="address-btn"
+          onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.address)}','_blank')">
+          📍 View on Map
+        </button>
+
+        <div style="margin-top:10px;">
+          <a href="${v.website || '#'}"
+             target="_blank"
+             class="see-venue-btn">
+             See Venue →
+          </a>
+        </div>
       </div>
     `;
 
@@ -141,10 +182,34 @@ function showMore() {
   renderResults();
 }
 
+/* =========================
+   LOADING EXPERIENCE
+========================= */
+
 function showLoading() {
-  document.getElementById("loadingOverlay").classList.add("active");
+  const overlay = document.getElementById("loadingOverlay");
+  const lore = document.getElementById("loreText");
+
+  const facts = [
+    "🎸 Building your short list...",
+    "🎤 Lady Gaga played tiny rooms before arenas.",
+    "🎶 Ed Sheeran started in bars.",
+    "✨ Every big act begins small.",
+    "🎵 Great shows start with the right room."
+  ];
+
+  let i = 0;
+  lore.innerText = facts[i];
+
+  factInterval = setInterval(() => {
+    i = (i + 1) % facts.length;
+    lore.innerText = facts[i];
+  }, 1600);
+
+  overlay.classList.add("active");
 }
 
 function hideLoading() {
+  clearInterval(factInterval);
   document.getElementById("loadingOverlay").classList.remove("active");
 }
