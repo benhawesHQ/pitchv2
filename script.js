@@ -1,93 +1,151 @@
-async function searchVenues() {
+let allVenues = [];
+let displayedCount = 0;
 
-  const city = document.getElementById("cityInput").value;
-  const audience = document.getElementById("audienceInput").value;
-  const extra = document.getElementById("extraInput")?.value;
-  const count = document.getElementById("countSelect")?.value;
+const loreMoments = [
+  "One global superstar once played to 14 people in a bookstore.",
+  "A Grammy winner once passed out flyers outside their own show.",
+  "One arena headliner once drove 8 hours to perform for 20 guests.",
+  "A festival closer once lived in a van touring small bars.",
+  "A platinum artist once opened for free drink tickets.",
+  "One chart-topper once played unpaid weeknight gigs.",
+  "A stadium act once rehearsed in a basement with broken amps.",
+  "One global icon once performed for a birthday party crowd.",
+  "A touring legend once got rejected by 20 venues in a row.",
+  "One breakout artist once begged venues for stage time.",
+  "A headline act once played coffee shops for tips.",
+  "One superstar once built their fanbase 30 people at a time.",
+  "A festival headliner once cold-emailed venues for bookings.",
+  "One arena artist once performed for 12 friends and family.",
+  "A global pop icon once opened for a bar trivia night."
+];
 
-  if (!city) return;
+let loreIndex = 0;
+
+function getLore(){
+  const text = loreMoments[loreIndex];
+  loreIndex = (loreIndex + 1) % loreMoments.length;
+  return text;
+}
+
+function searchVenues(){
+  document.getElementById("resultsWrapper").style.display="block";
 
   const overlay = document.getElementById("loadingOverlay");
   overlay.classList.add("active");
 
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "";
+  document.getElementById("loreText").innerText = getLore();
 
-  try {
+  setTimeout(() => {
+    overlay.classList.remove("active");
+    generateResults();
+  }, 1800);
+}
 
-    const res = await fetch("/api/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ city, audience, extra, count })
-    });
+function generateResults(){
+  const results = document.getElementById("results");
+  results.innerHTML="";
+  displayedCount = 0;
 
-    const data = await res.json();
-
-    const primary = [];
-    const secondary = [];
-
-    data.forEach(v => {
-      if (v.replyClass === "reply-low") {
-        secondary.push(v);
-      } else {
-        primary.push(v);
-      }
-    });
-
-    function renderVenue(venue) {
-
-      const googleLink =
-        `https://www.google.com/search?q=${encodeURIComponent(venue.name + " " + city)}`;
-
-      return `
-        <div class="venue-card">
-          <div class="venue-header">
-            <div class="venue-name">
-              ${venue.emoji || "🎵"} ${venue.name}
-            </div>
-            <div class="booking-badge ${venue.replyClass}">
-              ${venue.replyLabel}
-            </div>
-          </div>
-
-          <div class="venue-location">
-            ${venue.neighborhood}, ${city}
-          </div>
-
-          <div class="venue-description">
-            ${venue.description}
-          </div>
-
-          <div style="font-size:13px; opacity:.7; margin-bottom:12px;">
-            Best fit: ${venue.bestFit || "Similar audience size"}
-          </div>
-
-          <a href="${googleLink}" target="_blank" class="see-venue-btn">
-            See Venue
-          </a>
-        </div>
-      `;
+  const sampleVenues = [
+    {
+      name:"The Sultan Room",
+      location:"Brooklyn, NY",
+      capacityMin:50,
+      capacityMax:150,
+      description:"Independent music venue above a Turkish restaurant with dedicated stage and ticketed shows.",
+      reply:"high"
+    },
+    {
+      name:"Union Hall",
+      location:"Park Slope, Brooklyn",
+      capacityMin:60,
+      capacityMax:140,
+      description:"Intimate downstairs performance room hosting comedy, music, and ticketed events.",
+      reply:"high"
+    },
+    {
+      name:"The Lost Church",
+      location:"San Francisco, CA",
+      capacityMin:30,
+      capacityMax:80,
+      description:"Listening room focused on original music with seated ticketed shows.",
+      reply:"medium"
+    },
+    {
+      name:"The Independent",
+      location:"San Francisco, CA",
+      capacityMin:150,
+      capacityMax:500,
+      description:"Established concert venue hosting national touring acts and ticketed shows.",
+      reply:"medium"
     }
+  ];
 
-    if (primary.length > 0) {
-      resultsDiv.innerHTML += primary.map(renderVenue).join("");
-    }
+  allVenues = sampleVenues;
 
-    if (secondary.length > 0) {
-      resultsDiv.innerHTML += `
-        <div style="margin-top:40px; font-family:Poppins; font-size:18px;">
-          Additional venues (lower reply likelihood)
+  showMore();
+}
+
+function showMore(){
+  const results = document.getElementById("results");
+  const moreBtn = document.getElementById("moreBtn");
+
+  const nextChunk = allVenues.slice(displayedCount, displayedCount + 5);
+
+  nextChunk.forEach(v => {
+    const badgeClass = v.reply==="high" ? "reply-high" :
+                       v.reply==="medium" ? "reply-medium" : "reply-low";
+
+    results.innerHTML += `
+      <div class="venue-card">
+        <div class="venue-header">
+          <div class="venue-name">${v.name}</div>
+          <div class="booking-badge ${badgeClass}">
+            ${v.reply==="high" ? "Likely to Reply" :
+              v.reply==="medium" ? "May Reply" : "Harder to Reach"}
+          </div>
         </div>
-        <div style="opacity:.7; margin-bottom:15px;">
-          These venues host music but may be slower to respond.
-        </div>
-      `;
-      resultsDiv.innerHTML += secondary.map(renderVenue).join("");
-    }
+        <div class="venue-location">${v.location}</div>
+        <div class="venue-description">${v.description}</div>
+        <a class="see-venue-btn" target="_blank"
+           href="https://www.google.com/search?q=${encodeURIComponent(v.name + " " + v.location)}">
+          See venue
+        </a>
+      </div>
+    `;
+  });
 
-  } catch (err) {
-    resultsDiv.innerHTML = "Error loading venues.";
+  displayedCount += 5;
+
+  if(displayedCount < allVenues.length){
+    moreBtn.style.display="block";
+  } else {
+    moreBtn.style.display="none";
   }
 
-  overlay.classList.remove("active");
+  launchConfetti();
+}
+
+function launchConfetti(){
+  for(let i=0;i<40;i++){
+    const confetti=document.createElement("div");
+    confetti.style.position="fixed";
+    confetti.style.left=Math.random()*100+"%";
+    confetti.style.top="0";
+    confetti.style.width="6px";
+    confetti.style.height="6px";
+    confetti.style.background="#f94501";
+    confetti.style.zIndex="9999";
+    confetti.style.transition="1s ease-out";
+    document.body.appendChild(confetti);
+
+    setTimeout(()=>{
+      confetti.style.top="100%";
+      confetti.style.opacity="0";
+    },10);
+
+    setTimeout(()=>{
+      confetti.remove();
+    },1000);
+  }
 }
