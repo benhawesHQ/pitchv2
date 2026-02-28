@@ -1,338 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Pitch.io | Book a show</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pitch | Find venues that want to see you play</title>
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-<style>
-:root{
-  --orange:#f94501;
-  --bg:#111;
-  --card:#181818;
-  --soft:#262626;
-}
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:white;
-  font-family:'Open Sans',sans-serif;
-}
-
-.hero{
-  position:relative;
-  background:url('https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
-  padding:140px 20px 100px;
-  text-align:center;
-}
-
-.hero::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.65);
-}
-
-.hero-content{
-  position:relative;
-  z-index:2;
-  max-width:760px;
-  margin:auto;
-}
-
-h1{
-  font-family:'Poppins',sans-serif;
-  font-weight:800;
-  font-size:42px;
-}
-
-.sub{
-  font-size:20px;
-  margin-bottom:40px;
-}
-
-.search-box{
-  background:rgba(20,20,20,.95);
-  padding:32px;
-  border-radius:14px;
-  border:1px solid #222;
-  text-align:left;
-}
-
-label{
-  font-family:'Poppins';
-  font-weight:700;
-  font-size:14px;
-  display:block;
-  margin-bottom:8px;
-}
-
-input{
-  width:100%;
-  padding:14px;
-  border-radius:8px;
-  border:1px solid #333;
-  background:var(--card);
-  color:white;
-  margin-bottom:24px;
-}
-
-.row{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:24px;
-}
-
-.pill{
-  padding:8px 14px;
-  border-radius:20px;
-  background:var(--soft);
-  border:1px solid #333;
-  cursor:pointer;
-}
-
-.pill.active{
-  background:var(--orange);
-  color:black;
-}
-
-.segment{
-  display:flex;
-  background:var(--soft);
-  border-radius:999px;
-  padding:4px;
-  margin-bottom:24px;
-}
-
-.segment-option{
-  flex:1;
-  text-align:center;
-  padding:10px 0;
-  border-radius:999px;
-  cursor:pointer;
-  font-family:'Poppins';
-  font-weight:600;
-}
-
-.segment-option.active{
-  background:var(--orange);
-  color:black;
-}
-
-.search-btn{
-  width:100%;
-  padding:16px;
-  border-radius:10px;
-  border:none;
-  font-family:'Poppins';
-  font-weight:700;
-  font-size:16px;
-  background:var(--orange);
-  color:black;
-  cursor:pointer;
-}
-
-.results{
-  padding:60px 20px;
-  max-width:900px;
-  margin:auto;
-}
-
-.venue-card{
-  background:var(--card);
-  border:1px solid #222;
-  border-radius:12px;
-  padding:20px;
-  margin-bottom:20px;
-}
-
-.venue-name{
-  font-family:'Poppins';
-  font-weight:700;
-  font-size:18px;
-  margin-bottom:14px;
-}
-
-.venue-btn{
-  display:inline-block;
-  padding:10px 16px;
-  background:var(--orange);
-  color:black;
-  font-family:'Poppins';
-  font-weight:600;
-  border-radius:8px;
-  text-decoration:none;
-}
-
-.loading-overlay{
-  position:fixed;
-  inset:0;
-  background:black;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-  opacity:0;
-  pointer-events:none;
-  transition:.4s ease;
-}
-
-.loading-overlay.active{
-  opacity:1;
-  pointer-events:auto;
-}
-
-.loading-overlay::before,
-.loading-overlay::after{
-  content:"";
-  position:absolute;
-  width:200%;
-  height:200%;
-  background:radial-gradient(circle at top, rgba(249,69,1,.25), transparent 60%);
-  animation:lights 1.5s infinite alternate;
-}
-
-@keyframes lights{
-  0%{opacity:.3}
-  100%{opacity:.8}
-}
-
-.stage-icons{
-  font-size:70px;
-  display:flex;
-  gap:40px;
-  animation:rock 1.2s infinite alternate;
-}
-
-@keyframes rock{
-  0%{transform:scale(1) rotate(-5deg)}
-  100%{transform:scale(1.1) rotate(5deg)}
-}
-
-.quote{
-  margin-top:40px;
-  text-align:center;
-  max-width:600px;
-}
-
-.quote .text{
-  font-family:'Poppins';
-  font-size:24px;
-  margin-bottom:10px;
-}
-
-.quote .artist{
-  opacity:.7;
-}
-
-</style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-<div class="hero">
-  <div class="hero-content">
-    <h1>Find venues that want to see you play.</h1>
-    <div class="sub">Book more shows. Play more music.</div>
-
-    <div class="search-box">
-
-      <label>City</label>
-      <input id="cityInput" placeholder="Nashville">
-
-      <label>Audience size</label>
-      <input id="audienceInput" placeholder="20-30">
-
-      <button class="search-btn" id="searchBtn">Search venues</button>
-
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">
+      Pitch<span class="dot">.</span>
     </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Book more shows. Play more music.</h1>
+      <p class="sub">
+        The fastest way to find venues that actually make sense for your draw.
+      </p>
+
+      <div class="search-box">
+
+        <div class="field">
+          <label>City</label>
+          <input id="cityInput" placeholder="St. Louis" />
+        </div>
+
+        <div class="field">
+          <label>Audience you can realistically draw</label>
+          <input id="audienceInput" placeholder="40-75" />
+        </div>
+
+        <div class="field">
+          <label>What else matters?</label>
+          <input id="extraInput" placeholder="queer space, near train, black-owned, DIY vibe" />
+        </div>
+
+        <button id="searchBtn" class="search-btn">
+          Find venues
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="results-section">
+    <div id="results"></div>
+  </section>
+
+  <!-- LOADING EXPERIENCE -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="stage-icons">🎸 🎤</div>
+    <div class="loading-text">Finding your next stage...</div>
   </div>
-</div>
 
-<div class="results" id="results"></div>
-
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="stage-icons">
-    🎸 🎤
-  </div>
-  <div class="quote" id="quoteBox"></div>
-</div>
-
-<script>
-
-const quotes=[
-  {text:"Don't stop believin'.",artist:"Journey"},
-  {text:"The show must go on.",artist:"Queen"},
-  {text:"Dream until your dreams come true.",artist:"Aerosmith"},
-  {text:"Started from the bottom now we here.",artist:"Drake"}
-];
-
-function showQuote(){
-  const q=quotes[Math.floor(Math.random()*quotes.length)];
-  document.getElementById("quoteBox").innerHTML=
-  `<div class="text">"${q.text}"</div>
-   <div class="artist">— ${q.artist}</div>`;
-}
-
-searchBtn.addEventListener("click",async function(){
-
-  const city = document.getElementById("cityInput").value;
-  const audience = document.getElementById("audienceInput").value;
-  if(!city) return;
-
-  const overlay=document.getElementById("loadingOverlay");
-  overlay.classList.add("active");
-  showQuote();
-
-  try{
-
-    const res=await fetch("/api/search",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({ city, audience })
-    });
-
-    const data=await res.json();
-    const resultsContainer=document.getElementById("results");
-    resultsContainer.innerHTML="";
-
-    data.forEach(v=>{
-
-      const card=document.createElement("div");
-      card.className="venue-card";
-
-      const name=document.createElement("div");
-      name.className="venue-name";
-      name.innerText=v.name;
-
-      const button=document.createElement("a");
-      button.className="venue-btn";
-      button.innerText="See Venue";
-      button.href=`https://www.google.com/search?q=${encodeURIComponent(v.name + " " + city)}`;
-      button.target="_blank";
-
-      card.appendChild(name);
-      card.appendChild(button);
-      resultsContainer.appendChild(card);
-
-    });
-
-  }catch(err){
-    console.error(err);
-  }
-
-  overlay.classList.remove("active");
-});
-
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
