@@ -1,78 +1,288 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pitch | Find your next stage</title>
+  <title>Pitch | Find Your Next Stage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    :root{
+      --orange:#f94501;
+      --bg:#111;
+      --card:#181818;
+      --soft:#222;
+      --border:#2a2a2a;
+      --green:#1db954;
+      --yellow:#f4c430;
+      --red:#ff4d4d;
+    }
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:white;
+      font-family:'Open Sans',sans-serif;
+    }
+
+    /* NAV */
+
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 40px;
+    }
+
+    .logo{
+      font-family:'Poppins';
+      font-weight:800;
+      font-size:22px;
+      letter-spacing:.5px;
+    }
+
+    .logo span{
+      color:var(--orange);
+    }
+
+    .guide-btn{
+      background:transparent;
+      border:1px solid var(--orange);
+      color:var(--orange);
+      padding:8px 14px;
+      border-radius:6px;
+      font-family:'Poppins';
+      cursor:pointer;
+    }
+
+    /* HERO */
+
+    .hero{
+      text-align:center;
+      padding:40px 20px 60px;
+      max-width:900px;
+      margin:auto;
+    }
+
+    .hero h1{
+      font-family:'Poppins';
+      font-size:44px;
+      margin:10px 0 10px;
+    }
+
+    .hero p{
+      font-size:18px;
+      opacity:.8;
+      margin:0;
+    }
+
+    /* SEARCH PANEL */
+
+    .search-panel{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:30px;
+      margin:40px auto 0;
+      max-width:720px;
+    }
+
+    .field{
+      margin-bottom:20px;
+      text-align:left;
+    }
+
+    .field label{
+      font-family:'Poppins';
+      font-weight:600;
+      font-size:14px;
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .field input,
+    .field select{
+      width:100%;
+      padding:12px;
+      background:var(--soft);
+      border:1px solid var(--border);
+      border-radius:6px;
+      color:white;
+      font-size:14px;
+    }
+
+    .search-btn{
+      width:100%;
+      padding:14px;
+      margin-top:10px;
+      border:none;
+      border-radius:8px;
+      font-family:'Poppins';
+      font-weight:700;
+      background:var(--orange);
+      color:black;
+      cursor:pointer;
+    }
+
+    /* RESULTS */
+
+    .results{
+      max-width:1000px;
+      margin:60px auto;
+      padding:0 20px;
+      display:grid;
+      gap:20px;
+    }
+
+    .venue-card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:20px;
+    }
+
+    .venue-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+    }
+
+    .venue-name{
+      font-family:'Poppins';
+      font-size:18px;
+      font-weight:700;
+    }
+
+    .venue-location{
+      font-size:13px;
+      opacity:.7;
+      margin-bottom:10px;
+    }
+
+    .venue-description{
+      font-size:14px;
+      margin-bottom:14px;
+      opacity:.9;
+    }
+
+    .booking-badge{
+      padding:6px 10px;
+      border-radius:20px;
+      font-size:12px;
+      font-weight:600;
+    }
+
+    .reply-high{
+      background:var(--green);
+      color:black;
+    }
+
+    .reply-medium{
+      background:var(--yellow);
+      color:black;
+    }
+
+    .reply-low{
+      background:var(--red);
+      color:white;
+    }
+
+    .see-venue-btn{
+      display:inline-block;
+      padding:8px 14px;
+      border-radius:6px;
+      background:var(--orange);
+      color:black;
+      text-decoration:none;
+      font-weight:600;
+      font-size:14px;
+    }
+
+    /* LOADING OVERLAY */
+
+    .loading-overlay{
+      position:fixed;
+      inset:0;
+      background:black;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      opacity:0;
+      pointer-events:none;
+      transition:.3s ease;
+      z-index:999;
+    }
+
+    .loading-overlay.active{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .loading-overlay span{
+      font-size:40px;
+      animation:rock 1s infinite alternate;
+    }
+
+    @keyframes rock{
+      0%{transform:rotate(-5deg)}
+      100%{transform:rotate(5deg)}
+    }
+
+  </style>
 </head>
 
 <body>
 
-<header class="header">
-  <div class="logo">
-    Pitch<span class="dot">.</span>
+  <div class="nav">
+    <div class="logo">Pitch<span>.</span></div>
+    <button class="guide-btn">Download Guide</button>
   </div>
-</header>
 
-<section class="hero">
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
+  <div class="hero">
+    <h1>Find Your Next Stage</h1>
+    <p>Discover venues faster so you can focus on planning the show.</p>
 
-    <h1>Find your next stage.</h1>
-    <p class="sub">
-      Discover venues faster so you can focus on playing the show.
-    </p>
+    <div class="search-panel">
 
-    <div class="search-wrapper">
-      <div class="search-box">
-
-        <div class="field">
-          <label>City</label>
-          <input id="cityInput" placeholder="Nashville">
-        </div>
-
-        <div class="field">
-          <label>Expected audience</label>
-          <input id="audienceInput" placeholder="50-100">
-        </div>
-
-        <div class="field">
-          <label>Preferences</label>
-          <input id="extraInput" placeholder="queer-friendly, near train, volunteer-run">
-        </div>
-
-        <div class="field">
-          <label>Results</label>
-          <select id="countSelect">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="15">15</option>
-          </select>
-        </div>
-
-        <button id="searchBtn" class="search-btn">
-          Find venues
-        </button>
-
+      <div class="field">
+        <label>City</label>
+        <input id="cityInput" placeholder="Nashville">
       </div>
+
+      <div class="field">
+        <label>Audience Size</label>
+        <input id="audienceInput" placeholder="40, 75, 100">
+      </div>
+
+      <div class="field">
+        <label>What Else Matters?</label>
+        <input id="extraInput" placeholder="LGBTQ friendly, near train, indie vibe">
+      </div>
+
+      <div class="field">
+        <label>Number of Suggestions</label>
+        <select id="countSelect">
+          <option value="5">5 venues</option>
+          <option value="10" selected>10 venues</option>
+          <option value="15">15 venues</option>
+        </select>
+      </div>
+
+      <button class="search-btn" onclick="searchVenues()">
+        Search Venues
+      </button>
+
     </div>
-
   </div>
-</section>
 
-<section class="results-section">
-  <div id="results"></div>
-</section>
+  <div id="results" class="results"></div>
 
-<div id="loadingOverlay" class="loading-overlay">
-  <div class="stage-icons">🎸 🎤</div>
-  <div class="loading-text">Building your shortlist...</div>
-</div>
+  <div id="loadingOverlay" class="loading-overlay">
+    <span>🎸 🎤</span>
+  </div>
 
-<script src="script.js"></script>
+  <script src="/script.js"></script>
+
 </body>
 </html>
