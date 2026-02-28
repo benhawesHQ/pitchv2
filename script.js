@@ -1,9 +1,17 @@
 document.addEventListener("DOMContentLoaded", function(){
-
   document.getElementById("searchBtn")
     .addEventListener("click", searchVenues);
-
 });
+
+const funFacts = [
+  "Before selling out arenas, Lizzo played 150-person rooms in Minneapolis.",
+  "Lady Gaga used to perform at The Bitter End in NYC.",
+  "Brandi Carlile built her audience in intimate Seattle bars.",
+  "Ed Sheeran once played tiny pub gigs with just a loop pedal.",
+  "Taylor Swift started performing at small Nashville coffeehouses."
+];
+
+let factInterval;
 
 async function searchVenues(){
 
@@ -16,58 +24,71 @@ async function searchVenues(){
   const wrapper = document.getElementById("resultsWrapper");
 
   overlay.classList.add("active");
-  resultsContainer.innerHTML = "";
+  startFunFacts();
 
   try {
 
     const response = await fetch(`/api/search?city=${encodeURIComponent(city)}`);
-
-    if (!response.ok) {
-      throw new Error("API error");
-    }
-
     const data = await response.json();
 
-    let filtered = data.results || [];
+    resultsContainer.innerHTML = "";
 
-    filtered = filtered.filter(v => capacityMatch(v, audience));
+    const filtered = (data.results || [])
+      .filter(v => capacityMatch(v, audience))
+      .slice(0, count);
 
-    filtered.slice(0, count).forEach(v => {
-      resultsContainer.innerHTML += renderVenue(v, audience);
+    filtered.forEach(v => {
+      resultsContainer.innerHTML += renderVenue(v);
     });
 
     wrapper.style.display = "block";
 
   } catch (err) {
     console.error(err);
-    resultsContainer.innerHTML = `
-      <div style="padding:40px;text-align:center;">
-        Search failed.
-      </div>
-    `;
-    wrapper.style.display = "block";
   }
 
+  stopFunFacts();
   overlay.classList.remove("active");
 }
 
+function startFunFacts(){
+  const factEl = document.querySelector(".fun-fact");
+
+  if(!factEl) return;
+
+  let index = 0;
+
+  factInterval = setInterval(() => {
+    factEl.classList.remove("show");
+
+    setTimeout(() => {
+      factEl.textContent = funFacts[index];
+      factEl.classList.add("show");
+      index = (index + 1) % funFacts.length;
+    },300);
+
+  },2500);
+}
+
+function stopFunFacts(){
+  clearInterval(factInterval);
+}
+
 function capacityMatch(place, audience){
+  if(!audience) return true;
 
   const name = place.name.toLowerCase();
-
   const largeWords = ["arena","stadium","paramount","center","hall","theater"];
 
-  if(audience <= 40){
+  if(audience <= 50){
     if(largeWords.some(w => name.includes(w))){
       return false;
     }
   }
-
   return true;
 }
 
-function renderVenue(v, audience){
-
+function renderVenue(v){
   const image = v.photo || "hero.jpg";
 
   const googleUrl =
