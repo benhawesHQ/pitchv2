@@ -25,8 +25,6 @@ body{
   font-family:'Open Sans',sans-serif;
 }
 
-/* HERO */
-
 .hero{
   position:relative;
   background:url('https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
@@ -141,15 +139,37 @@ input{
   cursor:pointer;
 }
 
-/* RESULTS */
-
 .results{
   padding:60px 20px;
   max-width:900px;
   margin:auto;
 }
 
-/* STAGE LOADING OVERLAY */
+.venue-card{
+  background:var(--card);
+  border:1px solid #222;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.venue-name{
+  font-family:'Poppins';
+  font-weight:700;
+  font-size:18px;
+  margin-bottom:14px;
+}
+
+.venue-btn{
+  display:inline-block;
+  padding:10px 16px;
+  background:var(--orange);
+  color:black;
+  font-family:'Poppins';
+  font-weight:600;
+  border-radius:8px;
+  text-decoration:none;
+}
 
 .loading-overlay{
   position:fixed;
@@ -169,8 +189,6 @@ input{
   opacity:1;
   pointer-events:auto;
 }
-
-/* Flashing stage lights */
 
 .loading-overlay::before,
 .loading-overlay::after{
@@ -227,22 +245,8 @@ input{
 
     <div class="search-box">
 
-      <div class="segment" id="showTypeSegment">
-        <div class="segment-option active">Single show</div>
-        <div class="segment-option">Multi-city</div>
-      </div>
-
-      <label id="cityLabel">City</label>
+      <label>City</label>
       <input id="cityInput" placeholder="Nashville">
-
-      <label>Genre</label>
-      <div class="row">
-        <div class="pill">🎸 Rock</div>
-        <div class="pill">🌙 Indie</div>
-        <div class="pill">🎷 Jazz</div>
-        <div class="pill">🎭 Cabaret</div>
-        <div class="pill">🎤 Comedy</div>
-      </div>
 
       <label>Audience size</label>
       <input id="audienceInput" placeholder="20-30">
@@ -267,10 +271,8 @@ input{
 const quotes=[
   {text:"Don't stop believin'.",artist:"Journey"},
   {text:"The show must go on.",artist:"Queen"},
-  {text:"You have to fight to reach your dream.",artist:"Bad Bunny"},
   {text:"Dream until your dreams come true.",artist:"Aerosmith"},
-  {text:"Started from the bottom now we here.",artist:"Drake"},
-  {text:"No one can make you feel inferior.",artist:"Aretha Franklin"}
+  {text:"Started from the bottom now we here.",artist:"Drake"}
 ];
 
 function showQuote(){
@@ -280,36 +282,10 @@ function showQuote(){
    <div class="artist">— ${q.artist}</div>`;
 }
 
-document.querySelectorAll(".pill").forEach(p=>{
-  p.addEventListener("click",()=>p.classList.toggle("active"));
-});
-
-let showType="Single show";
-
-document.querySelectorAll(".segment-option").forEach(btn=>{
-  btn.addEventListener("click",function(){
-    document.querySelectorAll(".segment-option").forEach(b=>b.classList.remove("active"));
-    this.classList.add("active");
-    showType=this.innerText;
-
-    if(showType==="Single show"){
-      confetti({
-        particleCount:150,
-        spread:80,
-        origin:{y:0.6},
-        shapes:['text'],
-        shapeOptions:{text:{value:'🎤',font:'30px serif'}}
-      });
-    }else{
-      confetti({particleCount:160,spread:100,origin:{y:0.6}});
-    }
-  });
-});
-
 searchBtn.addEventListener("click",async function(){
 
-  const city=cityInput.value;
-  const audience=audienceInput.value;
+  const city = document.getElementById("cityInput").value;
+  const audience = document.getElementById("audienceInput").value;
   if(!city) return;
 
   const overlay=document.getElementById("loadingOverlay");
@@ -317,20 +293,36 @@ searchBtn.addEventListener("click",async function(){
   showQuote();
 
   try{
+
     const res=await fetch("/api/search",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({city,audience})
+      body:JSON.stringify({ city, audience })
     });
 
     const data=await res.json();
-    document.getElementById("results").innerHTML="";
+    const resultsContainer=document.getElementById("results");
+    resultsContainer.innerHTML="";
 
     data.forEach(v=>{
-      const div=document.createElement("div");
-      div.style.padding="10px 0";
-      div.innerText=v.name;
-      document.getElementById("results").appendChild(div);
+
+      const card=document.createElement("div");
+      card.className="venue-card";
+
+      const name=document.createElement("div");
+      name.className="venue-name";
+      name.innerText=v.name;
+
+      const button=document.createElement("a");
+      button.className="venue-btn";
+      button.innerText="See Venue";
+      button.href=`https://www.google.com/search?q=${encodeURIComponent(v.name + " " + city)}`;
+      button.target="_blank";
+
+      card.appendChild(name);
+      card.appendChild(button);
+      resultsContainer.appendChild(card);
+
     });
 
   }catch(err){
