@@ -1,339 +1,106 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Pitch | Find Your Next Stage</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+const searchForm = document.getElementById("searchForm");
+const resultsWrapper = document.getElementById("resultsWrapper");
+const loadingOverlay = document.getElementById("loadingOverlay");
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
+const funFacts = [
+  "🎤 Taylor Swift once played tiny Nashville venues before selling out stadium tours.",
+  "🎸 Ed Sheeran used to busk on the streets before headlining Wembley Stadium.",
+  "🎶 Lady Gaga performed in Lower East Side clubs before global fame.",
+  "🎵 Billie Eilish recorded songs in her bedroom before winning Grammys.",
+  "🎤 Harry Styles played 1,000-capacity rooms before arenas.",
+  "🎸 Lizzo toured small indie venues before Coachella main stage.",
+  "🎶 Phoebe Bridgers built her audience through intimate club shows.",
+  "🎵 Brandi Carlile toured coffeehouses before amphitheaters.",
+  "🎤 The Killers played Vegas bars before world tours.",
+  "🎸 Hozier gained momentum in small Irish venues.",
+  "🎶 Arctic Monkeys built buzz in Sheffield clubs.",
+  "🎵 Adele performed in London pubs early on.",
+  "🎤 Paramore toured VFW halls before festivals.",
+  "🎸 Coldplay played student unions before stadiums.",
+  "🎶 Kacey Musgraves played Texas honky-tonks.",
+  "🎵 John Mayer toured small blues clubs.",
+  "🎤 Olivia Rodrigo started in intimate LA rooms.",
+  "🎸 The Lumineers busked before selling out arenas.",
+  "🎶 Dua Lipa toured mid-size European venues.",
+  "🎵 Sam Fender played North Shields pubs."
+];
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+let recentFacts = [];
 
-  <style>
-    :root{
-      --orange:#f94501;
-      --bg:#111;
-      --card:#181818;
-      --soft:#222;
-      --border:#2a2a2a;
-    }
+function getRandomFact() {
+  let available = funFacts.filter(f => !recentFacts.includes(f));
+  if (available.length === 0) {
+    recentFacts = [];
+    available = funFacts;
+  }
+  const fact = available[Math.floor(Math.random() * available.length)];
+  recentFacts.push(fact);
+  if (recentFacts.length > 10) recentFacts.shift();
+  return fact;
+}
 
-    body{
-      margin:0;
-      background:var(--bg);
-      color:white;
-      font-family:'Open Sans',sans-serif;
-    }
+function startShowLights() {
+  loadingOverlay.classList.add("active");
+  document.body.classList.add("lights-down");
 
-    /* NAV */
+  const factEl = document.getElementById("funFact");
+  factEl.textContent = getRandomFact();
 
-    .nav{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:20px 40px;
-    }
+  loadingOverlay.classList.add("blink");
+}
 
-    .logo{
-      font-family:'Poppins';
-      font-weight:800;
-      font-size:28px;
-    }
+function stopShowLights() {
+  loadingOverlay.classList.remove("active");
+  document.body.classList.remove("lights-down");
+  loadingOverlay.classList.remove("blink");
+}
 
-    .logo span{
-      color:var(--orange);
-    }
+searchForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-    .guide-btn{
-      background:var(--orange);
-      color:black;
-      border:none;
-      padding:10px 16px;
-      border-radius:6px;
-      font-family:'Poppins';
-      font-weight:600;
-      cursor:pointer;
-    }
+  const city = document.getElementById("city").value;
+  const audience = document.getElementById("audience").value;
+  const count = document.getElementById("count").value;
 
-    /* HERO */
+  startShowLights();
 
-    .hero{
-      background:url('hero.jpg') center/cover no-repeat;
-      position:relative;
-      text-align:center;
-      padding:100px 20px;
-    }
+  try {
+    const res = await fetch("/.netlify/functions/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ city, audience, count })
+    });
 
-    .hero::before{
-      content:'';
-      position:absolute;
-      inset:0;
-      background:rgba(0,0,0,.7);
-    }
+    const data = await res.json();
 
-    .hero-content{
-      position:relative;
-      max-width:900px;
-      margin:auto;
-    }
+    stopShowLights();
 
-    .hero h1{
-      font-family:'Poppins';
-      font-size:48px;
-      margin-bottom:15px;
-    }
+    renderResults(data.venues);
 
-    .hero p{
-      font-size:18px;
-      margin-bottom:40px;
-      font-weight:600;
-    }
+  } catch (err) {
+    stopShowLights();
+    alert("Something went wrong.");
+  }
+});
 
-    /* SEARCH PANEL */
+function renderResults(venues) {
+  resultsWrapper.innerHTML = "";
 
-    .search-panel{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:35px;
-      max-width:720px;
-      margin:0 auto;
-    }
+  venues.forEach(v => {
+    const card = document.createElement("div");
+    card.className = "venue-card";
 
-    .field{
-      margin-bottom:20px;
-      text-align:left;
-    }
+    card.innerHTML = `
+      <h3>${v.emoji} ${v.name}</h3>
+      <p class="venue-city">${v.city}</p>
+      <p>${v.description}</p>
+      <p class="likelihood">🎯 Likelihood: ${v.likelihood}</p>
+      <a target="_blank" class="venue-btn"
+        href="https://www.google.com/search?q=${encodeURIComponent(v.googleQuery)}">
+        View Venue
+      </a>
+    `;
 
-    .field label{
-      font-family:'Poppins';
-      font-weight:600;
-      font-size:14px;
-      margin-bottom:8px;
-      display:block;
-    }
-
-    .field input,
-    .field select{
-      width:100%;
-      padding:12px;
-      background:var(--soft);
-      border:1px solid var(--border);
-      border-radius:6px;
-      color:white;
-      font-size:14px;
-    }
-
-    .search-btn{
-      width:100%;
-      padding:16px;
-      border:none;
-      border-radius:8px;
-      font-family:'Poppins';
-      font-weight:700;
-      background:var(--orange);
-      color:black;
-      cursor:pointer;
-      font-size:15px;
-    }
-
-    /* RESULTS */
-
-    .results-wrapper{
-      display:none;
-      max-width:1000px;
-      margin:80px auto;
-      padding:0 20px;
-    }
-
-    .results-header{
-      font-family:'Poppins';
-      font-size:28px;
-      margin-bottom:10px;
-    }
-
-    .results-sub{
-      font-weight:600;
-      margin-bottom:35px;
-    }
-
-    .results{
-      display:grid;
-      gap:20px;
-    }
-
-    .venue-card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:24px;
-    }
-
-    .venue-name{
-      font-family:'Poppins';
-      font-size:20px;
-      font-weight:700;
-      margin-bottom:12px;
-    }
-
-    .venue-description{
-      font-size:14px;
-      line-height:1.6;
-      margin-bottom:14px;
-    }
-
-    .more-btn{
-      margin-top:30px;
-      padding:14px 20px;
-      background:var(--orange);
-      color:black;
-      border:none;
-      border-radius:8px;
-      font-family:'Poppins';
-      font-weight:700;
-      cursor:pointer;
-    }
-
-    .support-note{
-      margin-top:60px;
-      text-align:center;
-      font-size:14px;
-      line-height:1.6;
-    }
-
-    /* LOADING OVERLAY */
-
-    .loading-overlay{
-      position:fixed;
-      inset:0;
-      background:black;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      opacity:0;
-      pointer-events:none;
-      transition:.3s ease;
-      z-index:999;
-    }
-
-    .loading-overlay.active{
-      opacity:1;
-      pointer-events:auto;
-    }
-
-    .floating{
-      font-size:40px;
-      animation:float 1.2s infinite alternate;
-    }
-
-    @keyframes float{
-      from{ transform:translateY(-6px); }
-      to{ transform:translateY(6px); }
-    }
-
-    .lore{
-      margin-top:25px;
-      max-width:500px;
-      text-align:center;
-      font-size:16px;
-      line-height:1.6;
-    }
-
-    footer{
-      margin-top:100px;
-      padding:40px 20px;
-      text-align:center;
-      border-top:1px solid var(--border);
-      font-size:14px;
-    }
-
-    footer a{
-      color:var(--orange);
-      text-decoration:none;
-      font-weight:600;
-    }
-
-    @media(max-width:768px){
-      .hero h1{
-        font-size:34px;
-      }
-    }
-
-  </style>
-</head>
-
-<body>
-
-  <div class="nav">
-    <div class="logo">Pitch<span>.</span></div>
-    <button class="guide-btn">Download Guide</button>
-  </div>
-
-  <div class="hero">
-    <div class="hero-content">
-      <h1>Find Your Next Stage</h1>
-      <p>Discover venues faster so you can focus on planning the show.</p>
-
-      <div class="search-panel">
-        <div class="field">
-          <label>City</label>
-          <input id="cityInput" placeholder="Brooklyn, Portland, Berlin">
-        </div>
-
-        <div class="field">
-          <label>Expected Audience</label>
-          <input id="audienceInput" placeholder="40, 120, 300">
-        </div>
-
-        <div class="field">
-          <label>Number of Suggestions</label>
-          <select id="countSelect">
-            <option value="10">10 venues</option>
-            <option value="15" selected>15 venues</option>
-          </select>
-        </div>
-
-        <button class="search-btn" onclick="searchVenues()">
-          Search Venues
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="results-wrapper" id="resultsWrapper">
-    <div class="results-header">Your short list of venues</div>
-    <div class="results-sub" id="resultsSub"></div>
-    <div id="results" class="results"></div>
-
-    <button id="moreBtn" class="more-btn" onclick="showMore()" style="display:none;">
-      See a few more
-    </button>
-
-    <div class="support-note">
-      Pitch surfaces performance spaces based on current programming patterns and internet research.
-      <br><br>
-      <strong>Pitch is in v1.</strong>
-      There is a chance a venue may be closed, booked, or slow to respond.
-      <br><br>
-      Want live status checks and real-time venue verification?
-      Support the build by downloading the guide or joining the launch campaign.
-    </div>
-  </div>
-
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="floating">🎸 🎵</div>
-    <div id="loreText" class="lore"></div>
-  </div>
-
-  <footer>
-    Created by NYC musician Ben Hawes.
-    <br>
-    <a href="https://instagram.com/benhaweshq" target="_blank">
-      Connect on Instagram
-    </a>
-  </footer>
-
-  <script src="/script.js?v=10"></script>
-
-</body>
-</html>
+    resultsWrapper.appendChild(card);
+  });
+}
