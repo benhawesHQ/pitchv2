@@ -1,11 +1,16 @@
 <style>
 
+/* ======================
+   ROOT
+====================== */
+
 :root{
   --orange:#f94501;
-  --bg:#0f0f0f;
-  --card:#171717;
-  --soft:#1f1f1f;
-  --border:#262626;
+  --bg:#0e0e0f;
+  --card:#171718;
+  --soft:#1f1f22;
+  --border:#26262a;
+  --text-soft:#a8a8ad;
 }
 
 body{
@@ -15,15 +20,15 @@ body{
   font-family:'Open Sans',sans-serif;
 }
 
-/* =========================
+/* ======================
    NAV
-========================= */
+====================== */
 
 .nav{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:20px 40px;
+  padding:24px 40px;
 }
 
 .logo{
@@ -40,81 +45,67 @@ body{
   background:var(--orange);
   color:black;
   border:none;
-  padding:10px 16px;
-  border-radius:8px;
-  font-family:'Poppins';
+  padding:10px 18px;
+  border-radius:999px;
   font-weight:600;
   cursor:pointer;
 }
 
-/* =========================
+/* ======================
    HERO
-========================= */
+====================== */
 
 .hero{
-  background:url('hero.jpg') center/cover no-repeat;
   position:relative;
   text-align:center;
-  padding:90px 20px;
-}
-
-.hero::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.7);
-}
-
-.hero-content{
-  position:relative;
-  max-width:900px;
-  margin:auto;
+  padding:90px 20px 70px;
 }
 
 .hero h1{
   font-family:'Poppins';
-  font-size:46px;
-  margin:10px 0;
+  font-size:48px;
+  margin:0 0 14px;
 }
 
 .hero p{
-  font-size:18px;
-  margin:0 0 30px;
+  color:var(--text-soft);
+  margin-bottom:40px;
 }
 
-/* =========================
+/* ======================
    SEARCH PANEL
-========================= */
+====================== */
 
 .search-panel{
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:18px;
-  padding:30px;
+  border-radius:24px;
+  padding:28px;
   max-width:720px;
   margin:0 auto;
 }
 
 .field{
-  margin-bottom:18px;
+  margin-bottom:16px;
   text-align:left;
 }
 
 .field label{
   font-family:'Poppins';
+  font-size:13px;
   font-weight:600;
-  font-size:14px;
   margin-bottom:6px;
   display:block;
+  color:var(--text-soft);
 }
 
 .field input,
 .field select{
   width:100%;
-  padding:12px;
+  padding:12px 14px;
   background:var(--soft);
   border:1px solid var(--border);
-  border-radius:8px;
+  border-radius:14px;
   color:white;
   font-size:14px;
 }
@@ -123,18 +114,18 @@ body{
   width:100%;
   padding:14px;
   border:none;
-  border-radius:12px;
-  font-family:'Poppins';
-  font-weight:700;
+  border-radius:999px;
   background:var(--orange);
   color:black;
+  font-family:'Poppins';
+  font-weight:700;
   cursor:pointer;
   margin-top:10px;
 }
 
-/* =========================
-   RESULTS
-========================= */
+/* ======================
+   RESULTS HEADER
+====================== */
 
 .results-wrapper{
   display:none;
@@ -146,29 +137,23 @@ body{
 .results-header{
   font-family:'Poppins';
   font-size:26px;
-  margin-bottom:10px;
+  margin-bottom:6px;
 }
 
 .results-sub{
-  color:#aaa;
+  color:var(--text-soft);
   margin-bottom:30px;
 }
 
-.results{
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-}
-
-/* =========================
-   VENUE CARD
-========================= */
+/* ======================
+   VENUE LISTING CARD
+====================== */
 
 .venue-card{
   display:flex;
-  gap:16px;
-  padding:16px;
-  border-radius:18px;
+  gap:18px;
+  padding:18px;
+  border-radius:22px;
   border:1px solid var(--border);
   background:var(--card);
   transition:.25s ease;
@@ -179,61 +164,54 @@ body{
   transform:translateY(-3px);
 }
 
+/* IMAGE */
+
 .image-wrap{
   position:relative;
-  width:140px;
-  min-width:140px;
+  width:150px;
+  min-width:150px;
 }
 
 .venue-image{
-  width:140px;
-  height:175px;
+  width:150px;
+  height:190px;
   object-fit:cover;
-  border-radius:14px;
+  border-radius:18px;
 }
 
-/* =========================
-   BADGES
-========================= */
+/* BADGES */
 
 .badge{
   position:absolute;
-  top:8px;
-  left:8px;
-  padding:6px 10px;
+  top:10px;
+  left:10px;
+  padding:6px 12px;
   font-size:12px;
   border-radius:999px;
   font-weight:600;
-  backdrop-filter:blur(6px);
 }
 
 .badge.high{
-  background:rgba(103,255,154,0.15);
-  color:#67ff9a;
-  border:1px solid rgba(103,255,154,0.3);
+  background:#1e3529;
+  color:#6dffb1;
 }
 
 .badge.medium{
-  background:rgba(255,199,102,0.15);
-  color:#ffc766;
-  border:1px solid rgba(255,199,102,0.3);
+  background:#352e1e;
+  color:#ffd27a;
 }
 
 .badge.low{
-  background:rgba(255,138,138,0.15);
-  color:#ff8a8a;
-  border:1px solid rgba(255,138,138,0.3);
+  background:#352020;
+  color:#ff8c8c;
 }
 
-/* =========================
-   CARD CONTENT
-========================= */
+/* CONTENT */
 
 .venue-info{
   flex:1;
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
 }
 
 .venue-header{
@@ -244,82 +222,70 @@ body{
 
 .venue-name{
   font-family:'Poppins';
-  font-size:18px;
+  font-size:19px;
   font-weight:700;
 }
 
 .rating{
   font-size:14px;
-  color:#ccc;
+  color:#ffcc66;
+  font-weight:600;
+}
+
+.venue-meta{
+  font-size:13px;
+  color:var(--text-soft);
+  margin-top:4px;
 }
 
 .venue-description{
   font-size:14px;
-  color:#bbb;
-  margin-top:8px;
-  line-height:1.4;
+  color:var(--text-soft);
+  margin-top:10px;
+  line-height:1.5;
 }
 
-/* =========================
-   LINKS
-========================= */
+/* ACTIONS */
 
 .venue-links{
   display:flex;
-  gap:20px;
-  margin-top:14px;
   align-items:center;
+  gap:16px;
+  margin-top:16px;
 }
 
-.map-link{
-  font-size:13px;
-  color:#aaa;
-  text-decoration:none;
-}
-
-.map-link:hover{
-  color:var(--orange);
-}
-
-.see-btn{
-  background:var(--orange);
-  color:black;
-  padding:7px 14px;
-  border-radius:10px;
-  font-weight:600;
+.map-pill{
+  padding:8px 14px;
+  border-radius:999px;
+  background:var(--soft);
+  color:white;
   font-size:13px;
   text-decoration:none;
   transition:.2s;
 }
 
-.see-btn:hover{
-  opacity:.85;
+.map-pill:hover{
+  background:#2a2a2f;
 }
 
-/* =========================
-   MORE BUTTON
-========================= */
-
-.more-btn{
-  margin-top:30px;
-  padding:14px 20px;
+.see-btn{
+  padding:9px 16px;
+  border-radius:999px;
   background:var(--orange);
   color:black;
-  border:none;
-  border-radius:12px;
-  font-family:'Poppins';
-  font-weight:700;
-  cursor:pointer;
+  font-weight:600;
+  font-size:13px;
+  text-decoration:none;
 }
 
-/* =========================
+/* ======================
    LOADING EXPERIENCE
-========================= */
+====================== */
 
 .loading-overlay{
   position:fixed;
   inset:0;
-  background:radial-gradient(circle at center, #1a1a1a 0%, #000 70%);
+  background:radial-gradient(circle at center, #181818 0%, #000 75%);
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -336,7 +302,7 @@ body{
 }
 
 .floating{
-  font-size:40px;
+  font-size:48px;
   animation:float 1.2s infinite alternate;
 }
 
@@ -346,35 +312,18 @@ body{
 }
 
 .lore{
-  margin-top:20px;
+  margin-top:24px;
   max-width:500px;
   text-align:center;
   font-size:16px;
-  color:#ddd;
+  color:var(--text-soft);
 }
 
-/* =========================
-   FOOTER
-========================= */
-
-footer{
-  margin-top:90px;
-  padding:40px 20px;
-  text-align:center;
-  border-top:1px solid var(--border);
-  font-size:14px;
-}
-
-footer a{
-  color:var(--orange);
-  text-decoration:none;
-  font-weight:600;
-}
+/* ======================
+   MOBILE
+====================== */
 
 @media(max-width:768px){
-  .hero h1{
-    font-size:34px;
-  }
 
   .venue-card{
     flex-direction:column;
@@ -386,8 +335,9 @@ footer a{
 
   .venue-image{
     width:100%;
-    height:220px;
+    height:240px;
   }
+
 }
 
 </style>
