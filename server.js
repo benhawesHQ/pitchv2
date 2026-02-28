@@ -12,34 +12,35 @@ app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve static files from root directory
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+
+// ===== STATIC FILES =====
 app.use(express.static(__dirname));
 
-// Serve index.html on root
+// Explicit root handler
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-
+// ===== API ROUTE =====
 app.post("/api/search", async (req, res) => {
   try {
     const { city } = req.body;
 
     if (!city) {
-      return res.status(400).json({ venues: [] });
+      return res.json({ venues: [] });
     }
 
     const query = `live music venue in ${city}`;
 
-    const textSearchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
+    const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
       query
     )}&key=${GOOGLE_API_KEY}`;
 
-    const response = await fetch(textSearchUrl);
+    const response = await fetch(url);
     const data = await response.json();
 
-    console.log("TEXT SEARCH RAW:", data);
+    console.log("GOOGLE RESPONSE:", data.status);
 
     if (!data.results || data.results.length === 0) {
       return res.json({ venues: [] });
@@ -52,19 +53,16 @@ app.post("/api/search", async (req, res) => {
         address: place.formatted_address,
         rating: place.rating || "N/A",
         reviews: place.user_ratings_total || 0,
-        open_now:
-          place.opening_hours?.open_now !== undefined
-            ? place.opening_hours.open_now
-            : null,
         photo:
-          place.photos && place.photos.length > 0
+          place.photos?.[0]
             ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${place.photos[0].photo_reference}&key=${GOOGLE_API_KEY}`
             : null
       }));
 
     res.json({ venues });
-  } catch (error) {
-    console.error("SEARCH ERROR:", error);
+
+  } catch (err) {
+    console.error("SEARCH ERROR:", err);
     res.status(500).json({ venues: [] });
   }
 });
