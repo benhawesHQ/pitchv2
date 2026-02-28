@@ -8,37 +8,37 @@
 
   <style>
 
+    :root {
+      --orange: #f94501;
+      --bg: #111111;
+      --card: #1a1a1a;
+      --soft: #2a2a2a;
+    }
+
     body {
       margin: 0;
-      background: #0b0b0b;
+      background: var(--bg);
       color: white;
       font-family: 'Open Sans', sans-serif;
     }
 
     .hero {
-      padding: 120px 20px 100px 20px;
+      padding: 110px 20px 80px;
       text-align: center;
-      background: linear-gradient(180deg,#111,#000);
+      border-bottom: 1px solid #222;
     }
 
     h1 {
       font-family: 'Poppins', sans-serif;
       font-weight: 800;
-      font-size: 56px;
-      letter-spacing: -1px;
-      margin-bottom: 18px;
+      font-size: 42px;
+      margin-bottom: 14px;
     }
 
     .sub {
-      font-size: 20px;
-      opacity: 0.85;
-      margin-bottom: 16px;
-    }
-
-    .free-note {
-      font-size: 15px;
-      opacity: 0.65;
-      margin-bottom: 40px;
+      font-size: 18px;
+      opacity: 0.8;
+      margin-bottom: 36px;
     }
 
     .search-box {
@@ -46,82 +46,108 @@
       margin: auto;
     }
 
+    .field-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      opacity: 0.6;
+      margin-bottom: 6px;
+      text-align: left;
+    }
+
     input, select, textarea {
       width: 100%;
-      padding: 18px;
-      border-radius: 14px;
-      border: none;
-      margin-bottom: 18px;
-      font-size: 17px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid #2b2b2b;
+      background: var(--card);
+      color: white;
+      font-size: 15px;
       font-family: 'Open Sans', sans-serif;
     }
 
     textarea {
+      min-height: 90px;
       resize: vertical;
-      min-height: 100px;
     }
 
-    .checkbox-row {
-      margin-bottom: 24px;
-      font-size: 16px;
-      text-align: left;
+    .toggle-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
     }
 
-    .checkbox-row input {
-      margin-right: 8px;
-      transform: scale(1.2);
-    }
-
-    button {
-      width: 100%;
-      padding: 20px;
-      border-radius: 16px;
-      border: none;
-      font-weight: 700;
-      font-size: 18px;
+    .toggle-btn {
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: var(--soft);
       cursor: pointer;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(90deg,#ff6a88,#ffb86c);
-      color: black;
-      transition: transform 0.15s ease;
+      font-size: 14px;
+      border: 1px solid #333;
+      transition: all 0.15s ease;
     }
 
-    button:hover {
-      transform: translateY(-2px);
+    .toggle-btn.active {
+      background: var(--orange);
+      color: black;
+      border-color: var(--orange);
+      font-weight: 600;
+    }
+
+    .search-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 10px;
+      border: none;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      background: var(--orange);
+      color: black;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .search-btn:hover {
+      opacity: 0.85;
     }
 
     #results {
-      padding: 80px 20px;
-      max-width: 950px;
+      padding: 70px 20px;
+      max-width: 900px;
       margin: auto;
     }
 
     .results-header {
-      margin-bottom: 50px;
+      margin-bottom: 40px;
     }
 
     .results-header h2 {
       font-family: 'Poppins', sans-serif;
-      font-size: 40px;
-      margin-bottom: 10px;
+      font-size: 30px;
+      margin-bottom: 6px;
     }
 
-    .results-explainer {
-      font-size: 16px;
-      opacity: 0.7;
+    .results-header p {
+      opacity: 0.6;
+      font-size: 14px;
     }
 
     .venue-card {
-      background: linear-gradient(145deg,#141414,#1f1f1f);
-      padding: 32px;
-      border-radius: 20px;
-      margin-bottom: 32px;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.45);
-      transition: transform 0.2s ease;
+      background: var(--card);
+      padding: 26px;
+      border-radius: 14px;
+      margin-bottom: 24px;
+      border: 1px solid #222;
+      transition: border 0.2s ease;
     }
 
     .venue-card:hover {
-      transform: translateY(-5px);
+      border-color: var(--orange);
     }
 
     .venue-header {
@@ -132,74 +158,62 @@
 
     .venue-title {
       display: flex;
+      gap: 10px;
       align-items: center;
-      gap: 14px;
     }
 
     .venue-title h3 {
       margin: 0;
-      font-size: 26px;
       font-family: 'Poppins', sans-serif;
+      font-size: 22px;
     }
 
-    .venue-emoji {
-      font-size: 28px;
-    }
-
-    .likelihood-badge {
-      background: linear-gradient(90deg,#ff7a7a,#ffb86c);
-      padding: 8px 16px;
-      border-radius: 24px;
-      font-size: 14px;
-      font-weight: 600;
-      color: black;
+    .likelihood {
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: var(--soft);
     }
 
     .venue-location {
-      margin: 14px 0 8px 0;
-      font-size: 16px;
-      opacity: 0.75;
+      margin: 10px 0 6px;
+      font-size: 14px;
+      opacity: 0.6;
     }
 
     .venue-description {
-      margin-bottom: 20px;
-      font-size: 17px;
-      opacity: 0.9;
+      font-size: 15px;
+      margin-bottom: 18px;
+      opacity: 0.85;
     }
 
-    .venue-actions {
-      margin-top: 14px;
-    }
-
-    .action-btn {
-      padding: 14px 22px;
-      border-radius: 14px;
-      background: linear-gradient(90deg,#ff6a88,#ffb86c);
-      text-decoration: none;
+    .venue-actions a {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: var(--orange);
       color: black;
       font-weight: 600;
-      display: inline-block;
-      font-family: 'Poppins', sans-serif;
+      text-decoration: none;
+      font-size: 14px;
     }
 
-    .footer-panel {
-      margin-top: 80px;
-      padding: 80px 20px;
+    .footer {
+      border-top: 1px solid #222;
+      padding: 70px 20px;
       text-align: center;
-      background: linear-gradient(180deg,#111,#000);
     }
 
-    .footer-panel h3 {
+    .footer h3 {
       font-family: 'Poppins', sans-serif;
-      font-size: 32px;
-      margin-bottom: 20px;
+      font-size: 24px;
+      margin-bottom: 16px;
     }
 
-    .footer-panel p {
-      max-width: 650px;
+    .footer p {
+      max-width: 600px;
       margin: auto;
       opacity: 0.75;
-      font-size: 17px;
       line-height: 1.6;
     }
 
@@ -209,123 +223,132 @@
 <body>
 
   <div class="hero">
-    <h1>🎸 Find venues faster.</h1>
-    <div class="sub">Spend less time searching. Spend more time booking.</div>
-    <div class="free-note">100% free. No login. No email collected.</div>
+    <h1>Find venues. Book shows.</h1>
+    <div class="sub">Built for independent artists serious about playing live.</div>
 
     <div class="search-box">
 
-      <input id="city" placeholder="City (NYC, Chicago, London)" />
-
-      <select id="genre">
-        <option value="">Genre</option>
-        <option>Indie</option>
-        <option>Rock</option>
-        <option>Pop</option>
-        <option>Jazz</option>
-        <option>Comedy</option>
-        <option>Cabaret</option>
-      </select>
-
-      <div class="checkbox-row">
-        <input type="checkbox" id="likely" />
-        Only show likely to reply 👍
+      <div class="field-group">
+        <label>City</label>
+        <input id="city" placeholder="Nashville, NYC, Chicago..." />
       </div>
 
-      <textarea id="extra" placeholder="What else is important? (intimate rooms, 100 cap, queer-friendly, outdoor stage, etc.)"></textarea>
+      <div class="field-group">
+        <label>Genre</label>
+        <select id="genre">
+          <option value="">Select genre</option>
+          <option>Indie</option>
+          <option>Rock</option>
+          <option>Alternative</option>
+          <option>Pop</option>
+          <option>Jazz</option>
+          <option>Cabaret</option>
+          <option>Comedy</option>
+        </select>
+      </div>
 
-      <button onclick="searchVenues()">Search venues</button>
+      <div class="toggle-row">
+        <div class="toggle-btn" id="likelyToggle">Likely to reply</div>
+      </div>
+
+      <div class="field-group">
+        <label>What else matters?</label>
+        <textarea id="extra" placeholder="150 cap rooms, queer-friendly, backline provided, etc."></textarea>
+      </div>
+
+      <button class="search-btn" onclick="searchVenues()">Search venues</button>
 
     </div>
   </div>
 
   <div id="results"></div>
 
-  <div class="footer-panel">
-    <h3>How venues are found</h3>
+  <div class="footer">
+    <h3>How it works</h3>
     <p>
-      Pitch uses AI to surface performance venues aligned with your genre and preferences.
-      It prioritizes cultural fit, emerging artist friendliness, and scene relevance.
-      No scraping. No fake contact info. Just intelligent discovery.
+      You choose the city and the sound.
+      We surface venues that regularly book emerging artists in that scene.
+      You reach out directly.
+      No middlemen. Just rooms that make sense for your next show.
     </p>
   </div>
 
-  <script>
+<script>
 
-    async function searchVenues() {
+let likelyActive = false;
 
-      const city = document.getElementById("city").value;
-      const genre = document.getElementById("genre").value;
-      const likely = document.getElementById("likely").checked;
-      const extra = document.getElementById("extra").value;
+document.getElementById("likelyToggle").addEventListener("click", function() {
+  likelyActive = !likelyActive;
+  this.classList.toggle("active");
+});
 
-      if (!city) {
-        alert("Enter a city.");
-        return;
-      }
+async function searchVenues() {
 
-      const res = await fetch("/api/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ city, genre, likely, extra })
-      });
+  const city = document.getElementById("city").value;
+  const genre = document.getElementById("genre").value;
+  const extra = document.getElementById("extra").value;
 
-      const data = await res.json();
+  if (!city) {
+    alert("Enter a city.");
+    return;
+  }
 
-      if (!res.ok) {
-        document.getElementById("results").innerHTML = "<p style='text-align:center;'>Error loading venues.</p>";
-        return;
-      }
+  const res = await fetch("/api/search", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ city, genre, likely: likelyActive, extra })
+  });
 
-      renderResults(data);
-    }
+  const data = await res.json();
 
-    function renderResults(data) {
+  if (!res.ok) {
+    document.getElementById("results").innerHTML = "<p>Error loading venues.</p>";
+    return;
+  }
 
-      const container = document.getElementById("results");
+  renderResults(data);
+}
 
-      container.innerHTML = `
-        <div class="results-header">
-          <h2>🎶 Venues in ${data.city}</h2>
-          <div class="results-explainer">
-            Ranked by genre alignment and emerging artist friendliness.
-          </div>
+function renderResults(data) {
+
+  const container = document.getElementById("results");
+
+  container.innerHTML = `
+    <div class="results-header">
+      <h2>Venues in ${data.city}</h2>
+      <p>Ranked by scene alignment and emerging artist friendliness.</p>
+    </div>
+  `;
+
+  data.results.forEach(venue => {
+
+    const card = document.createElement("div");
+    card.className = "venue-card";
+
+    card.innerHTML = `
+      <div class="venue-header">
+        <div class="venue-title">
+          <span>${venue.emoji}</span>
+          <h3>${venue.name}</h3>
         </div>
-      `;
+        <div class="likelihood">${venue.likelihood * 10}% match</div>
+      </div>
 
-      data.results.forEach(venue => {
+      <div class="venue-location">${venue.neighborhood}, ${data.city}</div>
+      <div class="venue-description">${venue.description}</div>
 
-        const likelihoodPercent = venue.likelihood * 10;
+      <div class="venue-actions">
+        <a href="https://www.google.com/search?q=${venue.name} ${data.city}" target="_blank">
+          View venue info
+        </a>
+      </div>
+    `;
 
-        const card = document.createElement("div");
-        card.className = "venue-card";
+    container.appendChild(card);
+  });
+}
 
-        card.innerHTML = `
-          <div class="venue-header">
-            <div class="venue-title">
-              <span class="venue-emoji">${venue.emoji}</span>
-              <h3>${venue.name}</h3>
-            </div>
-            <div class="likelihood-badge">
-              ${likelihoodPercent}% match
-            </div>
-          </div>
-
-          <p class="venue-location">📍 ${venue.neighborhood}, ${data.city}</p>
-          <p class="venue-description">${venue.description}</p>
-
-          <div class="venue-actions">
-            <a href="https://www.google.com/search?q=${venue.name} ${data.city}" target="_blank" class="action-btn">
-              🔎 View Venue Info
-            </a>
-          </div>
-        `;
-
-        container.appendChild(card);
-      });
-    }
-
-  </script>
+</script>
 
 </body>
 </html>
