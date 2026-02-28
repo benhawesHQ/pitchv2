@@ -1,341 +1,410 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Pitch | Find Your Next Stage</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pitch</title>
 
-  <!-- Guitar Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>">
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
 
-  <style>
-    :root{
-      --orange:#f94501;
-      --bg:#111;
-      --card:#181818;
-      --soft:#222;
-      --border:#2a2a2a;
-      --green:#1db954;
-      --yellow:#f4c430;
-      --red:#ff4d4d;
-    }
+<style>
 
-    body{
-      margin:0;
-      background:var(--bg);
-      color:white;
-      font-family:'Open Sans',sans-serif;
-    }
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  background: #0e0e0e;
+  color: white;
+}
 
-    /* NAV */
+header {
+  position: relative;
+  background: url('hero.jpg') center/cover no-repeat;
+  padding: 100px 20px 80px;
+  text-align: center;
+}
 
-    .nav{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:20px 40px;
-    }
+header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+}
 
-    .logo{
-      font-family:'Poppins';
-      font-weight:800;
-      font-size:28px;
-      letter-spacing:.5px;
-    }
+.header-content {
+  position: relative;
+  z-index: 2;
+}
 
-    .logo span{
-      color:var(--orange);
-    }
+.logo {
+  font-family: 'Poppins', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+}
 
-    .guide-btn{
-      background:var(--orange);
-      color:black;
-      border:none;
-      padding:10px 16px;
-      border-radius:6px;
-      font-family:'Poppins';
-      font-weight:600;
-      cursor:pointer;
-    }
+.logo span {
+  color: #ff9800;
+}
 
-    /* HERO */
+h1 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 40px;
+  margin: 20px 0 10px;
+}
 
-    .hero{
-      text-align:center;
-      padding:30px 20px 50px;
-      max-width:900px;
-      margin:auto;
-    }
+.subhead {
+  opacity: 0.8;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
 
-    .hero h1{
-      font-family:'Poppins';
-      font-size:44px;
-      margin:10px 0 10px;
-    }
+.search-box {
+  background: #1b1b1b;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 700px;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
-    .hero p{
-      font-size:18px;
-      opacity:.8;
-      margin:0;
-    }
+.search-box input, .search-box select {
+  flex: 1;
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+}
 
-    /* SEARCH PANEL */
+.search-box button {
+  background: #ff9800;
+  border: none;
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+}
 
-    .search-panel{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:30px;
-      margin:40px auto 0;
-      max-width:720px;
-    }
+#resultsSection {
+  padding: 60px 20px;
+  max-width: 1100px;
+  margin: auto;
+  display: none;
+}
 
-    .field{
-      margin-bottom:20px;
-      text-align:left;
-    }
+#resultsSection h2 {
+  font-family: 'Poppins';
+  font-size: 28px;
+  margin-bottom: 30px;
+}
 
-    .field label{
-      font-family:'Poppins';
-      font-weight:600;
-      font-size:14px;
-      display:block;
-      margin-bottom:8px;
-    }
+#results {
+  display: grid;
+  gap: 20px;
+}
 
-    .field input,
-    .field select{
-      width:100%;
-      padding:12px;
-      background:var(--soft);
-      border:1px solid var(--border);
-      border-radius:6px;
-      color:white;
-      font-size:14px;
-    }
+.card {
+  background: #1c1c1c;
+  padding: 20px;
+  border-radius: 10px;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+  animation: fadeUp 0.4s ease forwards;
+}
 
-    .search-btn{
-      width:100%;
-      padding:14px;
-      margin-top:10px;
-      border:none;
-      border-radius:8px;
-      font-family:'Poppins';
-      font-weight:700;
-      background:var(--orange);
-      color:black;
-      cursor:pointer;
-    }
+.card h3 {
+  margin: 0 0 10px;
+}
 
-    /* RESULTS SECTION */
+.card p {
+  font-size: 14px;
+  opacity: 0.85;
+}
 
-    .results-wrapper{
-      max-width:1000px;
-      margin:60px auto;
-      padding:0 20px;
-    }
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-top: 10px;
+}
 
-    .results-header{
-      font-family:'Poppins';
-      font-size:22px;
-      margin-bottom:8px;
-    }
+.high { background: #2e7d32; }
+.medium { background: #ff9800; }
+.low { background: #c62828; }
 
-    .results-sub{
-      opacity:.7;
-      font-size:14px;
-      margin-bottom:25px;
-    }
+.card button {
+  margin-top: 15px;
+  background: #ff9800;
+  border: none;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-radius: 6px;
+}
 
-    .results{
-      display:grid;
-      gap:20px;
-    }
+.load-more {
+  margin: 40px auto;
+  display: none;
+  padding: 12px 24px;
+  background: #ff9800;
+  color: black;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
-    .venue-card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:20px;
-    }
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  background: #111;
+  font-size: 14px;
+}
 
-    .venue-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:10px;
-    }
+footer a {
+  color: #ff9800;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 10px;
+}
 
-    .venue-name{
-      font-family:'Poppins';
-      font-size:18px;
-      font-weight:700;
-    }
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  display: none;
+}
 
-    .venue-location{
-      font-size:13px;
-      opacity:.7;
-      margin-bottom:10px;
-    }
+.loading-content {
+  text-align: center;
+  max-width: 600px;
+}
 
-    .venue-description{
-      font-size:14px;
-      margin-bottom:14px;
-      opacity:.9;
-    }
+.loading-content h2 {
+  font-family: 'Poppins';
+}
 
-    .booking-badge{
-      padding:6px 10px;
-      border-radius:20px;
-      font-size:12px;
-      font-weight:600;
-    }
+.floating-icons {
+  font-size: 40px;
+  margin-bottom: 20px;
+  animation: bounce 1.8s infinite ease-in-out;
+}
 
-    .reply-high{
-      background:var(--green);
-      color:black;
-    }
+.bulb-bar {
+  height: 6px;
+  background: linear-gradient(90deg, #ff9800, #ff5722, #ff9800);
+  margin-top: 25px;
+  animation: flicker 1.5s infinite alternate;
+}
 
-    .reply-medium{
-      background:var(--yellow);
-      color:black;
-    }
+#confettiCanvas {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9998;
+}
 
-    .reply-low{
-      background:var(--red);
-      color:white;
-    }
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
 
-    .see-venue-btn{
-      display:inline-block;
-      padding:8px 14px;
-      border-radius:6px;
-      background:var(--orange);
-      color:black;
-      text-decoration:none;
-      font-weight:600;
-      font-size:14px;
-    }
+@keyframes flicker {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
 
-    /* SUPPORT NOTE */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    .support-note{
-      margin-top:40px;
-      font-size:13px;
-      opacity:.7;
-      text-align:center;
-    }
+@media(max-width:768px){
+  h1 { font-size: 28px; }
+  .search-box { flex-direction: column; }
+}
 
-    .support-note strong{
-      color:var(--orange);
-      font-weight:600;
-    }
-
-    /* LOADING OVERLAY */
-
-    .loading-overlay{
-      position:fixed;
-      inset:0;
-      background:black;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      opacity:0;
-      pointer-events:none;
-      transition:.3s ease;
-      z-index:999;
-    }
-
-    .loading-overlay.active{
-      opacity:1;
-      pointer-events:auto;
-    }
-
-    .loading-overlay span{
-      font-size:40px;
-      animation:rock 1s infinite alternate;
-    }
-
-    @keyframes rock{
-      0%{transform:rotate(-5deg)}
-      100%{transform:rotate(5deg)}
-    }
-
-  </style>
+</style>
 </head>
-
 <body>
 
-  <div class="nav">
+<header>
+  <div class="header-content">
     <div class="logo">Pitch<span>.</span></div>
-    <button class="guide-btn">Download Guide</button>
-  </div>
-
-  <div class="hero">
     <h1>Find Your Next Stage</h1>
-    <p>Discover venues faster so you can focus on planning the show.</p>
-
-    <div class="search-panel">
-
-      <div class="field">
-        <label>City</label>
-        <input id="cityInput" placeholder="Brooklyn, Nashville, Austin">
-      </div>
-
-      <div class="field">
-        <label>Expected Audience</label>
-        <input id="audienceInput" placeholder="35, 80, 120">
-      </div>
-
-      <div class="field">
-        <label>What Else Matters?</label>
-        <input id="extraInput" placeholder="LGBTQ friendly, near train, indie vibe">
-      </div>
-
-      <div class="field">
-        <label>Number of Suggestions</label>
-        <select id="countSelect">
-          <option value="5">5 venues</option>
-          <option value="10" selected>10 venues</option>
-          <option value="15">15 venues</option>
-          <option value="20">20 venues</option>
-        </select>
-      </div>
-
-      <button class="search-btn" onclick="searchVenues()">
-        Search Venues
-      </button>
-
+    <div class="subhead">Discover venues faster so you can focus on planning the show.</div>
+    <div class="search-box">
+      <input type="text" id="city" placeholder="City">
+      <input type="number" id="audience" placeholder="Audience size">
+      <select id="count">
+        <option value="15">15 venues</option>
+        <option value="20">20 venues</option>
+      </select>
+      <button onclick="searchVenues()">Search Venues</button>
     </div>
   </div>
+</header>
 
-  <div class="results-wrapper">
+<section id="resultsSection">
+  <h2>Your Shortlist of Venues</h2>
+  <div id="results"></div>
+  <button id="loadMoreBtn" class="load-more">See a Few More</button>
+</section>
 
-    <div class="results-header">
-      Your short list of venues
-    </div>
+<footer>
+  Created by NYC musician Ben Hawes.<br>
+  Follow the journey at <a href="https://benhaweshq.com" target="_blank">benhaweshq.com</a><br>
+  <a href="https://instagram.com/benhaweshq" target="_blank">Connect on Instagram</a>
+</footer>
 
-    <div class="results-sub">
-      Reach out to any that fit your vibe. Always verify details before booking.
-    </div>
-
-    <div id="results" class="results"></div>
-
-    <div class="support-note">
-      Pitch surfaces performance spaces based on research and current programming patterns.
-      <br>
-      <strong>Want live status checks and real-time verification?</strong>
-      Support the build by downloading the guide or joining the launch campaign.
-    </div>
-
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-content">
+    <div class="floating-icons">🎸 🎵 🎶</div>
+    <h2>Building Your Next Stage…</h2>
+    <p id="loreText"></p>
+    <div class="bulb-bar"></div>
   </div>
+</div>
 
-  <div id="loadingOverlay" class="loading-overlay">
-    <span>🎸 🎤</span>
-  </div>
+<canvas id="confettiCanvas"></canvas>
 
-  <script src="/script.js"></script>
+<script>
+
+// ---- Lore Logic (Non Repeating) ----
+const loreLines = [
+"Stage One: Taylor Swift performed at county fairs before stadium tours.",
+"Back When: Green Day built their following in small Bay Area clubs.",
+"Before the Stadium: Madonna sharpened her sound in downtown New York clubs.",
+"Tour Origins: Beyoncé competed in local showcases before world tours.",
+"Stage One: Lady Gaga played Lower East Side venues before arenas.",
+"Back When: Ed Sheeran busked before selling out stadiums.",
+"Before the Encore: Nirvana toured tiny rooms before breaking mainstream.",
+"Tour Origins: Lizzo performed in small venues before global fame.",
+"Stage One: Adele played intimate London venues before arenas.",
+"Back When: Coldplay played small clubs before stadium runs.",
+"Before the Stadium: Billie Eilish began with intimate showcases.",
+"Tour Origins: Arctic Monkeys grew through UK club circuits.",
+"Stage One: Harry Styles played smaller venues before stadium tours.",
+"Back When: Dua Lipa performed small showcases before arena runs.",
+"Before the Encore: The Strokes built buzz in packed NYC club shows."
+];
+
+let unusedLore = [...Array(loreLines.length).keys()];
+
+function getLore(){
+  if(unusedLore.length === 0){
+    unusedLore = [...Array(loreLines.length).keys()];
+  }
+  const index = Math.floor(Math.random()*unusedLore.length);
+  return loreLines[unusedLore.splice(index,1)[0]];
+}
+
+// ---- Confetti ----
+const canvas = document.getElementById("confettiCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+function launchConfetti(){
+  const pieces = [];
+  for(let i=0;i<120;i++){
+    pieces.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*-canvas.height,
+      r: Math.random()*6+4,
+      d: Math.random()*120,
+      color:["#ff9800","#ff5722","#ffc107","#ffffff"][Math.floor(Math.random()*4)]
+    });
+  }
+
+  let angle=0;
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    angle+=0.01;
+    pieces.forEach(p=>{
+      p.y+=3;
+      ctx.beginPath();
+      ctx.lineWidth=p.r;
+      ctx.strokeStyle=p.color;
+      ctx.moveTo(p.x,p.y);
+      ctx.lineTo(p.x+5,p.y+5);
+      ctx.stroke();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+  setTimeout(()=>ctx.clearRect(0,0,canvas.width,canvas.height),1800);
+}
+
+// ---- Mock Venue Data ----
+function mockVenues(){
+  const venues=[];
+  for(let i=1;i<=20;i++){
+    venues.push({
+      name:"Venue "+i+" 🎶",
+      desc:"Independent live music venue hosting regular scheduled performances and touring artists.",
+      badge:["high","medium","low"][Math.floor(Math.random()*3)]
+    });
+  }
+  return venues;
+}
+
+// ---- Render Logic ----
+let fullResults=[];
+
+function searchVenues(){
+  document.getElementById("loadingOverlay").style.display="flex";
+  document.getElementById("loreText").textContent=getLore();
+
+  setTimeout(()=>{
+    document.getElementById("loadingOverlay").style.display="none";
+    document.getElementById("resultsSection").style.display="block";
+
+    fullResults=mockVenues();
+    renderVenues(fullResults);
+
+  },1800);
+}
+
+function renderVenues(venues){
+  const container=document.getElementById("results");
+  container.innerHTML="";
+  const initial=venues.slice(0,15);
+
+  initial.forEach(v=>container.appendChild(createCard(v)));
+
+  if(venues.length>15){
+    document.getElementById("loadMoreBtn").style.display="block";
+  }
+}
+
+function createCard(v){
+  const div=document.createElement("div");
+  div.className="card";
+  div.innerHTML=`
+    <h3>${v.name}</h3>
+    <p>${v.desc}</p>
+    <span class="badge ${v.badge}">Likely to Reply</span><br>
+    <button>See Venue</button>
+  `;
+  return div;
+}
+
+document.getElementById("loadMoreBtn").addEventListener("click",function(){
+  launchConfetti();
+  const container=document.getElementById("results");
+  fullResults.slice(15).forEach(v=>container.appendChild(createCard(v)));
+  this.style.display="none";
+});
+
+</script>
 
 </body>
 </html>
