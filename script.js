@@ -1,44 +1,17 @@
-// DATASET
-
-const venues = [
-  // BROOKLYN SMALL
-  {name:"The Sultan Room",city:"brooklyn",min:50,max:150,desc:"Independent upstairs venue with ticketed live music.",reply:"high"},
-  {name:"Union Hall",city:"brooklyn",min:80,max:140,desc:"Intimate performance room hosting music and comedy.",reply:"high"},
-  {name:"Baby's All Right",city:"brooklyn",min:100,max:280,desc:"Indie music venue with national touring acts.",reply:"medium"},
-  {name:"Music Hall of Williamsburg",city:"brooklyn",min:250,max:650,desc:"Established Brooklyn concert venue for touring artists.",reply:"medium"},
-  {name:"The Bell House",city:"brooklyn",min:150,max:300,desc:"Gowanus venue with full stage and ticketed shows.",reply:"medium"},
-
-  // SAN FRANCISCO
-  {name:"The Lost Church",city:"san francisco",min:30,max:80,desc:"Listening room focused on original music.",reply:"medium"},
-  {name:"The Independent",city:"san francisco",min:200,max:500,desc:"Established venue hosting touring acts.",reply:"medium"},
-  {name:"Bottom of the Hill",city:"san francisco",min:150,max:300,desc:"Historic indie venue with dedicated stage.",reply:"high"},
-
-  // PORTLAND
-  {name:"Mississippi Studios",city:"portland",min:200,max:300,desc:"Beloved Portland venue hosting touring acts.",reply:"medium"},
-  {name:"The Old Church",city:"portland",min:100,max:300,desc:"Historic church venue with seated performances.",reply:"medium"},
-  {name:"The Waypost",city:"portland",min:40,max:100,desc:"Cozy neighborhood venue with live music nights.",reply:"high"}
-];
-
-let filteredVenues = [];
+let generatedResults = [];
 let displayedCount = 0;
 
 const loreMoments = [
-  const loreMoments = [
-  "Taylor Swift once played small Nashville cafés before headlining stadium tours.",
-  "Lady Gaga performed in downtown New York clubs long before global fame.",
-  "Beyoncé started out performing in small local competitions before selling out arenas.",
-  "Green Day built their fanbase in tiny Bay Area venues before international tours.",
-  "Bruce Springsteen played small Jersey bars before filling stadiums worldwide.",
-  "Billie Eilish recorded songs in her bedroom before topping global charts.",
-  "Madonna performed in New York dance clubs before becoming a pop icon.",
-  "Prince played Minneapolis clubs before becoming a worldwide legend.",
-  "Bad Bunny started releasing music independently before global superstardom.",
-  "Adele performed in small London venues before becoming a household name.",
-  "Ed Sheeran busked on the streets before selling out stadiums.",
-  "The Weeknd uploaded songs online before becoming a festival headliner.",
-  "Kendrick Lamar performed in small LA venues before global tours.",
-  "Cher started performing locally before becoming an international icon.",
-  "Dua Lipa worked small stages before headlining world tours."
+  "Taylor Swift once played small Nashville cafés before stadium tours.",
+  "Lady Gaga built her audience in downtown New York clubs.",
+  "Green Day grew their fanbase in tiny Bay Area venues.",
+  "Bruce Springsteen played small Jersey bars before arenas.",
+  "Ed Sheeran busked on streets before selling out stadiums.",
+  "Beyoncé performed in local competitions before global tours.",
+  "Prince built momentum in Minneapolis clubs before worldwide fame.",
+  "Madonna performed in NYC dance rooms before pop superstardom.",
+  "Adele sang in small London venues before global recognition.",
+  "Kendrick Lamar performed in intimate LA rooms before festival headlines."
 ];
 
 let loreIndex = 0;
@@ -50,9 +23,14 @@ function getLore(){
 }
 
 function searchVenues(){
-  const cityInput = document.getElementById("cityInput").value.toLowerCase();
+  const city = document.getElementById("cityInput").value.trim();
   const audience = parseInt(document.getElementById("audienceInput").value);
   const count = parseInt(document.getElementById("countSelect").value);
+
+  if(!city || !audience){
+    alert("Please enter a city and audience size.");
+    return;
+  }
 
   document.getElementById("resultsWrapper").style.display="block";
 
@@ -62,45 +40,144 @@ function searchVenues(){
 
   setTimeout(() => {
     overlay.classList.remove("active");
+    buildResults(city, audience, count);
+  }, 1600);
+}
 
-    filteredVenues = venues
-      .filter(v => cityInput.includes(v.city))
-      .sort((a,b) => Math.abs(a.min - audience) - Math.abs(b.min - audience))
-      .slice(0,count);
+function buildResults(city, audience, count){
+  const results = document.getElementById("results");
+  results.innerHTML="";
+  generatedResults = [];
+  displayedCount = 0;
 
-    displayedCount = 0;
-    document.getElementById("results").innerHTML="";
-    document.getElementById("resultsSub").innerText =
-      `Showing ${filteredVenues.length} venues matching ~${audience} guests in ${cityInput}.`;
+  const sizeTier = getSizeTier(audience);
 
-    showMore();
-  }, 1500);
+  const baseCategories = getCategoriesForTier(sizeTier);
+
+  for(let i=0; i<count; i++){
+    const category = baseCategories[i % baseCategories.length];
+    generatedResults.push(generateCard(city, audience, category));
+  }
+
+  document.getElementById("resultsSub").innerText =
+    `Showing ${count} intelligent venue pathways for ~${audience} guests in ${city}.`;
+
+  showMore();
+}
+
+function getSizeTier(audience){
+  if(audience <= 60) return "small";
+  if(audience <= 150) return "medium";
+  if(audience <= 400) return "large";
+  return "theater";
+}
+
+function getCategoriesForTier(tier){
+  if(tier === "small"){
+    return [
+      "Intimate Listening Rooms",
+      "Indie Back Rooms Above Bars",
+      "DIY Music Spaces",
+      "Small Theaters Under 75 Seats",
+      "Neighborhood Music Bars",
+      "Artist-Run Performance Rooms",
+      "Warehouse-Style Micro Venues",
+      "All-Ages Community Stages",
+      "Residency-Friendly Rooms",
+      "Basement Performance Spaces",
+      "Coffeehouse Stages",
+      "Alternative Arts Spaces",
+      "Upstairs Bar Stages",
+      "Creative Event Lofts",
+      "Experimental Music Rooms"
+    ];
+  }
+
+  if(tier === "medium"){
+    return [
+      "Mid-Size Concert Halls",
+      "Standing-Room Indie Venues",
+      "Ticketed Touring Rooms",
+      "Converted Industrial Spaces",
+      "Music-Focused Event Venues",
+      "Ballroom-Style Stages",
+      "Established Indie Rooms",
+      "Hybrid Bar + Stage Venues",
+      "Flexible Capacity Event Spaces",
+      "City Arts Centers",
+      "Regional Touring Venues",
+      "Multi-Room Music Spaces",
+      "Community Performance Halls",
+      "Late-Night Live Music Rooms",
+      "Local Festival-Scale Spaces"
+    ];
+  }
+
+  if(tier === "large"){
+    return [
+      "Large Independent Concert Venues",
+      "Warehouse Concert Spaces",
+      "City Performance Centers",
+      "Historic Music Halls",
+      "Multi-Level Event Spaces",
+      "Festival-Sized Indoor Rooms",
+      "Standing-Room Ballrooms",
+      "Large Touring Venues",
+      "Converted Theater Spaces",
+      "Major Indie Music Rooms",
+      "Regional Event Centers",
+      "High-Capacity Music Venues",
+      "Arena-Scale Indie Halls",
+      "Urban Performance Warehouses",
+      "Major Ticketed Music Rooms"
+    ];
+  }
+
+  return [
+    "Theater-Scale Performance Venues",
+    "City Concert Halls",
+    "Large Touring Stages",
+    "Multi-Thousand Capacity Rooms",
+    "Regional Event Arenas",
+    "Landmark Music Theaters",
+    "Historic Grand Performance Spaces",
+    "Major City Performance Centers",
+    "Festival Headline Stages",
+    "High-Capacity Theater Rentals",
+    "Urban Concert Theaters",
+    "Premier Touring Venues",
+    "Metropolitan Music Halls",
+    "Mainstage City Auditoriums",
+    "Large-Scale Indoor Concert Spaces"
+  ];
+}
+
+function generateCard(city, audience, category){
+  const searchQuery = `${category} in ${city} capacity ${audience} live music booking`;
+
+  return {
+    title: category,
+    description: `These are the kinds of spaces where artists build momentum at this level. For a crowd around ${audience}, rooms like this create energy without feeling empty. Many touring acts passed through venues in this tier before scaling up. Explore current live options in ${city} that match this scale and vibe.`,
+    googleLink: `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`,
+    mapsLink: `https://www.google.com/maps/search/${encodeURIComponent(searchQuery)}`
+  };
 }
 
 function showMore(){
   const results = document.getElementById("results");
   const moreBtn = document.getElementById("moreBtn");
 
-  const nextChunk = filteredVenues.slice(displayedCount, displayedCount + 5);
+  const nextChunk = generatedResults.slice(displayedCount, displayedCount + 5);
 
-  nextChunk.forEach(v => {
-    const badgeClass = v.reply==="high" ? "reply-high" :
-                       v.reply==="medium" ? "reply-medium" : "reply-low";
-
+  nextChunk.forEach(card => {
     results.innerHTML += `
       <div class="venue-card">
         <div class="venue-header">
-          <div class="venue-name">${v.name}</div>
-          <div class="booking-badge ${badgeClass}">
-            ${v.reply==="high" ? "Likely to Reply" :
-              v.reply==="medium" ? "May Reply" : "Harder to Reach"}
-          </div>
+          <div class="venue-name">${card.title}</div>
         </div>
-        <div class="venue-location">${v.city}</div>
-        <div class="venue-description">${v.desc}</div>
-        <a class="see-venue-btn" target="_blank"
-           href="https://www.google.com/search?q=${encodeURIComponent(v.name + " " + v.city)}">
-          See venue
+        <div class="venue-description">${card.description}</div>
+        <a class="see-venue-btn" target="_blank" href="${card.googleLink}">
+          Explore Live Options →
         </a>
       </div>
     `;
@@ -108,7 +185,7 @@ function showMore(){
 
   displayedCount += 5;
 
-  if(displayedCount < filteredVenues.length){
+  if(displayedCount < generatedResults.length){
     moreBtn.style.display="block";
   } else {
     moreBtn.style.display="none";
@@ -118,7 +195,7 @@ function showMore(){
 }
 
 function launchConfetti(){
-  for(let i=0;i<30;i++){
+  for(let i=0;i<35;i++){
     const confetti=document.createElement("div");
     confetti.style.position="fixed";
     confetti.style.left=Math.random()*100+"%";
