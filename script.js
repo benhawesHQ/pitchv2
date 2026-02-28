@@ -1,103 +1,78 @@
-const resultsWrapper = document.getElementById("resultsWrapper");
-const resultsContainer = document.getElementById("results");
-const resultsSub = document.getElementById("resultsSub");
-const loadingOverlay = document.getElementById("loadingOverlay");
-const loreText = document.getElementById("loreText");
-const moreBtn = document.getElementById("moreBtn");
-
-let currentVenues = [];
-let shownCount = 0;
-
-const funFacts = [
-  "🎤 Taylor Swift played tiny Nashville venues before selling out stadium tours.",
-  "🎸 Ed Sheeran used to busk on the streets before headlining Wembley Stadium.",
-  "🎶 Lady Gaga performed in Lower East Side clubs before global fame.",
-  "🎵 Billie Eilish recorded songs in her bedroom before winning Grammys.",
-  "🎼 Adele performed in London pubs before arenas.",
-  "🎷 Lizzo toured small indie venues before Coachella main stage.",
-  "🎺 Hozier gained momentum in intimate Irish venues.",
-  "🎹 Coldplay played student unions before stadium tours.",
-  "🎻 Paramore toured VFW halls before festivals.",
-  "🎙️ The Killers played Vegas bars before world tours."
-];
-
-function getRandomFact() {
-  return funFacts[Math.floor(Math.random() * funFacts.length)];
-}
-
-function showLoading() {
-  loreText.innerText = getRandomFact();
-  loadingOverlay.classList.add("active");
-}
-
-function hideLoading() {
-  loadingOverlay.classList.remove("active");
-}
-
 async function searchVenues() {
-  const city = document.getElementById("cityInput").value;
-  const audience = document.getElementById("audienceInput").value;
-  const count = document.getElementById("countSelect").value;
+  const city = document.getElementById("cityInput").value.trim();
+  const audience = document.getElementById("audienceInput").value.trim();
 
   if (!city) {
-    alert("Enter a city");
+    alert("Please enter a city.");
     return;
   }
 
-  showLoading();
+  const overlay = document.getElementById("loadingOverlay");
+  overlay.classList.add("active");
 
   try {
-    const response = await fetch("https://pitch-lboq.onrender.com/search", {
+    const response = await fetch("/api/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ city, audience, count })
+      body: JSON.stringify({ city, audience })
     });
 
     const data = await response.json();
 
-    hideLoading();
+    overlay.classList.remove("active");
 
-    currentVenues = data.venues || [];
-    shownCount = 0;
+    if (!data.venues) {
+      alert("Something went wrong connecting to the server.");
+      return;
+    }
 
-    resultsContainer.innerHTML = "";
-    resultsWrapper.style.display = "block";
-    resultsSub.innerText = `${currentVenues.length} venues found in ${city}`;
-
-    showMore();
+    renderVenues(data.venues, city);
 
   } catch (err) {
-    hideLoading();
+    overlay.classList.remove("active");
     alert("Something went wrong connecting to the server.");
   }
 }
 
-function showMore() {
-  const nextBatch = currentVenues.slice(shownCount, shownCount + 5);
+function renderVenues(venues, city) {
+  const wrapper = document.getElementById("resultsWrapper");
+  const results = document.getElementById("results");
+  const sub = document.getElementById("resultsSub");
 
-  nextBatch.forEach(v => {
+  results.innerHTML = "";
+  wrapper.style.display = "block";
+  sub.innerText = `Live performance spaces in ${city}`;
+
+  venues.forEach(venue => {
     const card = document.createElement("div");
     card.className = "venue-card";
 
     card.innerHTML = `
-      <div class="venue-name">${v.emoji} ${v.name}</div>
-      <div class="venue-description">${v.description}</div>
-      <a class="see-venue-btn" target="_blank"
-         href="https://www.google.com/search?q=${encodeURIComponent(v.googleQuery)}">
-         View Venue
-      </a>
+      ${venue.photo ? `<img src="${venue.photo}" style="width:100%;border-radius:8px;margin-bottom:15px;">` : ""}
+
+      <div class="venue-name">${venue.name}</div>
+
+      <div style="font-size:14px;margin-bottom:8px;">
+        ⭐ ${venue.rating} (${venue.reviewCount} reviews)
+        ${venue.isOpen === true ? 
+          `<span style="color:#00ff88;font-weight:600;margin-left:10px;">● Open Now</span>` : 
+          venue.isOpen === false ? 
+          `<span style="color:#999;margin-left:10px;">Closed</span>` : ""}
+      </div>
+
+      <div class="venue-description">${venue.address}</div>
+
+      ${venue.reviewSnippet ? 
+        `<div style="font-size:13px;margin-top:10px;color:#ccc;">“${venue.reviewSnippet.substring(0,150)}...”</div>` 
+        : ""}
+
+      ${venue.website ? 
+        `<a href="${venue.website}" target="_blank" class="see-venue-btn" style="margin-top:15px;">Visit Website</a>` 
+        : ""}
     `;
 
-    resultsContainer.appendChild(card);
+    results.appendChild(card);
   });
-
-  shownCount += 5;
-
-  if (shownCount < currentVenues.length) {
-    moreBtn.style.display = "inline-block";
-  } else {
-    moreBtn.style.display = "none";
-  }
 }
