@@ -9,16 +9,15 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// Fix for ES modules static serving
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve frontend
-app.use(express.static(path.join(__dirname, "public")));
+// Serve static files from root directory
+app.use(express.static(__dirname));
 
-// Root route fallback (prevents Cannot GET /)
+// Serve index.html on root
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
