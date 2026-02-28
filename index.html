@@ -4,6 +4,9 @@
   <title>Pitch</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- 🎸 Emoji favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>">
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
@@ -95,10 +98,19 @@
     }
 
     label {
-      font-size: 13px;
-      opacity: 0.6;
-      margin-bottom: 6px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 8px;
       display: block;
+      color: white;
+    }
+
+    .hint {
+      font-size: 13px;
+      opacity: 0.55;
+      margin-top: -12px;
+      margin-bottom: 16px;
     }
 
     input {
@@ -118,7 +130,7 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
     }
 
     .genre-btn {
@@ -147,7 +159,8 @@
       border: 1px solid #333;
       cursor: pointer;
       font-size: 14px;
-      margin-bottom: 20px;
+      margin-top: 6px;
+      margin-bottom: 24px;
     }
 
     .toggle-btn.active {
@@ -189,7 +202,8 @@
       <div class="search-box">
 
         <label>City</label>
-        <input id="city" placeholder="Nashville, NYC, Chicago..." />
+        <input id="city" placeholder="Where are you playing?" />
+        <div class="hint">Start with the city you want to headline.</div>
 
         <label>Genre / vibe</label>
         <div class="genre-row">
@@ -200,11 +214,15 @@
           <div class="genre-btn">Comedy</div>
           <div class="genre-btn">Pop</div>
         </div>
+        <div class="hint">What kind of room fits your sound?</div>
 
         <label>Expected audience</label>
-        <input id="audience" placeholder="45, forty five, 40-50, under 100..." />
+        <input id="audience" placeholder="How many people could you realistically bring?" />
+        <div class="hint">Be honest. It helps.</div>
 
-        <div class="toggle-btn" id="likelyToggle">Only show venues likely to reply</div>
+        <div class="toggle-btn" id="likelyToggle">
+          Only show venues likely to reply
+        </div>
 
         <button class="search-btn" onclick="searchVenues()">Search venues</button>
 
@@ -230,7 +248,6 @@ document.getElementById("likelyToggle").addEventListener("click", function() {
   this.classList.toggle("active");
 });
 
-/* Normalize audience input */
 function normalizeAudience(input) {
   if (!input) return null;
 
