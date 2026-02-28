@@ -386,5 +386,28 @@ footer{
     text-align:center;
     margin:12px 0 0 0;
   }
+/* Solid badge */
+.solid-green{
+  background:#22c55e;
+  color:white;
+  border:none;
+  box-shadow:0 4px 12px rgba(0,0,0,.4);
+}
 
+/* Tag filters */
+.tag-filter{
+  display:inline-block;
+  padding:8px 14px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--card);
+  margin:6px 6px 12px 0;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.tag-filter.active{
+  background:var(--orange);
+  color:black;
+}
 }
