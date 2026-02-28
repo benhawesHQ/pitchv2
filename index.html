@@ -4,7 +4,7 @@
   <title>Pitch</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 🎸 Emoji favicon -->
+  <!-- 🎸 Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>">
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -72,7 +72,7 @@
     .hero-content {
       position: relative;
       z-index: 2;
-      max-width: 750px;
+      max-width: 720px;
       margin: auto;
     }
 
@@ -80,18 +80,18 @@
       font-family: 'Poppins', sans-serif;
       font-weight: 800;
       font-size: 44px;
-      margin-bottom: 14px;
+      margin-bottom: 10px;
     }
 
     .sub {
       font-size: 20px;
       opacity: 0.9;
-      margin-bottom: 40px;
+      margin-bottom: 50px;
     }
 
     .search-box {
       background: rgba(20,20,20,0.95);
-      padding: 30px;
+      padding: 32px;
       border-radius: 12px;
       border: 1px solid #222;
       text-align: left;
@@ -106,13 +106,6 @@
       color: white;
     }
 
-    .hint {
-      font-size: 13px;
-      opacity: 0.55;
-      margin-top: -12px;
-      margin-bottom: 16px;
-    }
-
     input {
       width: 100%;
       padding: 14px;
@@ -121,16 +114,16 @@
       background: var(--card);
       color: white;
       font-size: 15px;
-      margin-bottom: 18px;
+      margin-bottom: 24px;
     }
 
-    /* GENRE BUTTONS */
+    /* GENRE */
 
     .genre-row {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 12px;
+      margin-bottom: 24px;
     }
 
     .genre-btn {
@@ -140,6 +133,7 @@
       border: 1px solid #333;
       cursor: pointer;
       font-size: 14px;
+      transition: background 0.15s ease;
     }
 
     .genre-btn.active {
@@ -159,8 +153,7 @@
       border: 1px solid #333;
       cursor: pointer;
       font-size: 14px;
-      margin-top: 6px;
-      margin-bottom: 24px;
+      margin-bottom: 30px;
     }
 
     .toggle-btn.active {
@@ -202,10 +195,9 @@
       <div class="search-box">
 
         <label>City</label>
-        <input id="city" placeholder="Where are you playing?" />
-        <div class="hint">Start with the city you want to headline.</div>
+        <input id="city" placeholder="Nashville, NYC, Chicago…" />
 
-        <label>Genre / vibe</label>
+        <label>Genre</label>
         <div class="genre-row">
           <div class="genre-btn">Rock</div>
           <div class="genre-btn">Indie</div>
@@ -214,14 +206,12 @@
           <div class="genre-btn">Comedy</div>
           <div class="genre-btn">Pop</div>
         </div>
-        <div class="hint">What kind of room fits your sound?</div>
 
-        <label>Expected audience</label>
-        <input id="audience" placeholder="How many people could you realistically bring?" />
-        <div class="hint">Be honest. It helps.</div>
+        <label>Audience</label>
+        <input id="audience" placeholder="50 · 40-60 · under 100" />
 
         <div class="toggle-btn" id="likelyToggle">
-          Only show venues likely to reply
+          Prioritize likely to reply
         </div>
 
         <button class="search-btn" onclick="searchVenues()">Search venues</button>
@@ -250,7 +240,6 @@ document.getElementById("likelyToggle").addEventListener("click", function() {
 
 function normalizeAudience(input) {
   if (!input) return null;
-
   const numbers = input.match(/\d+/g);
   if (numbers) {
     if (numbers.length === 1) return parseInt(numbers[0]);
@@ -259,7 +248,6 @@ function normalizeAudience(input) {
       max: parseInt(numbers[1])
     };
   }
-
   return input.toLowerCase();
 }
 
