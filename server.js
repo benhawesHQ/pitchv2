@@ -1,12 +1,19 @@
 import express from "express";
 import dotenv from "dotenv";
 import OpenAI from "openai";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 app.use(express.json());
-app.use(express.static("public")); // make sure your index.html is inside /public
+
+// Serve root files (because you don't have a public folder)
+app.use(express.static(__dirname));
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -44,6 +51,7 @@ Return JSON only in this format:
     });
 
     const text = completion.choices[0].message.content;
+
     const parsed = JSON.parse(text);
 
     res.json(parsed);
@@ -55,6 +63,7 @@ Return JSON only in this format:
 });
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
