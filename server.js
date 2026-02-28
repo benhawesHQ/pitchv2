@@ -1,12 +1,25 @@
 import express from "express";
 import fetch from "node-fetch";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(express.static("public"));
+
+// Fix for ES modules static serving
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve frontend
+app.use(express.static(path.join(__dirname, "public")));
+
+// Root route fallback (prevents Cannot GET /)
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
@@ -58,6 +71,7 @@ app.post("/api/search", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 10000;
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
