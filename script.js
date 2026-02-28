@@ -1,10 +1,6 @@
 let generatedResults = [];
 let displayedCount = 0;
 
-/* =========================
-   LOADING LORE (STAR FACTS)
-========================= */
-
 const loreMoments = [
   "Taylor Swift once played small Nashville cafés before stadium tours.",
   "Lady Gaga built her audience in downtown New York clubs.",
@@ -25,10 +21,6 @@ function getLore() {
   loreIndex = (loreIndex + 1) % loreMoments.length;
   return text;
 }
-
-/* =========================
-   MAIN SEARCH
-========================= */
 
 function searchVenues() {
   const city = document.getElementById("cityInput").value.trim();
@@ -52,10 +44,6 @@ function searchVenues() {
   }, 1600);
 }
 
-/* =========================
-   BUILD RESULTS
-========================= */
-
 function buildResults(city, audience, count) {
   const results = document.getElementById("results");
   results.innerHTML = "";
@@ -76,20 +64,12 @@ function buildResults(city, audience, count) {
   showMore();
 }
 
-/* =========================
-   CAPACITY TIERS
-========================= */
-
 function getSizeTier(audience) {
   if (audience <= 60) return "small";
   if (audience <= 150) return "medium";
   if (audience <= 400) return "large";
   return "theater";
 }
-
-/* =========================
-   CATEGORY GENERATORS
-========================= */
 
 function getCategoriesForTier(tier) {
 
@@ -172,10 +152,6 @@ function getCategoriesForTier(tier) {
   ];
 }
 
-/* =========================
-   CARD CREATION
-========================= */
-
 function generateCard(city, audience, category) {
 
   const searchQuery =
@@ -193,10 +169,6 @@ Explore current live options in ${city} that match this scale and vibe.`,
   };
 }
 
-/* =========================
-   RENDER RESULTS
-========================= */
-
 function showMore() {
 
   const results = document.getElementById("results");
@@ -209,9 +181,7 @@ function showMore() {
 
     results.innerHTML += `
       <div class="venue-card">
-        <div class="venue-header">
-          <div class="venue-name">${card.title}</div>
-        </div>
+        <div class="venue-name">${card.title}</div>
         <div class="venue-description">${card.description}</div>
         <a class="see-venue-btn" target="_blank" href="${card.googleLink}">
           Explore Live Options →
@@ -230,10 +200,6 @@ function showMore() {
 
   launchConfetti();
 }
-
-/* =========================
-   CONFETTI
-========================= */
 
 function launchConfetti() {
 
