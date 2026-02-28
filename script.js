@@ -10,9 +10,13 @@ async function searchVenues() {
   }
 
   const overlay = document.getElementById("loadingOverlay");
+  const container = document.getElementById("results");
+
   overlay.classList.add("active");
+  container.innerHTML = "";
 
   try {
+
     const response = await fetch("/api/search", {
       method: "POST",
       headers: {
@@ -21,37 +25,64 @@ async function searchVenues() {
       body: JSON.stringify({ city, audience, vibe })
     });
 
+    if (!response.ok) {
+      throw new Error("Server error");
+    }
+
     const data = await response.json();
 
-    const container = document.getElementById("results");
-    container.innerHTML = "";
-
-    if (!data.venues) {
+    if (!data.venues || data.venues.length === 0) {
       container.innerHTML = "<p>No venues found.</p>";
-      overlay.classList.remove("active");
       return;
     }
 
     data.venues.forEach(v => {
-      container.innerHTML += `
-        <div class="venue-row">
-          <div class="venue-content">
-            <div class="label-row">
-              ${(v.labels || []).map(l => `<span class="venue-label">${l}</span>`).join("")}
-            </div>
-            <h3>${v.name}</h3>
-            <div class="capacity-line">
-              Estimated capacity: ${v.capacity_estimate}
-            </div>
-          </div>
-        </div>
-      `;
+      container.innerHTML += renderVenue(v);
     });
 
   } catch (err) {
-    console.error(err);
-    alert("Something went wrong.");
+    console.error("Search failed:", err);
+    container.innerHTML = "<p>Something went wrong. Try again.</p>";
+  } finally {
+    overlay.classList.remove("active");
   }
+}
 
-  overlay.classList.remove("active");
+function renderVenue(v) {
+
+  const statusClass =
+    v.contact_likelihood === "likely"
+      ? "status-good"
+      : v.contact_likelihood === "unlikely"
+      ? "status-hard"
+      : "status-neutral";
+
+  const statusText =
+    v.contact_likelihood === "likely"
+      ? "Likely to Reply"
+      : v.contact_likelihood === "unlikely"
+      ? "Harder to Book"
+      : "Open";
+
+  return `
+    <div class="venue-card">
+
+      <div class="status-badge ${statusClass}">
+        ${statusText}
+      </div>
+
+      <div class="venue-name">${v.name}</div>
+
+      <div class="venue-capacity">
+        Estimated capacity: ${v.capacity_estimate || "Unknown"}
+      </div>
+
+      <div class="venue-labels">
+        ${(v.labels || []).map(label =>
+          `<span class="venue-pill">${label}</span>`
+        ).join("")}
+      </div>
+
+    </div>
+  `;
 }
