@@ -12,13 +12,17 @@
 
 <body>
 
+<!-- NAV -->
 <div class="nav">
   <div class="logo">Pitch<span>.</span></div>
   <button class="guide-btn">Download Guide</button>
 </div>
 
+
+<!-- HERO -->
 <div class="hero">
   <div class="hero-content">
+
     <h1>Find Your Next Stage</h1>
     <p>Discover venues faster so you can focus on planning the show.</p>
 
@@ -36,7 +40,7 @@
 
       <div class="field">
         <label>Anything else feel important?</label>
-        <input id="notesInput" placeholder="Intimate vibe, neighborhood bar, DIY energy, listening room">
+        <input id="notesInput" placeholder="Intimate listening room, neighborhood bar, DIY energy">
       </div>
 
       <div class="field">
@@ -48,25 +52,35 @@
         </select>
       </div>
 
-      <button class="search-btn" onclick="searchVenues()">
+      <!-- IMPORTANT: type="button" prevents refresh -->
+      <button type="button" class="search-btn" onclick="searchVenues()">
         Search Venues
       </button>
 
     </div>
+
   </div>
 </div>
 
-<div class="results-wrapper" id="resultsWrapper">
+
+<!-- RESULTS -->
+<div class="results-wrapper" id="resultsWrapper" style="display:none;">
   <div class="results-header">Your short list</div>
-  <div class="results-sub">We surface venues. You reach out directly.</div>
+  <div class="results-sub">
+    We surface venues. You reach out directly.
+  </div>
   <div id="results" class="results"></div>
 </div>
 
+
+<!-- LOADING OVERLAY -->
 <div id="loadingOverlay" class="loading-overlay">
   <div class="lights">🎸 🎶 🎤 🎵</div>
   <div class="loading-text">Building your short list...</div>
 </div>
 
+
 <script src="script.js"></script>
+
 </body>
 </html>
