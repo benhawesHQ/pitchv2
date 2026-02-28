@@ -5,7 +5,7 @@
   <title>Pitch | Find Your Next Stage</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="./styles.css">
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -15,9 +15,8 @@
 <!-- NAV -->
 <div class="nav">
   <div class="logo">Pitch<span>.</span></div>
-  <button class="guide-btn">Download Guide</button>
+  <button type="button" class="guide-btn">Download Guide</button>
 </div>
-
 
 <!-- HERO -->
 <div class="hero">
@@ -26,21 +25,23 @@
     <h1>Find Your Next Stage</h1>
     <p>Discover venues faster so you can focus on planning the show.</p>
 
+    <!-- IMPORTANT: NO FORM ELEMENT ANYWHERE -->
+
     <div class="search-panel">
 
       <div class="field">
         <label>City</label>
-        <input id="cityInput" placeholder="Brooklyn, Portland, Berlin">
+        <input id="cityInput" type="text" placeholder="Brooklyn, Portland, Berlin">
       </div>
 
       <div class="field">
         <label>Expected Audience</label>
-        <input id="audienceInput" placeholder="40">
+        <input id="audienceInput" type="number" placeholder="40">
       </div>
 
       <div class="field">
         <label>Anything else feel important?</label>
-        <input id="notesInput" placeholder="Intimate listening room, neighborhood bar, DIY energy">
+        <input id="notesInput" type="text" placeholder="Intimate vibe, neighborhood bar, DIY energy">
       </div>
 
       <div class="field">
@@ -52,8 +53,10 @@
         </select>
       </div>
 
-      <!-- IMPORTANT: type="button" prevents refresh -->
-      <button type="button" class="search-btn" onclick="searchVenues()">
+      <button
+        type="button"
+        class="search-btn"
+        id="searchButton">
         Search Venues
       </button>
 
@@ -61,7 +64,6 @@
 
   </div>
 </div>
-
 
 <!-- RESULTS -->
 <div class="results-wrapper" id="resultsWrapper" style="display:none;">
@@ -72,15 +74,13 @@
   <div id="results" class="results"></div>
 </div>
 
-
-<!-- LOADING OVERLAY -->
+<!-- LOADING -->
 <div id="loadingOverlay" class="loading-overlay">
   <div class="lights">🎸 🎶 🎤 🎵</div>
   <div class="loading-text">Building your short list...</div>
 </div>
 
-
-<script src="script.js"></script>
+<script src="./script.js"></script>
 
 </body>
 </html>
