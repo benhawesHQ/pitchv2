@@ -3,48 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pitch | Find venues that want to see you play</title>
+  <title>Pitch | Find your next stage</title>
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="logo">
-      Pitch<span class="dot">.</span>
-    </div>
-  </header>
+<header class="header">
+  <div class="logo">
+    Pitch<span class="dot">.</span>
+  </div>
+</header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h1>Book more shows. Play more music.</h1>
-      <p class="sub">
-        The fastest way to find venues that actually make sense for your draw.
-      </p>
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
 
+    <h1>Find your next stage.</h1>
+    <p class="sub">
+      Discover venues faster so you can focus on playing the show.
+    </p>
+
+    <div class="search-wrapper">
       <div class="search-box">
 
         <div class="field">
           <label>City</label>
-          <input id="cityInput" placeholder="St. Louis" />
+          <input id="cityInput" placeholder="Nashville">
         </div>
 
         <div class="field">
-          <label>Audience you can realistically draw</label>
-          <input id="audienceInput" placeholder="40-75" />
+          <label>Expected audience</label>
+          <input id="audienceInput" placeholder="50-100">
         </div>
 
         <div class="field">
-          <label>What else matters?</label>
-          <input id="extraInput" placeholder="queer space, near train, black-owned, DIY vibe" />
+          <label>Preferences</label>
+          <input id="extraInput" placeholder="queer-friendly, near train, volunteer-run">
+        </div>
+
+        <div class="field">
+          <label>Results</label>
+          <select id="countSelect">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="15">15</option>
+          </select>
         </div>
 
         <button id="searchBtn" class="search-btn">
@@ -53,19 +60,19 @@
 
       </div>
     </div>
-  </section>
 
-  <!-- RESULTS -->
-  <section class="results-section">
-    <div id="results"></div>
-  </section>
-
-  <!-- LOADING EXPERIENCE -->
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="stage-icons">🎸 🎤</div>
-    <div class="loading-text">Finding your next stage...</div>
   </div>
+</section>
 
-  <script src="script.js"></script>
+<section class="results-section">
+  <div id="results"></div>
+</section>
+
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="stage-icons">🎸 🎤</div>
+  <div class="loading-text">Building your shortlist...</div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
