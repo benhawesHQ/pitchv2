@@ -1,26 +1,24 @@
-const searchBtn = document.getElementById("searchBtn");
+async function searchVenues() {
 
-searchBtn.addEventListener("click", async () => {
+  const city = document.getElementById("cityInput").value;
+  const audience = document.getElementById("audienceInput").value;
+  const extra = document.getElementById("extraInput")?.value;
+  const count = document.getElementById("countSelect")?.value;
 
-  const city = document.getElementById("cityInput").value.trim();
-  const audience = document.getElementById("audienceInput").value.trim();
-  const extra = document.getElementById("extraInput").value.trim();
-  const count = document.getElementById("countSelect").value;
-
-  if(!city) return;
+  if (!city) return;
 
   const overlay = document.getElementById("loadingOverlay");
   overlay.classList.add("active");
 
-  const resultsContainer = document.getElementById("results");
-  resultsContainer.innerHTML = "";
+  const resultsDiv = document.getElementById("results");
+  resultsDiv.innerHTML = "";
 
-  try{
+  try {
 
     const res = await fetch("/api/search", {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({ city, audience, extra, count })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ city, audience, extra, count })
     });
 
     const data = await res.json();
@@ -30,45 +28,39 @@ searchBtn.addEventListener("click", async () => {
       const card = document.createElement("div");
       card.className = "venue-card";
 
-      const header = document.createElement("div");
-      header.className = "venue-header";
+      const googleLink = `https://www.google.com/search?q=${encodeURIComponent(venue.name + " " + city)}`;
 
-      const name = document.createElement("div");
-      name.className = "venue-name";
-      name.innerText = `${venue.emoji || "🎶"} ${venue.name}`;
+      card.innerHTML = `
+        <div class="venue-header">
+          <div class="venue-name">
+            ${venue.emoji || "🎵"} ${venue.name}
+          </div>
+          <div class="booking-badge ${venue.replyClass}">
+            ${venue.replyLabel}
+          </div>
+        </div>
 
-      const badge = document.createElement("div");
-      badge.className = `reply-badge ${venue.replyClass}`;
-      badge.innerText = venue.replyLabel;
+        <div class="venue-location">
+          ${venue.neighborhood}, ${city}
+        </div>
 
-      header.appendChild(name);
-      header.appendChild(badge);
+        <div class="venue-description">
+          ${venue.description}
+        </div>
 
-      const cityText = document.createElement("div");
-      cityText.className = "venue-city";
-      cityText.innerText = city;
+        <div class="venue-actions">
+          <a href="${googleLink}" target="_blank" class="see-venue-btn">
+            See Venue
+          </a>
+        </div>
+      `;
 
-      const description = document.createElement("div");
-      description.className = "venue-description";
-      description.innerText = venue.description;
-
-      const btn = document.createElement("a");
-      btn.className = "see-btn";
-      btn.innerText = "See venue";
-      btn.href = `https://www.google.com/search?q=${encodeURIComponent(venue.name + " " + city)}`;
-      btn.target = "_blank";
-
-      card.appendChild(header);
-      card.appendChild(cityText);
-      card.appendChild(description);
-      card.appendChild(btn);
-
-      resultsContainer.appendChild(card);
+      resultsDiv.appendChild(card);
     });
 
-  }catch(e){
-    console.error(e);
+  } catch (err) {
+    resultsDiv.innerHTML = "Error loading venues.";
   }
 
   overlay.classList.remove("active");
-});
+}
