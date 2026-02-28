@@ -1,19 +1,14 @@
 document.addEventListener("DOMContentLoaded", function(){
 
-  const button = document.getElementById("searchButton");
-
-  button.addEventListener("click", function(){
-    searchVenues();
-  });
+  document.getElementById("searchBtn")
+    .addEventListener("click", searchVenues);
 
 });
-
 
 async function searchVenues(){
 
   const city = document.getElementById("cityInput").value.trim();
   const audience = parseInt(document.getElementById("audienceInput").value);
-  const notes = document.getElementById("notesInput").value.trim();
   const count = parseInt(document.getElementById("countSelect").value);
 
   const overlay = document.getElementById("loadingOverlay");
@@ -25,19 +20,17 @@ async function searchVenues(){
 
   try {
 
-    const response = await fetch(`/api/search?city=${encodeURIComponent(city)}&notes=${encodeURIComponent(notes)}`);
+    const response = await fetch(`/api/search?city=${encodeURIComponent(city)}`);
 
     if (!response.ok) {
-      throw new Error("API request failed");
+      throw new Error("API error");
     }
 
     const data = await response.json();
 
-    if (!data.results || !Array.isArray(data.results)) {
-      throw new Error("Invalid API response");
-    }
+    let filtered = data.results || [];
 
-    let filtered = data.results.filter(v => capacityMatch(v, audience));
+    filtered = filtered.filter(v => capacityMatch(v, audience));
 
     filtered.slice(0, count).forEach(v => {
       resultsContainer.innerHTML += renderVenue(v, audience);
@@ -49,7 +42,7 @@ async function searchVenues(){
     console.error(err);
     resultsContainer.innerHTML = `
       <div style="padding:40px;text-align:center;">
-        Search failed. Check API route.
+        Search failed.
       </div>
     `;
     wrapper.style.display = "block";
@@ -58,36 +51,29 @@ async function searchVenues(){
   overlay.classList.remove("active");
 }
 
-
 function capacityMatch(place, audience){
 
   const name = place.name.toLowerCase();
 
-  const bigWords = [
-    "arena",
-    "stadium",
-    "paramount",
-    "center",
-    "hall",
-    "theater",
-    "theatre"
-  ];
+  const largeWords = ["arena","stadium","paramount","center","hall","theater"];
 
   if(audience <= 40){
-    for(let w of bigWords){
-      if(name.includes(w)) return false;
+    if(largeWords.some(w => name.includes(w))){
+      return false;
     }
   }
 
   return true;
 }
 
-
 function renderVenue(v, audience){
 
-  const image = v.photo ? v.photo : "hero.jpg";
+  const image = v.photo || "hero.jpg";
 
-  const googleUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.name + " " + v.formatted_address)}`;
+  const googleUrl =
+    `https://www.google.com/maps/search/?api=1&query=${
+      encodeURIComponent(v.name + " " + v.formatted_address)
+    }`;
 
   return `
     <div class="venue-row">
@@ -95,17 +81,13 @@ function renderVenue(v, audience){
            style="background-image:url('${image}')">
       </div>
       <div class="venue-content">
-        <div>
-          <h3>${v.name}</h3>
-          <div class="meta">
-            ⭐ ${v.rating || "N/A"} • ${v.formatted_address}
-          </div>
+        <h3>${v.name}</h3>
+        <div class="meta">
+          ⭐ ${v.rating || "N/A"} • ${v.formatted_address}
         </div>
-        <div>
-          <a href="${googleUrl}" target="_blank" class="cta">
-            View on Google
-          </a>
-        </div>
+        <a href="${googleUrl}" target="_blank" class="cta">
+          View on Google
+        </a>
       </div>
     </div>
   `;
