@@ -20,7 +20,7 @@ body {
 
 .hero {
   background: url("hero.jpg") center/cover no-repeat;
-  padding: 60px 20px 120px;
+  padding: 60px 40px 140px;
   position: relative;
 }
 
@@ -63,11 +63,11 @@ body {
 }
 
 .hero-content {
-  max-width: 500px;
+  max-width: 520px;
 }
 
 .hero h1 {
-  font-size: 38px;
+  font-size: 40px;
   margin-bottom: 16px;
 }
 
@@ -78,12 +78,12 @@ body {
 
 .search-panel {
   background: rgba(20,20,20,0.95);
-  padding: 24px;
+  padding: 28px;
   border-radius: 20px;
   border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 
 .field label {
@@ -112,7 +112,7 @@ body {
 }
 
 .results-wrapper {
-  padding: 60px 20px;
+  padding: 80px 40px;
 }
 
 .results-grid {
@@ -120,25 +120,25 @@ body {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
 .venue-card {
   background: var(--card);
-  border-radius: 20px;
-  padding: 24px;
+  border-radius: 22px;
+  padding: 26px;
   border: 1px solid var(--border);
   position: relative;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .venue-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
 }
 
 .venue-name {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   margin: 10px 0;
 }
@@ -149,7 +149,7 @@ body {
 }
 
 .venue-labels {
-  margin-top: 16px;
+  margin-top: 18px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -157,7 +157,7 @@ body {
 
 .venue-pill {
   background: rgba(255,255,255,0.07);
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: 999px;
   font-size: 12px;
 }
