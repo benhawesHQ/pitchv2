@@ -127,12 +127,6 @@ body{
   border-radius:24px;
   overflow:hidden;
   border:1px solid var(--border);
-  transition:.3s;
-}
-
-.venue-row:hover{
-  transform:translateY(-6px);
-  box-shadow:0 30px 70px rgba(0,0,0,.6);
 }
 
 .venue-image{
@@ -145,49 +139,22 @@ body{
 .venue-content{
   width:75%;
   padding:32px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.venue-content h3{
-  font-family:'Poppins';
-  font-size:26px;
-  margin:0 0 8px 0;
 }
 
 .meta{
   font-size:14px;
-  margin-bottom:15px;
-}
-
-.tags{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:20px;
-}
-
-.tag{
-  padding:6px 14px;
-  border-radius:999px;
-  background:var(--soft);
-  font-size:12px;
-}
-
-.tag.reply{
-  background:rgba(249,69,1,.2);
-  color:var(--orange);
+  margin-top:6px;
 }
 
 .cta{
+  display:inline-block;
+  margin-top:20px;
   padding:12px 24px;
   border-radius:999px;
   background:var(--orange);
   font-weight:700;
-  text-decoration:none;
   color:black;
-  display:inline-block;
+  text-decoration:none;
 }
 
 .loading-overlay{
@@ -201,7 +168,6 @@ body{
   opacity:0;
   pointer-events:none;
   transition:.4s;
-  z-index:999;
 }
 
 .loading-overlay.active{
