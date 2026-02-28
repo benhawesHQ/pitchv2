@@ -27,13 +27,6 @@ async function searchVenues() {
 
     const data = await res.json();
 
-    if (!data.venues || data.venues.length === 0) {
-      hideLoading();
-      alert("No venues found.");
-      return;
-    }
-
-    // Remove duplicates
     const unique = [];
     const names = new Set();
 
@@ -51,79 +44,125 @@ async function searchVenues() {
 
     document.getElementById("resultsWrapper").style.display = "block";
     document.getElementById("resultsSub").innerText =
-      `Curated performance spaces in ${city}. We surface the venues — you make the ask.`;
+      `Live performance spaces in ${city}. We surface the rooms — you make the ask.`;
 
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(r => setTimeout(r, 1500));
     hideLoading();
 
   } catch (err) {
     hideLoading();
-    console.error(err);
     alert("Something went wrong.");
   }
 }
 
 /* =========================
-   CAPACITY INTELLIGENCE
+   CLASSIFICATION
 ========================= */
 
-function estimateVenueScale(v) {
-  const reviews = v.user_ratings_total || 0;
+function classifyVenue(v) {
   const name = v.name.toLowerCase();
   const types = (v.types || []).join(" ").toLowerCase();
 
-  let base;
+  if (name.includes("arena") || name.includes("stadium"))
+    return "arena";
 
-  // Review baseline (proxy for scale)
-  if (reviews < 100) base = 25;
-  else if (reviews < 300) base = 60;
-  else if (reviews < 800) base = 150;
-  else if (reviews < 2000) base = 400;
-  else base = 900;
+  if (name.includes("theatre") || name.includes("theater") || name.includes("opera"))
+    return "large_theater";
 
-  // Small signals
-  if (name.includes("improv")) base *= 0.6;
-  if (name.includes("studio")) base *= 0.6;
-  if (name.includes("comedy")) base *= 0.7;
-  if (name.includes("basement")) base *= 0.5;
-  if (types.includes("bar")) base *= 0.8;
+  if (name.includes("music hall") || name.includes("concert hall") || name.includes("ballroom"))
+    return "mid_music_hall";
 
-  // Large signals
-  if (name.includes("arena")) base *= 2;
-  if (name.includes("stadium")) base *= 2;
-  if (name.includes("opera")) base *= 1.5;
-  if (name.includes("civic")) base *= 1.4;
-  if (name.includes("theatre") && reviews > 800) base *= 1.5;
+  if (types.includes("bar") || types.includes("night_club"))
+    return "small_room";
 
-  return Math.round(base);
+  if (
+    name.includes("club") ||
+    name.includes("room") ||
+    name.includes("basement") ||
+    name.includes("improv") ||
+    name.includes("studio")
+  )
+    return "intimate_bar";
+
+  return "small_room";
 }
 
-function getFitLabel(estimated, requested) {
-  const diff = estimated - requested;
+/* =========================
+   AUDIENCE MATCHING
+========================= */
 
-  if (Math.abs(diff) <= requested * 0.4)
-    return { text: "🎯 Great fit", class: "fit-perfect" };
+function matchByAudience(bucket, size) {
+  if (size <= 20)
+    return bucket === "intimate_bar";
 
-  if (diff > 0)
-    return { text: "🏟 Larger space", class: "fit-large" };
+  if (size <= 40)
+    return bucket === "intimate_bar" || bucket === "small_room";
 
-  return { text: "🔥 Intimate room", class: "fit-small" };
+  if (size <= 60)
+    return bucket === "small_room";
+
+  if (size <= 80)
+    return bucket === "small_room" || bucket === "mid_music_hall";
+
+  if (size <= 150)
+    return bucket === "mid_music_hall";
+
+  if (size <= 300)
+    return bucket === "mid_music_hall";
+
+  if (size <= 800)
+    return bucket === "large_theater";
+
+  return bucket === "arena";
 }
 
 function filterByAudience(venues, audience) {
   const size = parseInt(audience);
   if (!size) return venues;
 
-  return venues
-    .map(v => {
-      const estimated = estimateVenueScale(v);
-      const matchScore = Math.abs(estimated - size);
-      const fit = getFitLabel(estimated, size);
+  return venues.filter(v => {
+    const bucket = classifyVenue(v);
+    v.bucket = bucket;
+    return matchByAudience(bucket, size);
+  });
+}
 
-      return { ...v, estimated, matchScore, fit };
-    })
-    .sort((a, b) => a.matchScore - b.matchScore)
-    .filter(v => v.matchScore < size * 3);
+/* =========================
+   REPLY LIKELIHOOD
+========================= */
+
+function getReplyLikelihood(v) {
+  const reviews = v.user_ratings_total || 0;
+
+  if (reviews < 400)
+    return { text: "Likely to reply", class: "reply-high" };
+
+  if (reviews < 1200)
+    return { text: "Might reply", class: "reply-medium" };
+
+  return { text: "Harder to book", class: "reply-low" };
+}
+
+/* =========================
+   DESCRIPTION BUILDER
+========================= */
+
+function buildDescription(v) {
+  const bucket = v.bucket;
+
+  if (bucket === "intimate_bar")
+    return "An intimate performance space ideal for stripped-down sets and small audiences.";
+
+  if (bucket === "small_room")
+    return "A neighborhood venue hosting live music, comedy, and emerging artists.";
+
+  if (bucket === "mid_music_hall")
+    return "A larger concert space designed for touring acts and ticketed events.";
+
+  if (bucket === "large_theater")
+    return "A historic theater space built for large-scale productions and touring performances.";
+
+  return "A live performance venue.";
 }
 
 /* =========================
@@ -137,30 +176,39 @@ function renderResults() {
   const slice = allVenues.slice(0, visibleCount);
 
   slice.forEach(v => {
+    const reply = getReplyLikelihood(v);
+    const description = buildDescription(v);
+
     const card = document.createElement("div");
     card.className = "venue-card";
 
     card.innerHTML = `
-      <img src="${v.photo || "https://via.placeholder.com/100"}"
-           class="venue-image">
+      <div class="venue-image-wrapper">
+        <img src="${v.photo || "https://via.placeholder.com/300x375"}"
+             class="venue-image">
+        <div class="reply-badge ${reply.class}">
+          ${reply.text}
+        </div>
+      </div>
 
       <div class="venue-content">
         <div class="venue-name">${v.name}</div>
 
         <div class="venue-rating">
-          ⭐ ${v.rating || "N/A"} (${v.user_ratings_total || 0})
+          ⭐ ${v.rating || "N/A"}
         </div>
 
-        <div class="fit-badge ${v.fit.class}">
-          ${v.fit.text}
+        <div class="venue-description">
+          ${description}
         </div>
 
-        <button class="address-btn"
-          onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.address)}','_blank')">
-          📍 View on Map
-        </button>
+        <div class="venue-actions">
+          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.address)}"
+             target="_blank"
+             class="map-link">
+             View on map
+          </a>
 
-        <div style="margin-top:10px;">
           <a href="${v.website || '#'}"
              target="_blank"
              class="see-venue-btn">
@@ -191,11 +239,11 @@ function showLoading() {
   const lore = document.getElementById("loreText");
 
   const facts = [
-    "🎸 Building your short list...",
-    "🎤 Lady Gaga played tiny rooms before arenas.",
-    "🎶 Ed Sheeran started in bars.",
-    "✨ Every big act begins small.",
-    "🎵 Great shows start with the right room."
+    "🎸 Loading your short list...",
+    "✨ Every arena artist started in a room like this.",
+    "🎤 Great shows begin with the right stage.",
+    "🎶 Matching your crowd size...",
+    "🌟 Finding spaces that fit your vibe..."
   ];
 
   let i = 0;
