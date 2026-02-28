@@ -9,43 +9,37 @@ export async function handler(event) {
     const { city, audience, count } = JSON.parse(event.body);
 
     const prompt = `
-You are helping a touring musician find real performance venues.
+Return ${count} real performance venues in ${city}
+suitable for an audience of about ${audience} people.
 
-Return ${count} real venues in ${city} appropriate for an audience of around ${audience} people.
-
-For each venue, return:
-
+For each venue return:
 - name
 - city (include state if US)
 - emoji
-- detailed 3–5 sentence description
-- likelihood of response (High / Medium / Low)
+- 2–3 sentence description
+- likelihood (High / Medium / Low)
 - googleQuery (venue name + city)
 
-Return ONLY JSON array. No commentary.
+Return ONLY JSON array.
 `;
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: "Return valid JSON only." },
         { role: "user", content: prompt }
       ],
-      temperature: 0.7
+      temperature: 0.6,
+      max_tokens: 1000
     });
 
     let raw = completion.choices[0].message.content.trim();
-
-    // Remove possible markdown wrapping
     raw = raw.replace(/```json/g, "").replace(/```/g, "");
 
-    // Extract JSON array if extra text appears
-    const jsonMatch = raw.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) {
-      throw new Error("No JSON array found in response");
-    }
+    const match = raw.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error("Invalid JSON");
 
-    const venues = JSON.parse(jsonMatch[0]);
+    const venues = JSON.parse(match[0]);
 
     return {
       statusCode: 200,
@@ -54,14 +48,9 @@ Return ONLY JSON array. No commentary.
     };
 
   } catch (error) {
-    console.error("Search function error:", error);
-
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        error: "Function failed",
-        details: error.message
-      })
+      body: JSON.stringify({ error: error.message })
     };
   }
 }
