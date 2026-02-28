@@ -8,22 +8,27 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Main CSS -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
 
-  <!-- NAV -->
-  <div class="nav">
-    <div class="logo">Pitch<span>.</span></div>
-  </div>
-
-  <!-- HERO -->
+  <!-- HERO + LOGO AREA -->
   <div class="hero">
+
+    <div class="top-bar">
+      <div class="logo">
+        Pitch<span>.</span>
+      </div>
+
+      <a href="#" class="guide-btn">
+        Download the Guide
+      </a>
+    </div>
+
     <div class="hero-content">
       <h1>Find Your Next Stage</h1>
-      <p>Discover the right venue faster so you can focus on planning the show.</p>
+      <p>Discover the right venue faster so you can focus on playing more music.</p>
 
       <div class="search-panel">
 
@@ -39,7 +44,7 @@
 
         <div class="field">
           <label>Anything else feel important?</label>
-          <input id="vibeInput" placeholder="Intimate, bar vibe, standing room, indie crowd" />
+          <input id="vibeInput" placeholder="Intimate, standing room, indie crowd, bar vibe" />
         </div>
 
         <div class="field">
@@ -59,29 +64,46 @@
     </div>
   </div>
 
-  <!-- RESULTS -->
+  <!-- RESULTS SECTION -->
   <div class="results-wrapper" id="resultsWrapper" style="display:none;">
-    <div class="results-header">Your Short List</div>
+
+    <div class="results-intro">
+      <h2>Your Shortlist</h2>
+      <p>
+        Pitch curates performance spaces based on live venue activity, audience size patterns,
+        and search signals so you can reach out faster and book smarter.
+      </p>
+    </div>
+
     <div class="results" id="results"></div>
+
   </div>
 
   <!-- LOADING OVERLAY -->
   <div id="loadingOverlay" class="loading-overlay">
-
     <div class="lights">🎸 🎤 🎶</div>
-
     <div class="fun-fact">
-      Searching the stage lights...
+      Warming up the stage lights...
     </div>
-
   </div>
 
   <!-- FOOTER -->
   <footer>
-    Created by NYC musician Ben Hawes.
+    <div class="footer-logo">Pitch<span>.</span></div>
+
+    <div class="footer-text">
+      Created by NYC musician Ben Hawes in New York City.
+    </div>
+
+    <a
+      href="https://www.instagram.com/benhaweshq"
+      target="_blank"
+      class="footer-link"
+    >
+      Connect on Instagram
+    </a>
   </footer>
 
-  <!-- JS -->
   <script src="script.js"></script>
 
 </body>
