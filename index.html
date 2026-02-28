@@ -16,97 +16,112 @@
     }
 
     .hero {
-      padding: 80px 20px;
+      padding: 120px 20px 100px 20px;
       text-align: center;
       background: linear-gradient(180deg,#111,#000);
     }
 
     h1 {
       font-family: 'Poppins', sans-serif;
-      font-size: 44px;
-      margin-bottom: 10px;
+      font-weight: 800;
+      font-size: 56px;
+      letter-spacing: -1px;
+      margin-bottom: 18px;
     }
 
     .sub {
-      opacity: 0.75;
-      margin-bottom: 30px;
+      font-size: 20px;
+      opacity: 0.85;
+      margin-bottom: 16px;
     }
 
     .free-note {
-      font-size: 13px;
-      opacity: 0.6;
-      margin-bottom: 30px;
+      font-size: 15px;
+      opacity: 0.65;
+      margin-bottom: 40px;
     }
 
     .search-box {
-      max-width: 600px;
+      max-width: 650px;
       margin: auto;
     }
 
     input, select, textarea {
       width: 100%;
-      padding: 14px;
-      border-radius: 10px;
+      padding: 18px;
+      border-radius: 14px;
       border: none;
-      margin-bottom: 14px;
-      font-size: 15px;
+      margin-bottom: 18px;
+      font-size: 17px;
+      font-family: 'Open Sans', sans-serif;
     }
 
     textarea {
       resize: vertical;
-      min-height: 80px;
+      min-height: 100px;
     }
 
     .checkbox-row {
-      margin-bottom: 18px;
-      font-size: 14px;
+      margin-bottom: 24px;
+      font-size: 16px;
       text-align: left;
+    }
+
+    .checkbox-row input {
+      margin-right: 8px;
+      transform: scale(1.2);
     }
 
     button {
       width: 100%;
-      padding: 16px;
-      border-radius: 12px;
+      padding: 20px;
+      border-radius: 16px;
       border: none;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 18px;
       cursor: pointer;
+      font-family: 'Poppins', sans-serif;
       background: linear-gradient(90deg,#ff6a88,#ffb86c);
       color: black;
+      transition: transform 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
     }
 
     #results {
-      padding: 60px 20px;
-      max-width: 900px;
+      padding: 80px 20px;
+      max-width: 950px;
       margin: auto;
     }
 
     .results-header {
-      margin-bottom: 40px;
+      margin-bottom: 50px;
     }
 
     .results-header h2 {
       font-family: 'Poppins', sans-serif;
-      font-size: 32px;
+      font-size: 40px;
+      margin-bottom: 10px;
     }
 
     .results-explainer {
+      font-size: 16px;
       opacity: 0.7;
-      font-size: 14px;
-      margin-top: 8px;
     }
 
     .venue-card {
       background: linear-gradient(145deg,#141414,#1f1f1f);
-      padding: 28px;
-      border-radius: 16px;
-      margin-bottom: 28px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      padding: 32px;
+      border-radius: 20px;
+      margin-bottom: 32px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.45);
       transition: transform 0.2s ease;
     }
 
     .venue-card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-5px);
     }
 
     .venue-header {
@@ -118,36 +133,38 @@
     .venue-title {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
     .venue-title h3 {
       margin: 0;
-      font-size: 22px;
+      font-size: 26px;
       font-family: 'Poppins', sans-serif;
     }
 
     .venue-emoji {
-      font-size: 22px;
+      font-size: 28px;
     }
 
     .likelihood-badge {
       background: linear-gradient(90deg,#ff7a7a,#ffb86c);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 24px;
+      font-size: 14px;
       font-weight: 600;
       color: black;
     }
 
     .venue-location {
-      margin: 10px 0 6px 0;
-      opacity: 0.7;
+      margin: 14px 0 8px 0;
+      font-size: 16px;
+      opacity: 0.75;
     }
 
     .venue-description {
-      margin-bottom: 16px;
-      opacity: 0.85;
+      margin-bottom: 20px;
+      font-size: 17px;
+      opacity: 0.9;
     }
 
     .venue-actions {
@@ -155,33 +172,35 @@
     }
 
     .action-btn {
-      padding: 12px 18px;
-      border-radius: 10px;
+      padding: 14px 22px;
+      border-radius: 14px;
       background: linear-gradient(90deg,#ff6a88,#ffb86c);
       text-decoration: none;
       color: black;
       font-weight: 600;
       display: inline-block;
+      font-family: 'Poppins', sans-serif;
     }
 
     .footer-panel {
-      margin-top: 60px;
-      padding: 60px 20px;
+      margin-top: 80px;
+      padding: 80px 20px;
       text-align: center;
       background: linear-gradient(180deg,#111,#000);
     }
 
     .footer-panel h3 {
       font-family: 'Poppins', sans-serif;
-      font-size: 28px;
-      margin-bottom: 16px;
+      font-size: 32px;
+      margin-bottom: 20px;
     }
 
     .footer-panel p {
-      max-width: 600px;
+      max-width: 650px;
       margin: auto;
       opacity: 0.75;
-      font-size: 15px;
+      font-size: 17px;
+      line-height: 1.6;
     }
 
   </style>
@@ -225,8 +244,8 @@
   <div class="footer-panel">
     <h3>How venues are found</h3>
     <p>
-      Pitch uses AI to analyze live performance venues in your selected city.
-      It prioritizes genre alignment, emerging artist friendliness, and cultural fit.
+      Pitch uses AI to surface performance venues aligned with your genre and preferences.
+      It prioritizes cultural fit, emerging artist friendliness, and scene relevance.
       No scraping. No fake contact info. Just intelligent discovery.
     </p>
   </div>
@@ -269,7 +288,7 @@
         <div class="results-header">
           <h2>🎶 Venues in ${data.city}</h2>
           <div class="results-explainer">
-            Ranked by genre match and emerging artist friendliness.
+            Ranked by genre alignment and emerging artist friendliness.
           </div>
         </div>
       `;
