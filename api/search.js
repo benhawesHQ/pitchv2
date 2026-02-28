@@ -46,73 +46,73 @@ export default async function handler(req, res) {
 
   if (window.tier === "indie") {
     priorityLogic = `
-Prioritize independent venues, small rooms, backroom stages, DIY spaces.
-Avoid major touring theaters.
+Prioritize independent venues and smaller bookable rooms.
+Avoid major touring halls unless capacity clearly requires it.
 `;
   }
 
   if (window.tier === "large") {
     priorityLogic = `
-Include larger theaters and established music halls.
-Do not limit to indie rooms.
+Larger established theaters are allowed due to audience size.
 `;
   }
 
   let systemPrompt = `
-You are a live music booking researcher.
+You are a live music booking researcher in 2026.
 
-CRITICAL RULES:
-- Return ONLY real, currently operating venues.
-- No duplicates.
-- Never invent venues.
-- Never fabricate details.
+CRITICAL FRESHNESS RULE:
+Only include venues that are confirmed to still be operating as of 2024–2026.
+If uncertain whether a venue is open, EXCLUDE it.
 
-DEFAULT BEHAVIOR:
-Only include venues that host LIVE MUSIC shows with booked performers.
-Exclude:
-- DJ-only venues
+Do NOT include:
+- Permanently closed venues
+- Recently closed venues
+- Relocated venues that no longer operate under original name
+- DJ-only clubs
 - Nightlife-only bars
-- Party bars
-- Dance clubs
-- Event spaces without recurring live music programming
+- Event spaces without recurring live music
+
+Default behavior:
+Only include venues that host LIVE MUSIC with booked performers.
 
 ${comedyRequested ? `
-Comedy clubs allowed only if user requested comedy.
+Comedy venues allowed only if explicitly requested.
 ` : `
 Exclude comedy clubs unless live music is core programming.
 `}
 
-Each venue must:
-- Have a stage or dedicated performance space
-- Publicly list events
-- Have history of hosting performers
+Venue must:
+- Have active event listings
+- Maintain current online presence
+- Be publicly booking or hosting music
 
 Each result must include:
 - name
 - neighborhood
-- description (10-15 factual words specific to music programming)
+- description (10–15 factual words specific to music programming)
 - emoji
 - replyLabel (High booking signal, Moderate booking signal, Lower booking signal)
 - replyClass (reply-high, reply-medium, reply-low)
 
-BOOKING SIGNAL:
+BOOKING SIGNAL guidance:
 High booking signal:
-- Active event calendar
-- Public booking contact
-- Regular weekly music programming
+- Active 2024–2026 event listings
+- Visible booking contact
+- Frequent programming
 
 Moderate booking signal:
-- Some live music programming
-- Basic online presence
+- Some recurring shows
+- Limited booking visibility
 
 Lower booking signal:
-- Infrequent music programming
+- Occasional music events
 
-STRICT FORMAT:
+STRICT OUTPUT:
 Return ONLY a JSON array.
 No markdown.
 No commentary.
-No wrapper object.
+No wrapper.
+No duplicate venues.
 `;
 
   let userPrompt = `
@@ -125,19 +125,19 @@ ${priorityLogic}
 
 Return ${venueCount} venues that:
 - Match capacity range
-- Regularly host live music performances
-- Are recognized locally for music programming
+- Are currently operating in 2026
+- Regularly host live music
 - Match stated preferences
 
+Descriptions must be factual and specific.
 Include neighborhood.
-Descriptions must be factual.
 `;
 
   try {
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
-      temperature: 0.2,
+      temperature: 0.1,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt }
