@@ -6,10 +6,8 @@ const openai = new OpenAI({
 
 function extractAudienceNumber(input) {
   if (!input) return 50;
-
   const numbers = input.match(/\d+/g);
   if (!numbers) return 50;
-
   return parseInt(numbers[0]);
 }
 
@@ -20,7 +18,6 @@ function capacityWindow(n) {
   if (n <= 500) return { min: 300, max: 700 };
   if (n <= 1000) return { min: 500, max: 1200 };
   if (n > 10000) return { mode: "platform" };
-
   return { min: 200, max: 500 };
 }
 
@@ -30,7 +27,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { city, audience } = req.body;
+  const { city, audience, extra, count } = req.body;
 
   if (!city) {
     return res.status(400).json({ error: "City required" });
@@ -38,33 +35,44 @@ export default async function handler(req, res) {
 
   const audienceNumber = extractAudienceNumber(audience);
   const window = capacityWindow(audienceNumber);
+  const venueCount = parseInt(count) || 10;
 
   let systemPrompt = `
 You are a live music booking researcher.
 
-Return real, currently operating venues that regularly book emerging independent musicians.
+Return REAL, currently operating venues only.
 
-STRICT RULES:
-- Only suggest venues under 500 capacity unless capacity range allows higher.
-- Never suggest arenas.
-- Never suggest stadiums.
-- Never suggest theaters over 1500 capacity.
-- Never suggest major touring stops.
-- Avoid famous legacy rooms.
-- Avoid corporate event venues.
-- Avoid wedding venues.
-- Favor slightly smaller rooms over larger ones if uncertain.
+Never invent venues.
+Never fabricate details.
+Never guess websites.
+Never include venues that do not exist.
 
-Only return real venue names.
+Each result must include:
+- name
+- short description (10-15 words max)
+- emoji representing vibe
+- replyLabel (one of: "High reply signal", "Moderate reply signal", "Low reply signal")
+- replyClass (one of: reply-high, reply-medium, reply-low)
 
-Output STRICT JSON array format:
-[
-  { "name": "Venue Name" }
-]
+Reply signal estimation logic:
+High reply signal:
+- Active Instagram
+- Regular live events
+- Public booking email or DM booking process
 
+Moderate reply signal:
+- Some event history
+- Basic online presence
+
+Low reply signal:
+- Sparse updates
+- Hard-to-find contact method
+
+STRICT OUTPUT FORMAT:
+Return ONLY a JSON array.
 No markdown.
-No commentary.
-No extra text.
+No explanation.
+No wrapper object.
 `;
 
   let userPrompt = "";
@@ -74,33 +82,31 @@ No extra text.
     userPrompt = `
 City: ${city}
 
-The artist wants to reach extremely large audiences (10,000+).
+The artist is targeting extremely large audiences.
 
-Do NOT suggest stadiums or arenas.
-
-Instead return scalable platforms such as:
-- Festivals that accept emerging artists
+Return ${venueCount} scalable platforms such as:
+- Emerging artist festivals
 - Showcase circuits
-- Regional support slot pathways
-- College booking networks
-- Sofar-style showcase platforms
+- Regional support pathways
 
-Return only real, legitimate platforms or circuits.
+Still follow JSON format rules.
 `;
 
   } else {
 
     userPrompt = `
 City: ${city}
+Target capacity range: ${window.min}-${window.max}
+Artist expected audience: approximately ${audienceNumber}
+Preferences: ${extra || "none specified"}
 
-Target venue capacity range: ${window.min}–${window.max}.
+Return ${venueCount} venues that:
+- Match capacity range
+- Regularly book emerging artists
+- Match preferences when possible
+- Are locally known for live music
 
-Match venue size closely to the artist's expected draw of approximately ${audienceNumber} people.
-
-Only include venues known locally for booking independent artists.
-
-Do not suggest venues significantly larger than the expected audience.
-Favor slightly smaller rooms if uncertain.
+Short description must be 10-15 words only.
 `;
 
   }
@@ -116,14 +122,18 @@ Favor slightly smaller rooms if uncertain.
       ],
     });
 
-    let content = completion.choices[0].message.content;
+    const content = completion.choices[0].message.content;
 
-    // Force clean JSON parsing
     let parsed;
     try {
       parsed = JSON.parse(content);
     } catch (e) {
-      return res.status(500).json({ error: "Invalid JSON from AI" });
+      const match = content.match(/\[.*\]/s);
+      if (match) {
+        parsed = JSON.parse(match[0]);
+      } else {
+        return res.status(500).json({ error: "Invalid JSON from AI" });
+      }
     }
 
     return res.status(200).json(parsed);
