@@ -4,234 +4,217 @@
   <title>Pitch.io | Book a show</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 🎸 Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <style>
-    :root{
-      --orange:#f94501;
-      --bg:#111;
-      --card:#181818;
-      --soft:#262626;
-    }
+<style>
+:root{
+  --orange:#f94501;
+  --bg:#111;
+  --card:#181818;
+  --soft:#262626;
+}
 
-    body{
-      margin:0;
-      background:var(--bg);
-      color:white;
-      font-family:'Open Sans',sans-serif;
-    }
+body{
+  margin:0;
+  background:var(--bg);
+  color:white;
+  font-family:'Open Sans',sans-serif;
+}
 
-    .nav{
-      position:absolute;
-      top:20px;
-      left:40px;
-      right:40px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      z-index:3;
-    }
+.hero{
+  position:relative;
+  background:url('https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+  padding:140px 20px 100px;
+  text-align:center;
+}
 
-    .logo{
-      font-family:'Poppins',sans-serif;
-      font-weight:800;
-      font-size:20px;
-    }
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.65);
+}
 
-    .guide-btn{
-      background:var(--orange);
-      color:black;
-      padding:10px 18px;
-      border-radius:999px;
-      font-family:'Poppins',sans-serif;
-      font-weight:700;
-      font-size:14px;
-      text-decoration:none;
-      cursor:pointer;
-    }
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:760px;
+  margin:auto;
+}
 
-    .hero{
-      position:relative;
-      background:url('https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
-      padding:140px 20px 100px;
-      text-align:center;
-    }
+h1{
+  font-family:'Poppins',sans-serif;
+  font-weight:800;
+  font-size:42px;
+}
 
-    .hero::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:rgba(0,0,0,.65);
-    }
+.sub{
+  font-size:20px;
+  margin-bottom:40px;
+}
 
-    .hero-content{
-      position:relative;
-      z-index:2;
-      max-width:760px;
-      margin:auto;
-    }
+.search-box{
+  background:rgba(20,20,20,.95);
+  padding:32px;
+  border-radius:14px;
+  border:1px solid #222;
+  text-align:left;
+}
 
-    h1{
-      font-family:'Poppins',sans-serif;
-      font-weight:800;
-      font-size:42px;
-      margin-bottom:12px;
-    }
+label{
+  font-family:'Poppins';
+  font-weight:700;
+  font-size:14px;
+  display:block;
+  margin-bottom:8px;
+}
 
-    .sub{
-      font-size:20px;
-      opacity:.9;
-      margin-bottom:40px;
-    }
+input{
+  width:100%;
+  padding:14px;
+  border-radius:8px;
+  border:1px solid #333;
+  background:var(--card);
+  color:white;
+  margin-bottom:24px;
+}
 
-    .search-box{
-      background:rgba(20,20,20,.95);
-      padding:32px;
-      border-radius:14px;
-      border:1px solid #222;
-      text-align:left;
-    }
+.row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:24px;
+}
 
-    label{
-      font-family:'Poppins',sans-serif;
-      font-weight:700;
-      font-size:14px;
-      margin-bottom:10px;
-      display:block;
-    }
+.pill{
+  padding:8px 14px;
+  border-radius:20px;
+  background:var(--soft);
+  border:1px solid #333;
+  cursor:pointer;
+}
 
-    input{
-      width:100%;
-      padding:14px;
-      border-radius:8px;
-      border:1px solid #2b2b2b;
-      background:var(--card);
-      color:white;
-      font-size:15px;
-      margin-bottom:24px;
-    }
+.pill.active{
+  background:var(--orange);
+  color:black;
+}
 
-    .row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:24px;
-    }
+.segment{
+  display:flex;
+  background:var(--soft);
+  border-radius:999px;
+  padding:4px;
+  margin-bottom:24px;
+}
 
-    .pill{
-      padding:8px 14px;
-      border-radius:20px;
-      background:var(--soft);
-      border:1px solid #333;
-      cursor:pointer;
-      font-size:14px;
-      transition:.15s;
-    }
+.segment-option{
+  flex:1;
+  text-align:center;
+  padding:10px 0;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:'Poppins';
+  font-weight:600;
+}
 
-    .pill.active{
-      background:var(--orange);
-      color:black;
-      border-color:var(--orange);
-      font-weight:600;
-    }
+.segment-option.active{
+  background:var(--orange);
+  color:black;
+}
 
-    .segment{
-      display:flex;
-      background:var(--soft);
-      border-radius:999px;
-      padding:4px;
-      margin-bottom:24px;
-      border:1px solid #333;
-    }
+.search-btn{
+  width:100%;
+  padding:16px;
+  border-radius:10px;
+  border:none;
+  font-family:'Poppins';
+  font-weight:700;
+  font-size:16px;
+  background:var(--orange);
+  color:black;
+  cursor:pointer;
+}
 
-    .segment-option{
-      flex:1;
-      text-align:center;
-      padding:10px 0;
-      border-radius:999px;
-      cursor:pointer;
-      font-family:'Poppins',sans-serif;
-      font-weight:600;
-      font-size:14px;
-      transition:.2s;
-    }
+.results{
+  padding:60px 20px;
+  max-width:900px;
+  margin:auto;
+}
 
-    .segment-option.active{
-      background:var(--orange);
-      color:black;
-    }
+/* 🔥 LOADING OVERLAY */
 
-    .search-btn{
-      width:100%;
-      padding:16px;
-      border-radius:10px;
-      border:none;
-      font-family:'Poppins',sans-serif;
-      font-weight:700;
-      font-size:16px;
-      background:var(--orange);
-      color:black;
-      cursor:pointer;
-    }
+.loading-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s ease;
+}
 
-    .results{
-      padding:60px 20px;
-      max-width:900px;
-      margin:auto;
-    }
+.loading-overlay.active{
+  opacity:1;
+  pointer-events:auto;
+}
 
-    .quote{
-      text-align:center;
-      padding:40px 0;
-      font-family:'Poppins';
-    }
+.floating{
+  font-size:60px;
+  animation:float 2s ease-in-out infinite;
+}
 
-    .quote .text{
-      font-size:22px;
-      margin-bottom:10px;
-    }
+.floating2{
+  font-size:60px;
+  animation:float2 2.5s ease-in-out infinite;
+}
 
-    .quote .artist{
-      opacity:.7;
-    }
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-15px)}
+  100%{transform:translateY(0)}
+}
 
-    .city-block{
-      background:var(--card);
-      border:1px solid #222;
-      border-radius:10px;
-      padding:20px;
-      margin-top:20px;
-    }
+@keyframes float2{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-20px)}
+  100%{transform:translateY(0)}
+}
 
-    .venue{
-      padding:6px 0;
-      border-bottom:1px solid #222;
-    }
+.quote{
+  margin-top:30px;
+  text-align:center;
+  max-width:600px;
+}
 
-  </style>
+.quote .text{
+  font-family:'Poppins';
+  font-size:22px;
+  margin-bottom:10px;
+}
+
+.quote .artist{
+  opacity:.7;
+}
+
+</style>
 </head>
 
 <body>
 
 <div class="hero">
-
-  <div class="nav">
-    <div class="logo">🎸 Pitch.io</div>
-    <a href="#" class="guide-btn">Guide to pitching shows</a>
-  </div>
-
   <div class="hero-content">
     <h1>Find venues that want to see you play.</h1>
     <div class="sub">Book more shows. Play more music.</div>
 
     <div class="search-box">
-
-      <label>What are you booking?</label>
       <div class="segment" id="showTypeSegment">
         <div class="segment-option active">Single show</div>
         <div class="segment-option">Multi-city</div>
@@ -247,42 +230,39 @@
         <div class="pill">🎷 Jazz</div>
         <div class="pill">🎭 Cabaret</div>
         <div class="pill">🎤 Comedy</div>
-        <div class="pill">✨ Pop</div>
       </div>
 
-      <label>Audience size</label>
-      <input id="audience" placeholder="20-30" />
-
       <button class="search-btn" id="searchBtn">Search venues</button>
-
     </div>
   </div>
 </div>
 
 <div class="results" id="results"></div>
 
+<div class="loading-overlay" id="loadingOverlay">
+  <div>
+    <span class="floating">🎸</span>
+    <span class="floating2">🎤</span>
+  </div>
+  <div class="quote" id="quoteBox"></div>
+</div>
+
 <script>
 
 const quotes=[
   {text:"Don't stop believin'.",artist:"Journey"},
-  {text:"You have to fight to reach your dream.",artist:"Bad Bunny"},
   {text:"The show must go on.",artist:"Queen"},
-  {text:"Started from the bottom now we here.",artist:"Drake"},
-  {text:"I'm every woman.",artist:"Whitney Houston"},
   {text:"Dream until your dreams come true.",artist:"Aerosmith"},
-  {text:"We were born to be real.",artist:"Lady Gaga"},
-  {text:"It's a long way to the top.",artist:"AC/DC"},
-  {text:"No one can make you feel inferior.",artist:"Aretha Franklin"},
-  {text:"I'm a survivor.",artist:"Destiny's Child"}
+  {text:"You have to fight to reach your dream.",artist:"Bad Bunny"},
+  {text:"Started from the bottom now we here.",artist:"Drake"},
+  {text:"No one can make you feel inferior.",artist:"Aretha Franklin"}
 ];
 
 function showQuote(){
   const q=quotes[Math.floor(Math.random()*quotes.length)];
-  document.getElementById("results").innerHTML=
-  `<div class="quote">
-    <div class="text">"${q.text}"</div>
-    <div class="artist">— ${q.artist}</div>
-  </div>`;
+  document.getElementById("quoteBox").innerHTML=
+  `<div class="text">"${q.text}"</div>
+   <div class="artist">— ${q.artist}</div>`;
 }
 
 document.querySelectorAll(".pill").forEach(p=>{
@@ -299,18 +279,14 @@ document.querySelectorAll(".segment-option").forEach(btn=>{
 
     if(showType==="Single show"){
       confetti({
-        particleCount:150,
-        spread:80,
+        particleCount:120,
+        spread:70,
         origin:{y:0.6},
         shapes:['text'],
         shapeOptions:{text:{value:'🎤',font:'30px serif'}}
       });
-      cityLabel.innerText="City";
-      cityInput.placeholder="Nashville";
     }else{
-      confetti({particleCount:180,spread:100,origin:{y:0.6}});
-      cityLabel.innerText="Cities";
-      cityInput.placeholder="Nashville, Chicago, NYC";
+      confetti({particleCount:160,spread:100,origin:{y:0.6}});
     }
   });
 });
@@ -320,42 +296,33 @@ searchBtn.addEventListener("click",async function(){
   const input=cityInput.value;
   if(!input) return;
 
+  const overlay=document.getElementById("loadingOverlay");
+  overlay.classList.add("active");
   showQuote();
 
-  const cities=showType==="Multi-city"
-    ? input.split(",").map(c=>c.trim())
-    : [input.trim()];
+  try{
+    const res=await fetch("/api/search",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({city:input})
+    });
 
-  for(let city of cities){
+    const data=await res.json();
 
-    try{
-      const res=await fetch("/api/search",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({city})
-      });
+    document.getElementById("results").innerHTML="";
 
-      const data=await res.json();
+    data.forEach(v=>{
+      const div=document.createElement("div");
+      div.style.padding="8px 0";
+      div.innerText=v.name;
+      document.getElementById("results").appendChild(div);
+    });
 
-      const block=document.createElement("div");
-      block.className="city-block";
-      block.innerHTML=`<h3 style="font-family:Poppins;margin-top:0;">${city}</h3>`;
-
-      data.forEach(v=>{
-        const div=document.createElement("div");
-        div.className="venue";
-        div.innerText=v.name;
-        block.appendChild(div);
-      });
-
-      document.getElementById("results").appendChild(block);
-
-    }catch(err){
-      console.error(err);
-    }
-
+  }catch(err){
+    console.error(err);
   }
 
+  overlay.classList.remove("active");
 });
 
 </script>
