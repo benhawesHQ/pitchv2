@@ -25,6 +25,8 @@ body{
   font-family:'Open Sans',sans-serif;
 }
 
+/* HERO */
+
 .hero{
   position:relative;
   background:url('https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
@@ -139,18 +141,20 @@ input{
   cursor:pointer;
 }
 
+/* RESULTS */
+
 .results{
   padding:60px 20px;
   max-width:900px;
   margin:auto;
 }
 
-/* 🔥 LOADING OVERLAY */
+/* STAGE LOADING OVERLAY */
 
 .loading-overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.9);
+  background:black;
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -158,7 +162,7 @@ input{
   z-index:9999;
   opacity:0;
   pointer-events:none;
-  transition:.3s ease;
+  transition:.4s ease;
 }
 
 .loading-overlay.active{
@@ -166,37 +170,44 @@ input{
   pointer-events:auto;
 }
 
-.floating{
-  font-size:60px;
-  animation:float 2s ease-in-out infinite;
+/* Flashing stage lights */
+
+.loading-overlay::before,
+.loading-overlay::after{
+  content:"";
+  position:absolute;
+  width:200%;
+  height:200%;
+  background:radial-gradient(circle at top, rgba(249,69,1,.25), transparent 60%);
+  animation:lights 1.5s infinite alternate;
 }
 
-.floating2{
-  font-size:60px;
-  animation:float2 2.5s ease-in-out infinite;
+@keyframes lights{
+  0%{opacity:.3}
+  100%{opacity:.8}
 }
 
-@keyframes float{
-  0%{transform:translateY(0)}
-  50%{transform:translateY(-15px)}
-  100%{transform:translateY(0)}
+.stage-icons{
+  font-size:70px;
+  display:flex;
+  gap:40px;
+  animation:rock 1.2s infinite alternate;
 }
 
-@keyframes float2{
-  0%{transform:translateY(0)}
-  50%{transform:translateY(-20px)}
-  100%{transform:translateY(0)}
+@keyframes rock{
+  0%{transform:scale(1) rotate(-5deg)}
+  100%{transform:scale(1.1) rotate(5deg)}
 }
 
 .quote{
-  margin-top:30px;
+  margin-top:40px;
   text-align:center;
   max-width:600px;
 }
 
 .quote .text{
   font-family:'Poppins';
-  font-size:22px;
+  font-size:24px;
   margin-bottom:10px;
 }
 
@@ -215,13 +226,14 @@ input{
     <div class="sub">Book more shows. Play more music.</div>
 
     <div class="search-box">
+
       <div class="segment" id="showTypeSegment">
         <div class="segment-option active">Single show</div>
         <div class="segment-option">Multi-city</div>
       </div>
 
       <label id="cityLabel">City</label>
-      <input id="cityInput" placeholder="Nashville" />
+      <input id="cityInput" placeholder="Nashville">
 
       <label>Genre</label>
       <div class="row">
@@ -232,7 +244,11 @@ input{
         <div class="pill">🎤 Comedy</div>
       </div>
 
+      <label>Audience size</label>
+      <input id="audienceInput" placeholder="20-30">
+
       <button class="search-btn" id="searchBtn">Search venues</button>
+
     </div>
   </div>
 </div>
@@ -240,9 +256,8 @@ input{
 <div class="results" id="results"></div>
 
 <div class="loading-overlay" id="loadingOverlay">
-  <div>
-    <span class="floating">🎸</span>
-    <span class="floating2">🎤</span>
+  <div class="stage-icons">
+    🎸 🎤
   </div>
   <div class="quote" id="quoteBox"></div>
 </div>
@@ -252,8 +267,8 @@ input{
 const quotes=[
   {text:"Don't stop believin'.",artist:"Journey"},
   {text:"The show must go on.",artist:"Queen"},
-  {text:"Dream until your dreams come true.",artist:"Aerosmith"},
   {text:"You have to fight to reach your dream.",artist:"Bad Bunny"},
+  {text:"Dream until your dreams come true.",artist:"Aerosmith"},
   {text:"Started from the bottom now we here.",artist:"Drake"},
   {text:"No one can make you feel inferior.",artist:"Aretha Franklin"}
 ];
@@ -279,8 +294,8 @@ document.querySelectorAll(".segment-option").forEach(btn=>{
 
     if(showType==="Single show"){
       confetti({
-        particleCount:120,
-        spread:70,
+        particleCount:150,
+        spread:80,
         origin:{y:0.6},
         shapes:['text'],
         shapeOptions:{text:{value:'🎤',font:'30px serif'}}
@@ -293,8 +308,9 @@ document.querySelectorAll(".segment-option").forEach(btn=>{
 
 searchBtn.addEventListener("click",async function(){
 
-  const input=cityInput.value;
-  if(!input) return;
+  const city=cityInput.value;
+  const audience=audienceInput.value;
+  if(!city) return;
 
   const overlay=document.getElementById("loadingOverlay");
   overlay.classList.add("active");
@@ -304,16 +320,15 @@ searchBtn.addEventListener("click",async function(){
     const res=await fetch("/api/search",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({city:input})
+      body:JSON.stringify({city,audience})
     });
 
     const data=await res.json();
-
     document.getElementById("results").innerHTML="";
 
     data.forEach(v=>{
       const div=document.createElement("div");
-      div.style.padding="8px 0";
+      div.style.padding="10px 0";
       div.innerText=v.name;
       document.getElementById("results").appendChild(div);
     });
