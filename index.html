@@ -22,10 +22,40 @@
       font-family: 'Open Sans', sans-serif;
     }
 
+    /* NAV */
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 30px;
+      border-bottom: 1px solid #222;
+    }
+
+    .logo {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      letter-spacing: 1px;
+    }
+
+    .nav-btn {
+      background: var(--orange);
+      color: black;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* HERO */
+
     .hero {
       position: relative;
       background: url('https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
-      padding: 140px 20px 110px;
+      padding: 120px 20px 100px;
       text-align: center;
     }
 
@@ -46,7 +76,7 @@
     h1 {
       font-family: 'Poppins', sans-serif;
       font-weight: 800;
-      font-size: 46px;
+      font-size: 44px;
       margin-bottom: 14px;
     }
 
@@ -59,12 +89,8 @@
     .search-box {
       background: rgba(20,20,20,0.95);
       padding: 30px;
-      border-radius: 14px;
+      border-radius: 12px;
       border: 1px solid #222;
-    }
-
-    .field-group {
-      margin-bottom: 18px;
       text-align: left;
     }
 
@@ -75,7 +101,7 @@
       display: block;
     }
 
-    input, select {
+    input {
       width: 100%;
       padding: 14px;
       border-radius: 8px;
@@ -83,30 +109,45 @@
       background: var(--card);
       color: white;
       font-size: 15px;
-      font-family: 'Open Sans', sans-serif;
+      margin-bottom: 18px;
     }
 
-    .inline-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
+    /* GENRE BUTTONS */
 
-    .toggle-group {
+    .genre-row {
       display: flex;
       gap: 10px;
-      margin-bottom: 18px;
       flex-wrap: wrap;
+      margin-bottom: 20px;
     }
 
-    .toggle-btn {
-      padding: 10px 14px;
-      border-radius: 8px;
+    .genre-btn {
+      padding: 8px 14px;
+      border-radius: 20px;
       background: var(--soft);
       border: 1px solid #333;
       cursor: pointer;
       font-size: 14px;
-      transition: all 0.15s ease;
+    }
+
+    .genre-btn.active {
+      background: var(--orange);
+      color: black;
+      border-color: var(--orange);
+      font-weight: 600;
+    }
+
+    /* TOGGLE */
+
+    .toggle-btn {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: var(--soft);
+      border: 1px solid #333;
+      cursor: pointer;
+      font-size: 14px;
+      margin-bottom: 20px;
     }
 
     .toggle-btn.active {
@@ -129,108 +170,15 @@
       cursor: pointer;
     }
 
-    #results {
-      padding: 80px 20px;
-      max-width: 950px;
-      margin: auto;
-    }
-
-    .results-header h2 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 32px;
-      margin-bottom: 6px;
-    }
-
-    .results-header p {
-      opacity: 0.6;
-      font-size: 14px;
-      margin-bottom: 40px;
-    }
-
-    .venue-card {
-      background: var(--card);
-      padding: 24px;
-      border-radius: 12px;
-      margin-bottom: 22px;
-      border: 1px solid #222;
-      transition: border 0.2s ease;
-    }
-
-    .venue-card:hover {
-      border-color: var(--orange);
-    }
-
-    .venue-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .venue-title {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .venue-title h3 {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      font-size: 22px;
-    }
-
-    .likelihood {
-      font-size: 13px;
-      padding: 6px 10px;
-      border-radius: 20px;
-      background: var(--soft);
-    }
-
-    .venue-location {
-      margin: 8px 0 6px;
-      font-size: 14px;
-      opacity: 0.6;
-    }
-
-    .venue-description {
-      font-size: 15px;
-      margin-bottom: 16px;
-      opacity: 0.85;
-    }
-
-    .venue-actions a {
-      display: inline-block;
-      padding: 10px 14px;
-      border-radius: 6px;
-      background: var(--orange);
-      color: black;
-      font-weight: 600;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    .footer {
-      border-top: 1px solid #222;
-      padding: 80px 20px;
-      text-align: center;
-    }
-
-    .footer h3 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 26px;
-      margin-bottom: 14px;
-    }
-
-    .footer p {
-      max-width: 650px;
-      margin: auto;
-      opacity: 0.75;
-      line-height: 1.6;
-    }
-
   </style>
 </head>
 
 <body>
+
+  <div class="nav">
+    <div class="logo">PITCH</div>
+    <button class="nav-btn">Plan a tour</button>
+  </div>
 
   <div class="hero">
     <div class="hero-content">
@@ -240,50 +188,23 @@
 
       <div class="search-box">
 
-        <div class="field-group">
-          <label>City</label>
-          <input id="city" placeholder="Nashville, NYC, Chicago..." />
+        <label>City</label>
+        <input id="city" placeholder="Nashville, NYC, Chicago..." />
+
+        <label>Genre / vibe</label>
+        <div class="genre-row">
+          <div class="genre-btn">Rock</div>
+          <div class="genre-btn">Indie</div>
+          <div class="genre-btn">Jazz</div>
+          <div class="genre-btn">Cabaret</div>
+          <div class="genre-btn">Comedy</div>
+          <div class="genre-btn">Pop</div>
         </div>
 
-        <div class="field-group">
-          <label>Genre / vibe</label>
-          <select id="genre">
-            <option value="">Select</option>
-            <option>Indie Rock</option>
-            <option>Alternative</option>
-            <option>Pop</option>
-            <option>Jazz</option>
-            <option>Grunge</option>
-            <option>Cabaret</option>
-            <option>Comedy</option>
-          </select>
-        </div>
+        <label>Expected audience</label>
+        <input id="audience" placeholder="45, forty five, 40-50, under 100..." />
 
-        <div class="field-group">
-          <label>Expected audience</label>
-          <div class="inline-row">
-            <input id="audienceExact" placeholder="Exact number (optional)" />
-            <select id="audienceRange">
-              <option value="">Or choose range</option>
-              <option>Under 50</option>
-              <option>50–150</option>
-              <option>150–300</option>
-              <option>300+</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label>Show type</label>
-          <div class="toggle-group">
-            <div class="toggle-btn" id="singleToggle">Single show</div>
-            <div class="toggle-btn" id="multiToggle">Multiple shows</div>
-          </div>
-        </div>
-
-        <div class="toggle-group">
-          <div class="toggle-btn" id="likelyToggle">Prioritize likely to reply</div>
-        </div>
+        <div class="toggle-btn" id="likelyToggle">Only show venues likely to reply</div>
 
         <button class="search-btn" onclick="searchVenues()">Search venues</button>
 
@@ -291,45 +212,45 @@
     </div>
   </div>
 
-  <div id="results"></div>
-
-  <div class="footer">
-    <h3>How it works</h3>
-    <p>
-      Choose the city, the sound, and the room size you're aiming for.
-      We surface venues that regularly book emerging artists in that scene.
-      You reach out directly and start booking.
-    </p>
-  </div>
-
 <script>
 
+let selectedGenre = null;
 let likelyActive = false;
-let showType = null;
 
-document.getElementById("likelyToggle").onclick = function() {
+document.querySelectorAll(".genre-btn").forEach(btn => {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll(".genre-btn").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    selectedGenre = this.innerText;
+  });
+});
+
+document.getElementById("likelyToggle").addEventListener("click", function() {
   likelyActive = !likelyActive;
   this.classList.toggle("active");
-};
+});
 
-document.getElementById("singleToggle").onclick = function() {
-  showType = "single";
-  this.classList.add("active");
-  document.getElementById("multiToggle").classList.remove("active");
-};
+/* Normalize audience input */
+function normalizeAudience(input) {
+  if (!input) return null;
 
-document.getElementById("multiToggle").onclick = function() {
-  showType = "multiple";
-  this.classList.add("active");
-  document.getElementById("singleToggle").classList.remove("active");
-};
+  const numbers = input.match(/\d+/g);
+  if (numbers) {
+    if (numbers.length === 1) return parseInt(numbers[0]);
+    if (numbers.length >= 2) return {
+      min: parseInt(numbers[0]),
+      max: parseInt(numbers[1])
+    };
+  }
+
+  return input.toLowerCase();
+}
 
 async function searchVenues() {
 
   const city = document.getElementById("city").value;
-  const genre = document.getElementById("genre").value;
-  const audienceExact = document.getElementById("audienceExact").value;
-  const audienceRange = document.getElementById("audienceRange").value;
+  const audienceRaw = document.getElementById("audience").value;
+  const audience = normalizeAudience(audienceRaw);
 
   if (!city) {
     alert("Enter a city.");
@@ -341,56 +262,14 @@ async function searchVenues() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       city,
-      genre,
+      genre: selectedGenre,
       likely: likelyActive,
-      audienceExact,
-      audienceRange,
-      showType
+      audience
     })
   });
 
   const data = await res.json();
-
-  renderResults(data);
-}
-
-function renderResults(data) {
-
-  const container = document.getElementById("results");
-
-  container.innerHTML = `
-    <div class="results-header">
-      <h2>Venues in ${data.city}</h2>
-      <p>Ranked by reply likelihood for emerging artists.</p>
-    </div>
-  `;
-
-  data.results.forEach(venue => {
-
-    const card = document.createElement("div");
-    card.className = "venue-card";
-
-    card.innerHTML = `
-      <div class="venue-header">
-        <div class="venue-title">
-          <span>${venue.emoji}</span>
-          <h3>${venue.name}</h3>
-        </div>
-        <div class="likelihood">${venue.likelihood * 10}% likely to reply</div>
-      </div>
-
-      <div class="venue-location">${venue.neighborhood}, ${data.city}</div>
-      <div class="venue-description">${venue.description}</div>
-
-      <div class="venue-actions">
-        <a href="https://www.google.com/search?q=${venue.name} ${data.city}" target="_blank">
-          View venue info
-        </a>
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
+  console.log(data);
 }
 
 </script>
