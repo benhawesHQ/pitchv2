@@ -142,6 +142,7 @@ textarea{
   border-radius:999px;
   font-weight:700;
   background:var(--orange);
+  color:black;
   cursor:pointer;
   transition:.2s;
 }
@@ -376,6 +377,7 @@ footer{
     display:block;
     width:100%;
     text-align:center;
+    color:white; /* white button text on mobile */
   }
 
   .secondary{
