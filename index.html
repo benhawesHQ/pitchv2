@@ -1,219 +1,334 @@
-let generatedResults = [];
-let displayedCount = 0;
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pitch | Find Your Next Stage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-const loreMoments = [
-  "Taylor Swift once played small Nashville cafés before stadium tours.",
-  "Lady Gaga built her audience in downtown New York clubs.",
-  "Green Day grew their fanbase in tiny Bay Area venues.",
-  "Bruce Springsteen played small Jersey bars before arenas.",
-  "Ed Sheeran busked on streets before selling out stadiums.",
-  "Beyoncé performed in local competitions before global tours.",
-  "Prince built momentum in Minneapolis clubs before worldwide fame.",
-  "Madonna performed in NYC dance rooms before pop superstardom.",
-  "Adele sang in small London venues before global recognition.",
-  "Kendrick Lamar performed in intimate LA rooms before festival headlines."
-];
+  <!-- Guitar Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
 
-let loreIndex = 0;
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
-function getLore(){
-  const text = loreMoments[loreIndex];
-  loreIndex = (loreIndex + 1) % loreMoments.length;
-  return text;
-}
+  <style>
+    :root{
+      --orange:#f94501;
+      --bg:#111;
+      --card:#181818;
+      --soft:#222;
+      --border:#2a2a2a;
+    }
 
-function searchVenues(){
-  const city = document.getElementById("cityInput").value.trim();
-  const audience = parseInt(document.getElementById("audienceInput").value);
-  const count = parseInt(document.getElementById("countSelect").value);
+    body{
+      margin:0;
+      background:var(--bg);
+      color:white;
+      font-family:'Open Sans',sans-serif;
+    }
 
-  if(!city || !audience){
-    alert("Please enter a city and audience size.");
-    return;
-  }
+    /* NAV */
 
-  document.getElementById("resultsWrapper").style.display="block";
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 40px;
+    }
 
-  const overlay = document.getElementById("loadingOverlay");
-  overlay.classList.add("active");
-  document.getElementById("loreText").innerText = getLore();
+    .logo{
+      font-family:'Poppins';
+      font-weight:800;
+      font-size:28px;
+    }
 
-  setTimeout(() => {
-    overlay.classList.remove("active");
-    buildResults(city, audience, count);
-  }, 1600);
-}
+    .logo span{
+      color:var(--orange);
+    }
 
-function buildResults(city, audience, count){
-  const results = document.getElementById("results");
-  results.innerHTML="";
-  generatedResults = [];
-  displayedCount = 0;
+    .guide-btn{
+      background:var(--orange);
+      color:black;
+      border:none;
+      padding:10px 16px;
+      border-radius:6px;
+      font-family:'Poppins';
+      font-weight:600;
+      cursor:pointer;
+    }
 
-  const sizeTier = getSizeTier(audience);
+    /* HERO */
 
-  const baseCategories = getCategoriesForTier(sizeTier);
+    .hero{
+      background:url('hero.jpg') center/cover no-repeat;
+      position:relative;
+      text-align:center;
+      padding:80px 20px;
+    }
 
-  for(let i=0; i<count; i++){
-    const category = baseCategories[i % baseCategories.length];
-    generatedResults.push(generateCard(city, audience, category));
-  }
+    .hero::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.6);
+    }
 
-  document.getElementById("resultsSub").innerText =
-    `Showing ${count} intelligent venue pathways for ~${audience} guests in ${city}.`;
+    .hero-content{
+      position:relative;
+      max-width:900px;
+      margin:auto;
+    }
 
-  showMore();
-}
+    .hero h1{
+      font-family:'Poppins';
+      font-size:44px;
+      margin:10px 0;
+    }
 
-function getSizeTier(audience){
-  if(audience <= 60) return "small";
-  if(audience <= 150) return "medium";
-  if(audience <= 400) return "large";
-  return "theater";
-}
+    .hero p{
+      font-size:18px;
+      margin:0 0 30px;
+    }
 
-function getCategoriesForTier(tier){
-  if(tier === "small"){
-    return [
-      "Intimate Listening Rooms",
-      "Indie Back Rooms Above Bars",
-      "DIY Music Spaces",
-      "Small Theaters Under 75 Seats",
-      "Neighborhood Music Bars",
-      "Artist-Run Performance Rooms",
-      "Warehouse-Style Micro Venues",
-      "All-Ages Community Stages",
-      "Residency-Friendly Rooms",
-      "Basement Performance Spaces",
-      "Coffeehouse Stages",
-      "Alternative Arts Spaces",
-      "Upstairs Bar Stages",
-      "Creative Event Lofts",
-      "Experimental Music Rooms"
-    ];
-  }
+    /* SEARCH PANEL */
 
-  if(tier === "medium"){
-    return [
-      "Mid-Size Concert Halls",
-      "Standing-Room Indie Venues",
-      "Ticketed Touring Rooms",
-      "Converted Industrial Spaces",
-      "Music-Focused Event Venues",
-      "Ballroom-Style Stages",
-      "Established Indie Rooms",
-      "Hybrid Bar + Stage Venues",
-      "Flexible Capacity Event Spaces",
-      "City Arts Centers",
-      "Regional Touring Venues",
-      "Multi-Room Music Spaces",
-      "Community Performance Halls",
-      "Late-Night Live Music Rooms",
-      "Local Festival-Scale Spaces"
-    ];
-  }
+    .search-panel{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:30px;
+      max-width:720px;
+      margin:0 auto;
+    }
 
-  if(tier === "large"){
-    return [
-      "Large Independent Concert Venues",
-      "Warehouse Concert Spaces",
-      "City Performance Centers",
-      "Historic Music Halls",
-      "Multi-Level Event Spaces",
-      "Festival-Sized Indoor Rooms",
-      "Standing-Room Ballrooms",
-      "Large Touring Venues",
-      "Converted Theater Spaces",
-      "Major Indie Music Rooms",
-      "Regional Event Centers",
-      "High-Capacity Music Venues",
-      "Arena-Scale Indie Halls",
-      "Urban Performance Warehouses",
-      "Major Ticketed Music Rooms"
-    ];
-  }
+    .field{
+      margin-bottom:20px;
+      text-align:left;
+    }
 
-  return [
-    "Theater-Scale Performance Venues",
-    "City Concert Halls",
-    "Large Touring Stages",
-    "Multi-Thousand Capacity Rooms",
-    "Regional Event Arenas",
-    "Landmark Music Theaters",
-    "Historic Grand Performance Spaces",
-    "Major City Performance Centers",
-    "Festival Headline Stages",
-    "High-Capacity Theater Rentals",
-    "Urban Concert Theaters",
-    "Premier Touring Venues",
-    "Metropolitan Music Halls",
-    "Mainstage City Auditoriums",
-    "Large-Scale Indoor Concert Spaces"
-  ];
-}
+    .field label{
+      font-family:'Poppins';
+      font-weight:600;
+      font-size:14px;
+      margin-bottom:8px;
+      display:block;
+    }
 
-function generateCard(city, audience, category){
-  const searchQuery = `${category} in ${city} capacity ${audience} live music booking`;
+    .field input,
+    .field select{
+      width:100%;
+      padding:12px;
+      background:var(--soft);
+      border:1px solid var(--border);
+      border-radius:6px;
+      color:white;
+      font-size:14px;
+    }
 
-  return {
-    title: category,
-    description: `These are the kinds of spaces where artists build momentum at this level. For a crowd around ${audience}, rooms like this create energy without feeling empty. Many touring acts passed through venues in this tier before scaling up. Explore current live options in ${city} that match this scale and vibe.`,
-    googleLink: `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`,
-    mapsLink: `https://www.google.com/maps/search/${encodeURIComponent(searchQuery)}`
-  };
-}
+    .search-btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:8px;
+      font-family:'Poppins';
+      font-weight:700;
+      background:var(--orange);
+      color:black;
+      cursor:pointer;
+    }
 
-function showMore(){
-  const results = document.getElementById("results");
-  const moreBtn = document.getElementById("moreBtn");
+    /* RESULTS */
 
-  const nextChunk = generatedResults.slice(displayedCount, displayedCount + 5);
+    .results-wrapper{
+      display:none;
+      max-width:1000px;
+      margin:60px auto;
+      padding:0 20px;
+    }
 
-  nextChunk.forEach(card => {
-    results.innerHTML += `
-      <div class="venue-card">
-        <div class="venue-header">
-          <div class="venue-name">${card.title}</div>
+    .results-header{
+      font-family:'Poppins';
+      font-size:24px;
+      margin-bottom:8px;
+    }
+
+    .results-sub{
+      font-weight:600;
+      margin-bottom:25px;
+    }
+
+    .results{
+      display:grid;
+      gap:20px;
+    }
+
+    .venue-card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:20px;
+    }
+
+    .venue-name{
+      font-family:'Poppins';
+      font-size:18px;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .venue-description{
+      font-size:14px;
+      margin-bottom:14px;
+    }
+
+    .see-venue-btn{
+      padding:8px 14px;
+      border-radius:6px;
+      background:var(--orange);
+      color:black;
+      text-decoration:none;
+      font-weight:600;
+      font-size:14px;
+    }
+
+    .more-btn{
+      margin-top:25px;
+      padding:12px 18px;
+      background:var(--orange);
+      color:black;
+      border:none;
+      border-radius:8px;
+      font-family:'Poppins';
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .support-note{
+      margin-top:40px;
+      text-align:center;
+    }
+
+    /* LOADING OVERLAY */
+
+    .loading-overlay{
+      position:fixed;
+      inset:0;
+      background:black;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      opacity:0;
+      pointer-events:none;
+      transition:.3s ease;
+      z-index:999;
+    }
+
+    .loading-overlay.active{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .floating{
+      font-size:40px;
+      animation:float 1.2s infinite alternate;
+    }
+
+    @keyframes float{
+      from{ transform:translateY(-5px); }
+      to{ transform:translateY(5px); }
+    }
+
+    .lore{
+      margin-top:20px;
+      max-width:500px;
+      text-align:center;
+      font-size:15px;
+    }
+
+    footer{
+      margin-top:80px;
+      padding:40px 20px;
+      text-align:center;
+      border-top:1px solid var(--border);
+    }
+
+    footer a{
+      color:var(--orange);
+      text-decoration:none;
+      font-weight:600;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="nav">
+    <div class="logo">Pitch<span>.</span></div>
+    <button class="guide-btn">Download Guide</button>
+  </div>
+
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Find Your Next Stage</h1>
+      <p>Discover venues faster so you can focus on planning the show.</p>
+
+      <div class="search-panel">
+        <div class="field">
+          <label>City</label>
+          <input id="cityInput" placeholder="Brooklyn, Portland, Berlin">
         </div>
-        <div class="venue-description">${card.description}</div>
-        <a class="see-venue-btn" target="_blank" href="${card.googleLink}">
-          Explore Live Options →
-        </a>
+
+        <div class="field">
+          <label>Expected Audience</label>
+          <input id="audienceInput" placeholder="40, 120, 300">
+        </div>
+
+        <div class="field">
+          <label>Number of Suggestions</label>
+          <select id="countSelect">
+            <option value="10">10 venues</option>
+            <option value="15" selected>15 venues</option>
+          </select>
+        </div>
+
+        <button class="search-btn" onclick="searchVenues()">
+          Search Venues
+        </button>
       </div>
-    `;
-  });
+    </div>
+  </div>
 
-  displayedCount += 5;
+  <div class="results-wrapper" id="resultsWrapper">
+    <div class="results-header">Your short list of venues</div>
+    <div class="results-sub" id="resultsSub"></div>
+    <div id="results" class="results"></div>
+    <button id="moreBtn" class="more-btn" onclick="showMore()" style="display:none;">
+      See a few more
+    </button>
 
-  if(displayedCount < generatedResults.length){
-    moreBtn.style.display="block";
-  } else {
-    moreBtn.style.display="none";
-  }
+    <div class="support-note">
+      Pitch surfaces performance spaces based on current programming patterns and internet research.
+      <br><br>
+      <strong>Pitch is in v1.</strong>
+      Want live status checks and real-time venue verification?
+      Support the build by downloading the guide or joining the launch campaign.
+    </div>
+  </div>
 
-  launchConfetti();
-}
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="floating">🎸 🎵</div>
+    <div id="loreText" class="lore"></div>
+  </div>
 
-function launchConfetti(){
-  for(let i=0;i<35;i++){
-    const confetti=document.createElement("div");
-    confetti.style.position="fixed";
-    confetti.style.left=Math.random()*100+"%";
-    confetti.style.top="0";
-    confetti.style.width="6px";
-    confetti.style.height="6px";
-    confetti.style.background="#f94501";
-    confetti.style.zIndex="9999";
-    confetti.style.transition="1s ease-out";
-    document.body.appendChild(confetti);
+  <footer>
+    Created by NYC musician Ben Hawes.
+    <br>
+    <a href="https://instagram.com/benhaweshq" target="_blank">
+      Connect on Instagram
+    </a>
+  </footer>
 
-    setTimeout(()=>{
-      confetti.style.top="100%";
-      confetti.style.opacity="0";
-    },10);
+  <script src="/script.js"></script>
 
-    setTimeout(()=>{
-      confetti.remove();
-    },1000);
-  }
-}
+</body>
+</html>
