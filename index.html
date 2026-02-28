@@ -4,6 +4,7 @@
   <title>Pitch.io | Book a show</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- 🎸 Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -11,11 +12,11 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    :root {
+    :root{
       --orange:#f94501;
       --bg:#111;
       --card:#181818;
-      --soft:#2a2a2a;
+      --soft:#262626;
     }
 
     body{
@@ -65,7 +66,7 @@
       content:"";
       position:absolute;
       inset:0;
-      background:rgba(0,0,0,0.65);
+      background:rgba(0,0,0,.65);
     }
 
     .hero-content{
@@ -78,14 +79,14 @@
     h1{
       font-family:'Poppins',sans-serif;
       font-weight:800;
-      font-size:44px;
+      font-size:42px;
       margin-bottom:12px;
     }
 
     .sub{
       font-size:20px;
       opacity:.9;
-      margin-bottom:50px;
+      margin-bottom:40px;
     }
 
     .search-box{
@@ -112,14 +113,14 @@
       background:var(--card);
       color:white;
       font-size:15px;
-      margin-bottom:28px;
+      margin-bottom:24px;
     }
 
     .row{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
-      margin-bottom:28px;
+      margin-bottom:24px;
     }
 
     .pill{
@@ -144,7 +145,7 @@
       background:var(--soft);
       border-radius:999px;
       padding:4px;
-      margin-bottom:28px;
+      margin-bottom:24px;
       border:1px solid #333;
     }
 
@@ -183,6 +184,35 @@
       max-width:900px;
       margin:auto;
     }
+
+    .quote{
+      text-align:center;
+      padding:40px 0;
+      font-family:'Poppins';
+    }
+
+    .quote .text{
+      font-size:22px;
+      margin-bottom:10px;
+    }
+
+    .quote .artist{
+      opacity:.7;
+    }
+
+    .city-block{
+      background:var(--card);
+      border:1px solid #222;
+      border-radius:10px;
+      padding:20px;
+      margin-top:20px;
+    }
+
+    .venue{
+      padding:6px 0;
+      border-bottom:1px solid #222;
+    }
+
   </style>
 </head>
 
@@ -233,53 +263,99 @@
 
 <script>
 
-/* 🎸 Genre toggle working */
-document.querySelectorAll(".pill").forEach(pill=>{
-  pill.addEventListener("click",()=>{
-    pill.classList.toggle("active");
-  });
+const quotes=[
+  {text:"Don't stop believin'.",artist:"Journey"},
+  {text:"You have to fight to reach your dream.",artist:"Bad Bunny"},
+  {text:"The show must go on.",artist:"Queen"},
+  {text:"Started from the bottom now we here.",artist:"Drake"},
+  {text:"I'm every woman.",artist:"Whitney Houston"},
+  {text:"Dream until your dreams come true.",artist:"Aerosmith"},
+  {text:"We were born to be real.",artist:"Lady Gaga"},
+  {text:"It's a long way to the top.",artist:"AC/DC"},
+  {text:"No one can make you feel inferior.",artist:"Aretha Franklin"},
+  {text:"I'm a survivor.",artist:"Destiny's Child"}
+];
+
+function showQuote(){
+  const q=quotes[Math.floor(Math.random()*quotes.length)];
+  document.getElementById("results").innerHTML=
+  `<div class="quote">
+    <div class="text">"${q.text}"</div>
+    <div class="artist">— ${q.artist}</div>
+  </div>`;
+}
+
+document.querySelectorAll(".pill").forEach(p=>{
+  p.addEventListener("click",()=>p.classList.toggle("active"));
 });
 
 let showType="Single show";
 
-document.querySelectorAll("#showTypeSegment .segment-option").forEach(btn=>{
+document.querySelectorAll(".segment-option").forEach(btn=>{
   btn.addEventListener("click",function(){
-
-    document.querySelectorAll("#showTypeSegment .segment-option")
-      .forEach(b=>b.classList.remove("active"));
-
+    document.querySelectorAll(".segment-option").forEach(b=>b.classList.remove("active"));
     this.classList.add("active");
     showType=this.innerText;
 
     if(showType==="Single show"){
-
       confetti({
         particleCount:150,
         spread:80,
         origin:{y:0.6},
         shapes:['text'],
-        shapeOptions:{
-          text:{value:'🎤',font:'30px serif'}
-        }
+        shapeOptions:{text:{value:'🎤',font:'30px serif'}}
       });
-
-      document.getElementById("cityLabel").innerText="City";
-      document.getElementById("cityInput").placeholder="Nashville";
+      cityLabel.innerText="City";
+      cityInput.placeholder="Nashville";
+    }else{
+      confetti({particleCount:180,spread:100,origin:{y:0.6}});
+      cityLabel.innerText="Cities";
+      cityInput.placeholder="Nashville, Chicago, NYC";
     }
-
-    if(showType==="Multi-city"){
-
-      confetti({
-        particleCount:160,
-        spread:100,
-        origin:{y:0.6}
-      });
-
-      document.getElementById("cityLabel").innerText="Cities";
-      document.getElementById("cityInput").placeholder="Nashville, Chicago, NYC";
-    }
-
   });
+});
+
+searchBtn.addEventListener("click",async function(){
+
+  const input=cityInput.value;
+  if(!input) return;
+
+  showQuote();
+
+  const cities=showType==="Multi-city"
+    ? input.split(",").map(c=>c.trim())
+    : [input.trim()];
+
+  for(let city of cities){
+
+    try{
+      const res=await fetch("/api/search",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({city})
+      });
+
+      const data=await res.json();
+
+      const block=document.createElement("div");
+      block.className="city-block";
+      block.innerHTML=`<h3 style="font-family:Poppins;margin-top:0;">${city}</h3>`;
+
+      data.forEach(v=>{
+        const div=document.createElement("div");
+        div.className="venue";
+        div.innerText=v.name;
+        block.appendChild(div);
+      });
+
+      document.getElementById("results").appendChild(block);
+
+    }catch(err){
+      console.error(err);
+    }
+
+  }
+
 });
 
 </script>
