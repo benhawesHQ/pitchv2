@@ -1,94 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Pitch | Find Your Next Stage</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Pitch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
-<div class="hero">
-
-  <div class="top-bar">
-    <div class="logo">Pitch<span>.</span></div>
-    <a href="#" class="guide-btn">Download the Guide</a>
-  </div>
-
-  <div class="hero-content">
-    <h1>Find Your Next Stage</h1>
-    <p>Discover the right venue faster so you can play more music.</p>
-
-    <div class="search-panel">
-
-      <div class="field">
-        <label>City</label>
-        <input id="cityInput" placeholder="Brooklyn, Portland, Berlin">
-      </div>
-
-      <div class="field">
-        <label>Expected Audience</label>
-        <input id="audienceInput" placeholder="25, 40, 80">
-      </div>
-
-      <div class="field">
-        <label>Anything else feel important?</label>
-        <input id="vibeInput" placeholder="Intimate, standing room, indie crowd">
-      </div>
-
-      <div class="field">
-        <label>Number of Suggestions</label>
-        <select id="countSelect">
-          <option value="5">5 venues</option>
-          <option value="10" selected>10 venues</option>
-          <option value="15">15 venues</option>
-        </select>
-      </div>
-      <div class="tag-row">
-  <button class="tag-filter" data-tag="rock">🎸 Rock</button>
-  <button class="tag-filter" data-tag="jazz">🎷 Jazz</button>
-  <button class="tag-filter" data-tag="cabaret">🎭 Cabaret</button>
-  <button class="tag-filter" data-tag="lgbt">🏳️‍🌈 LGBTQ+</button>
-  <button class="tag-filter" data-tag="black">✊🏾 Black-Owned</button>
-</div>
-
-      <button id="searchBtn" class="search-btn">Search Venues</button>
-
+  <section class="hero">
+    <div class="top-bar">
+      <div class="logo">Pitch<span>.</span></div>
+      <a href="#" class="guide-btn">Download the Guide</a>
     </div>
+
+    <div class="hero-content">
+      <h1>Find Your Next Stage</h1>
+      <p>Pitch curates venues based on your audience size and city so you can reach out faster and book more shows.</p>
+
+      <div class="search-panel">
+        <div class="field">
+          <label>City</label>
+          <input id="cityInput" placeholder="Brooklyn, Nashville, etc">
+        </div>
+
+        <div class="field">
+          <label>Expected Audience Size</label>
+          <input id="audienceInput" type="number" placeholder="40">
+        </div>
+
+        <div class="field">
+          <label>Desired Vibe</label>
+          <input id="vibeInput" placeholder="Cabaret, rock, jazz, intimate, etc">
+        </div>
+
+        <button class="search-btn" onclick="searchVenues()">
+          Search Venues
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="results-wrapper">
+    <div id="results" class="results"></div>
+  </section>
+
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="fun-fact">Finding stages...</div>
   </div>
-</div>
 
-<div class="results-wrapper" id="resultsWrapper" style="display:none;">
-
-  <div class="results-intro">
-    <h2>Your Shortlist</h2>
-    <p>
-      Pitch curates performance spaces using live venue signals and audience patterns,
-      helping you reach out faster and book smarter.
-    </p>
-  </div>
-
-  <div id="results" class="results"></div>
-
-</div>
-
-<div id="loadingOverlay" class="loading-overlay">
-  <div class="lights">🎸 🎤 🎶</div>
-  <div class="fun-fact">Warming up the stage lights...</div>
-</div>
-
-<footer>
-  <div class="footer-logo">Pitch<span>.</span></div>
-  <div class="footer-text">Created by NYC musician Ben Hawes in New York City.</div>
-  <a href="https://www.instagram.com/benhaweshq" target="_blank" class="footer-link">
-    Connect on Instagram
-  </a>
-</footer>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 
 </body>
 </html>
