@@ -17,42 +17,35 @@ For each venue, return:
 
 - name
 - city (include state if US)
-- emoji that represents the vibe
-- detailed 3–5 sentence description about the venue, its programming style, and why it fits this audience size
+- emoji
+- detailed 3–5 sentence description
 - likelihood of response (High / Medium / Low)
-- googleQuery (venue name + city only)
+- googleQuery (venue name + city)
 
-Return ONLY valid JSON in this exact format:
-
-[
-  {
-    "name": "",
-    "city": "",
-    "emoji": "",
-    "description": "",
-    "likelihood": "",
-    "googleQuery": ""
-  }
-]
-
-No commentary.
-No markdown.
-No explanation.
-JSON only.
+Return ONLY JSON array. No commentary.
 `;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: "You return clean JSON only." },
+        { role: "system", content: "Return valid JSON only." },
         { role: "user", content: prompt }
       ],
       temperature: 0.7
     });
 
-    const raw = completion.choices[0].message.content.trim();
+    let raw = completion.choices[0].message.content.trim();
 
-    const venues = JSON.parse(raw);
+    // Remove possible markdown wrapping
+    raw = raw.replace(/```json/g, "").replace(/```/g, "");
+
+    // Extract JSON array if extra text appears
+    const jsonMatch = raw.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      throw new Error("No JSON array found in response");
+    }
+
+    const venues = JSON.parse(jsonMatch[0]);
 
     return {
       statusCode: 200,
@@ -61,12 +54,12 @@ JSON only.
     };
 
   } catch (error) {
-    console.error("Function error:", error);
+    console.error("Search function error:", error);
 
     return {
       statusCode: 500,
       body: JSON.stringify({
-        error: "Something went wrong in search function.",
+        error: "Function failed",
         details: error.message
       })
     };
