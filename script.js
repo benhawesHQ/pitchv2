@@ -1,75 +1,150 @@
-async function searchVenues() {
-  console.log("Search clicked");
+let allVenues = [];
+let visibleCount = 0;
 
+async function searchVenues() {
   const city = document.getElementById("cityInput").value.trim();
+  const audience = document.getElementById("audienceInput").value.trim();
+  const count = parseInt(document.getElementById("countSelect").value);
 
   if (!city) {
-    alert("Please enter a city.");
+    alert("Enter a city first.");
     return;
   }
 
-  const overlay = document.getElementById("loadingOverlay");
-  overlay.classList.add("active");
+  showLoading();
 
   try {
-    const response = await fetch("/api/search", {
+    const res = await fetch("/api/search", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ city })
     });
 
-    const data = await response.json();
-
-    console.log("API Response:", data);
-
-    overlay.classList.remove("active");
+    const data = await res.json();
 
     if (!data.venues || data.venues.length === 0) {
+      hideLoading();
       alert("No venues found.");
       return;
     }
 
-    renderVenues(data.venues, city);
+    // Deduplicate by name
+    const unique = [];
+    const names = new Set();
+
+    data.venues.forEach(v => {
+      if (!names.has(v.name)) {
+        names.add(v.name);
+        unique.push(v);
+      }
+    });
+
+    // Apply audience filtering
+    allVenues = filterByAudience(unique, audience);
+
+    visibleCount = count;
+    renderResults();
+
+    document.getElementById("resultsWrapper").style.display = "block";
+    document.getElementById("resultsSub").innerText =
+      `Live performance spaces in ${city} curated for an expected audience of ${audience || "varied sizes"}.`;
+
+    hideLoading();
 
   } catch (err) {
-    overlay.classList.remove("active");
+    hideLoading();
     console.error(err);
-    alert("Something went wrong connecting to the server.");
+    alert("Something went wrong.");
   }
 }
 
-function renderVenues(venues, city) {
-  const wrapper = document.getElementById("resultsWrapper");
-  const results = document.getElementById("results");
-  const sub = document.getElementById("resultsSub");
+function filterByAudience(venues, audience) {
+  const size = parseInt(audience);
 
-  results.innerHTML = "";
-  wrapper.style.display = "block";
-  sub.innerText = `Live performance spaces in ${city}`;
+  if (!size || size > 80) return venues;
 
-  venues.forEach(venue => {
+  const largeWords = [
+    "theatre","theater","arena","concert hall",
+    "stadium","music hall","center","centre"
+  ];
+
+  return venues.filter(v => {
+    const name = v.name.toLowerCase();
+    return !largeWords.some(word => name.includes(word));
+  });
+}
+
+function getLikelihood(v) {
+  const rating = v.rating || 0;
+  const reviews = v.user_ratings_total || 0;
+
+  if (rating >= 4.4 && reviews > 200)
+    return { text: "Likely to reply", class: "good" };
+
+  if (rating >= 4.0)
+    return { text: "Worth reaching out", class: "medium" };
+
+  return { text: "Less likely to reply", class: "low" };
+}
+
+function renderResults() {
+  const container = document.getElementById("results");
+  container.innerHTML = "";
+
+  const slice = allVenues.slice(0, visibleCount);
+
+  slice.forEach(v => {
+    const likelihood = getLikelihood(v);
+
     const card = document.createElement("div");
     card.className = "venue-card";
-
     card.innerHTML = `
-      ${venue.photo ? `<img src="${venue.photo}" style="width:100%;border-radius:8px;margin-bottom:15px;">` : ""}
-      <div class="venue-name">${venue.name}</div>
-      <div style="font-size:14px;margin-bottom:8px;">
-        ⭐ ${venue.rating} (${venue.reviewCount} reviews)
-        ${venue.isOpen === true ? 
-          `<span style="color:#00ff88;font-weight:600;margin-left:10px;">● Open Now</span>` : ""}
+      <img src="${v.photo || "https://via.placeholder.com/100"}"
+           class="venue-image">
+
+      <div class="venue-content">
+        <div class="venue-name">${v.name}</div>
+
+        <div class="venue-rating">
+          ⭐ ${v.rating || "N/A"} (${v.user_ratings_total || 0})
+        </div>
+
+        <a 
+          href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.address)}"
+          target="_blank"
+          class="venue-meta"
+        >
+          ${v.address}
+        </a>
+
+        <div class="badge ${likelihood.class}">
+          ${likelihood.text}
+        </div>
+
+        <a href="${v.website || '#'}"
+           target="_blank"
+           class="see-venue-btn">
+          See Venue
+        </a>
       </div>
-      <div class="venue-description">${venue.address}</div>
-      ${venue.reviewSnippet ? 
-        `<div style="font-size:13px;margin-top:10px;color:#ccc;">“${venue.reviewSnippet.substring(0,150)}...”</div>` 
-        : ""}
-      ${venue.website ? 
-        `<a href="${venue.website}" target="_blank" class="see-venue-btn" style="margin-top:15px;">Visit Website</a>` 
-        : ""}
     `;
 
-    results.appendChild(card);
+    container.appendChild(card);
   });
+
+  document.getElementById("moreBtn").style.display =
+    visibleCount < allVenues.length ? "inline-block" : "none";
+}
+
+function showMore() {
+  visibleCount += 5;
+  renderResults();
+}
+
+function showLoading() {
+  document.getElementById("loadingOverlay").classList.add("active");
+}
+
+function hideLoading() {
+  document.getElementById("loadingOverlay").classList.remove("active");
 }
