@@ -1,84 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pitch</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>Pitch | Find Your Next Stage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
 
-<div class="hero">
-  <h1>Find Your Next Stage</h1>
-  <p>Discover your venue faster.</p>
-
-  <input id="cityInput" placeholder="Brooklyn, Portland, Berlin">
-  <input id="audienceInput" type="number" placeholder="Expected audience (e.g. 40)">
-  <button id="searchButton">Search Venues</button>
-</div>
-
-<div id="resultsWrapper" style="display:none;">
-  <div id="results"></div>
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const button = document.getElementById("searchButton");
-  button.addEventListener("click", searchVenues);
-});
-
-async function searchVenues() {
-  const city = document.getElementById("cityInput").value;
-  const audience = parseInt(document.getElementById("audienceInput").value);
-
-  if (!city) return;
-
-  const response = await fetch("/api/search?city=" + encodeURIComponent(city));
-  const data = await response.json();
-
-  const results = data.results || [];
-
-  const filtered = results.filter(v => capacityMatch(v, audience));
-
-  const container = document.getElementById("results");
-  container.innerHTML = "";
-
-  filtered.forEach(v => {
-    container.innerHTML += renderVenue(v);
-  });
-
-  document.getElementById("resultsWrapper").style.display = "block";
-}
-
-function capacityMatch(place, audience) {
-  if (!audience) return true;
-
-  const name = place.name.toLowerCase();
-  const bigWords = ["arena","stadium","paramount","center","hall","theater","theatre"];
-
-  if (audience <= 50) {
-    for (let w of bigWords) {
-      if (name.includes(w)) return false;
-    }
-  }
-
-  return true;
-}
-
-function renderVenue(v) {
-  const googleUrl = "https://www.google.com/maps/search/?api=1&query=" +
-    encodeURIComponent(v.name + " " + v.formatted_address);
-
-  return `
-  <div class="venue-card">
-    <h2>${v.name}</h2>
-    <p>⭐ ${v.rating || "N/A"}</p>
-    <p>${v.formatted_address}</p>
-    <a href="${googleUrl}" target="_blank" class="venue-button">View on Google</a>
+  <!-- NAV -->
+  <div class="nav">
+    <div class="logo">Pitch<span>.</span></div>
   </div>
-  `;
-}
-</script>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Find Your Next Stage</h1>
+      <p>Discover the right venue faster so you can focus on planning the show.</p>
+
+      <div class="search-panel">
+
+        <div class="field">
+          <label>City</label>
+          <input id="cityInput" placeholder="Brooklyn, Portland, Berlin" />
+        </div>
+
+        <div class="field">
+          <label>Expected Audience</label>
+          <input id="audienceInput" placeholder="25, 40, 80" />
+        </div>
+
+        <div class="field">
+          <label>Anything else feel important?</label>
+          <input id="vibeInput" placeholder="Intimate, bar vibe, standing room, indie crowd" />
+        </div>
+
+        <div class="field">
+          <label>Number of Suggestions</label>
+          <select id="countSelect">
+            <option value="5">5 venues</option>
+            <option value="10" selected>10 venues</option>
+            <option value="15">15 venues</option>
+          </select>
+        </div>
+
+        <button id="searchBtn" class="search-btn">
+          Search Venues
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-wrapper" id="resultsWrapper" style="display:none;">
+    <div class="results-header">Your Short List</div>
+    <div class="results" id="results"></div>
+  </div>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loadingOverlay" class="loading-overlay">
+
+    <div class="lights">🎸 🎤 🎶</div>
+
+    <div class="fun-fact">
+      Searching the stage lights...
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    Created by NYC musician Ben Hawes.
+  </footer>
+
+  <!-- JS -->
+  <script src="script.js"></script>
 
 </body>
 </html>
