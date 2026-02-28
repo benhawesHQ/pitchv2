@@ -5,16 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- 🎸 Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
-
     :root {
       --orange: #f94501;
       --bg: #111;
-      --card: #1a1a1a;
+      --card: #181818;
       --soft: #2a2a2a;
     }
 
@@ -28,7 +27,7 @@
     .hero {
       position: relative;
       background: url('https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
-      padding: 130px 20px 110px;
+      padding: 120px 20px 100px;
       text-align: center;
     }
 
@@ -42,15 +41,15 @@
     .hero-content {
       position: relative;
       z-index: 2;
-      max-width: 720px;
+      max-width: 760px;
       margin: auto;
     }
 
     h1 {
       font-family: 'Poppins', sans-serif;
       font-weight: 800;
-      font-size: 46px;
-      margin-bottom: 10px;
+      font-size: 44px;
+      margin-bottom: 12px;
     }
 
     .sub {
@@ -62,7 +61,7 @@
     .search-box {
       background: rgba(20,20,20,0.95);
       padding: 32px;
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid #222;
       text-align: left;
     }
@@ -86,10 +85,34 @@
       margin-bottom: 24px;
     }
 
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .pill {
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: var(--soft);
+      border: 1px solid #333;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.15s ease;
+    }
+
+    .pill.active {
+      background: var(--orange);
+      color: black;
+      border-color: var(--orange);
+      font-weight: 600;
+    }
+
     .search-btn {
       width: 100%;
       padding: 16px;
-      border-radius: 8px;
+      border-radius: 10px;
       border: none;
       font-family: 'Poppins', sans-serif;
       font-weight: 700;
@@ -97,6 +120,7 @@
       background: var(--orange);
       color: black;
       cursor: pointer;
+      margin-top: 10px;
     }
 
     .results {
@@ -122,7 +146,7 @@
     .loading-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.92);
       display: none;
       align-items: center;
       justify-content: center;
@@ -144,7 +168,6 @@
       font-size: 14px;
       opacity: 0.6;
     }
-
   </style>
 </head>
 
@@ -156,9 +179,35 @@
     <div class="sub">Book more shows. Play more music.</div>
 
     <div class="search-box">
+
       <label>City</label>
       <input id="city" placeholder="Nashville, NYC, Chicago…" />
+
+      <label>Genre</label>
+      <div class="row" id="genreRow">
+        <div class="pill">🎸 Rock</div>
+        <div class="pill">🌙 Indie</div>
+        <div class="pill">🎷 Jazz</div>
+        <div class="pill">🎭 Cabaret</div>
+        <div class="pill">🎤 Comedy</div>
+        <div class="pill">✨ Pop</div>
+      </div>
+
+      <label>Audience size</label>
+      <input id="audience" placeholder="20-30 or 45 or fifty" />
+
+      <label>Show type</label>
+      <div class="row" id="showTypeRow">
+        <div class="pill">Single show</div>
+        <div class="pill">Multiple shows</div>
+      </div>
+
+      <div class="row">
+        <div class="pill" id="likelyToggle">Prioritize venues likely to reply</div>
+      </div>
+
       <button class="search-btn" id="searchBtn">Search venues</button>
+
     </div>
   </div>
 </div>
@@ -172,17 +221,50 @@
 
 <script>
 
+let selectedGenre = null;
+let selectedShowType = null;
+let likelyOnly = false;
+
+document.querySelectorAll("#genreRow .pill").forEach(btn => {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll("#genreRow .pill").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    selectedGenre = this.innerText;
+  });
+});
+
+document.querySelectorAll("#showTypeRow .pill").forEach(btn => {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll("#showTypeRow .pill").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    selectedShowType = this.innerText;
+  });
+});
+
+document.getElementById("likelyToggle").addEventListener("click", function() {
+  likelyOnly = !likelyOnly;
+  this.classList.toggle("active");
+});
+
+function parseAudience(input) {
+  if (!input) return null;
+  const nums = input.match(/\d+/g);
+  if (!nums) return null;
+  if (nums.length === 1) return parseInt(nums[0]);
+  return { min: parseInt(nums[0]), max: parseInt(nums[1]) };
+}
+
 const quotes = [
   { text: "The way I see it, if you want the rainbow, you gotta put up with the rain.", author: "Dolly Parton" },
   { text: "You have to be relentless.", author: "Beyoncé" },
   { text: "Play every show like it matters.", author: "Dave Grohl" },
-  { text: "Nobody believed in us at first.", author: "Brandon Flowers" },
-  { text: "Keep showing up.", author: "Jon Bon Jovi" },
-  { text: "You’ve got to keep going.", author: "Shania Twain" },
-  { text: "Make your own luck.", author: "Taylor Hawkins" },
-  { text: "I didn’t have a plan B.", author: "Ed Sheeran" },
-  { text: "Confidence is everything.", author: "Katy Perry" },
-  { text: "You can’t fake passion.", author: "Brandon Flowers" }
+  { text: "I built my own empire.", author: "Bad Bunny" },
+  { text: "Don’t underestimate the power of your voice.", author: "Jennifer Lopez" },
+  { text: "If you believe in yourself, anything is possible.", author: "Usher" },
+  { text: "Hard work beats talent.", author: "Kendrick Lamar" },
+  { text: "You have to create your own opportunities.", author: "Nicki Minaj" },
+  { text: "I was told no a thousand times.", author: "J. Balvin" },
+  { text: "Nothing worth having comes easy.", author: "Selena Gomez" }
 ];
 
 function randomQuote() {
@@ -197,17 +279,24 @@ document.getElementById("searchBtn").addEventListener("click", async function() 
     return;
   }
 
-  const quote = randomQuote();
-  document.getElementById("quoteText").innerText = "“" + quote.text + "”";
-  document.getElementById("quoteAuthor").innerText = "— " + quote.author;
+  const audience = parseAudience(document.getElementById("audience").value);
 
+  const q = randomQuote();
+  document.getElementById("quoteText").innerText = "“" + q.text + "”";
+  document.getElementById("quoteAuthor").innerText = "— " + q.author;
   document.getElementById("loading").style.display = "flex";
 
   try {
     const res = await fetch("/api/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ city })
+      body: JSON.stringify({
+        city,
+        genre: selectedGenre,
+        audience,
+        showType: selectedShowType,
+        likelyOnly
+      })
     });
 
     const data = await res.json();
@@ -215,18 +304,18 @@ document.getElementById("searchBtn").addEventListener("click", async function() 
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = "";
 
-    data.forEach(venue => {
+    data.forEach(v => {
       const card = document.createElement("div");
       card.className = "venue-card";
       card.innerHTML = `
-        <div class="venue-name">${venue.name}</div>
-        <div>${venue.address || ""}</div>
+        <div class="venue-name">${v.name}</div>
+        <div>${v.address || ""}</div>
       `;
       resultsDiv.appendChild(card);
     });
 
   } catch (err) {
-    console.error("Search error:", err);
+    console.error(err);
   }
 
   document.getElementById("loading").style.display = "none";
