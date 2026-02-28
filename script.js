@@ -1,43 +1,37 @@
-let allVenues = [];
-let visibleCount = 10;
+const resultsWrapper = document.getElementById("resultsWrapper");
+const resultsContainer = document.getElementById("results");
+const resultsSub = document.getElementById("resultsSub");
+const loadingOverlay = document.getElementById("loadingOverlay");
+const loreText = document.getElementById("loreText");
+const moreBtn = document.getElementById("moreBtn");
+
+let currentVenues = [];
+let shownCount = 0;
 
 const funFacts = [
   "🎤 Taylor Swift played tiny Nashville venues before selling out stadium tours.",
-  "🎸 Ed Sheeran busked on the streets before Wembley Stadium.",
+  "🎸 Ed Sheeran used to busk on the streets before headlining Wembley Stadium.",
   "🎶 Lady Gaga performed in Lower East Side clubs before global fame.",
-  "🎵 Billie Eilish recorded songs in her bedroom before Grammys.",
-  "🎤 Harry Styles played 1,000-capacity rooms before arenas.",
-  "🎸 Lizzo toured indie venues before Coachella.",
-  "🎶 Phoebe Bridgers built her audience in intimate clubs.",
-  "🎵 Adele performed in London pubs early on.",
-  "🎤 Paramore toured VFW halls before festivals.",
-  "🎸 Coldplay played student unions before stadiums.",
-  "🎶 Dua Lipa toured mid-size venues before arenas."
+  "🎵 Billie Eilish recorded songs in her bedroom before winning Grammys.",
+  "🎼 Adele performed in London pubs before arenas.",
+  "🎷 Lizzo toured small indie venues before Coachella main stage.",
+  "🎺 Hozier gained momentum in intimate Irish venues.",
+  "🎹 Coldplay played student unions before stadium tours.",
+  "🎻 Paramore toured VFW halls before festivals.",
+  "🎙️ The Killers played Vegas bars before world tours."
 ];
 
-let recentFacts = [];
-
 function getRandomFact() {
-  let available = funFacts.filter(f => !recentFacts.includes(f));
-  if (available.length === 0) {
-    recentFacts = [];
-    available = funFacts;
-  }
-  const fact = available[Math.floor(Math.random() * available.length)];
-  recentFacts.push(fact);
-  if (recentFacts.length > 8) recentFacts.shift();
-  return fact;
+  return funFacts[Math.floor(Math.random() * funFacts.length)];
 }
 
 function showLoading() {
-  const overlay = document.getElementById("loadingOverlay");
-  const lore = document.getElementById("loreText");
-  lore.innerText = getRandomFact();
-  overlay.classList.add("active");
+  loreText.innerText = getRandomFact();
+  loadingOverlay.classList.add("active");
 }
 
 function hideLoading() {
-  document.getElementById("loadingOverlay").classList.remove("active");
+  loadingOverlay.classList.remove("active");
 }
 
 async function searchVenues() {
@@ -45,76 +39,65 @@ async function searchVenues() {
   const audience = document.getElementById("audienceInput").value;
   const count = document.getElementById("countSelect").value;
 
-  if (!city || !audience) {
-    alert("Please fill in both fields.");
+  if (!city) {
+    alert("Enter a city");
     return;
   }
 
   showLoading();
 
   try {
-    const response = await fetch("/.netlify/functions/search", {
+    const response = await fetch("https://pitch-lboq.onrender.com/search", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({ city, audience, count })
     });
 
     const data = await response.json();
+
     hideLoading();
 
-    if (!data.venues) {
-      alert("Something went wrong.");
-      return;
-    }
+    currentVenues = data.venues || [];
+    shownCount = 0;
 
-    allVenues = data.venues;
-    visibleCount = 10;
+    resultsContainer.innerHTML = "";
+    resultsWrapper.style.display = "block";
+    resultsSub.innerText = `${currentVenues.length} venues found in ${city}`;
 
-    document.getElementById("resultsWrapper").style.display = "block";
-    document.getElementById("resultsSub").innerText =
-      `${allVenues.length} venues found in ${city}`;
-
-    renderResults();
+    showMore();
 
   } catch (err) {
     hideLoading();
-    alert("Search failed.");
+    alert("Something went wrong connecting to the server.");
   }
 }
 
-function renderResults() {
-  const resultsContainer = document.getElementById("results");
-  resultsContainer.innerHTML = "";
+function showMore() {
+  const nextBatch = currentVenues.slice(shownCount, shownCount + 5);
 
-  allVenues.slice(0, visibleCount).forEach(v => {
+  nextBatch.forEach(v => {
     const card = document.createElement("div");
     card.className = "venue-card";
 
     card.innerHTML = `
       <div class="venue-name">${v.emoji} ${v.name}</div>
-      <div class="venue-description">
-        ${v.description}
-        <br><br>
-        🎯 Likelihood: <strong>${v.likelihood}</strong>
-      </div>
-      <a class="see-venue-btn"
-        href="https://www.google.com/search?q=${encodeURIComponent(v.googleQuery)}"
-        target="_blank">
-        View Venue
+      <div class="venue-description">${v.description}</div>
+      <a class="see-venue-btn" target="_blank"
+         href="https://www.google.com/search?q=${encodeURIComponent(v.googleQuery)}">
+         View Venue
       </a>
     `;
 
     resultsContainer.appendChild(card);
   });
 
-  if (visibleCount < allVenues.length) {
-    document.getElementById("moreBtn").style.display = "inline-block";
-  } else {
-    document.getElementById("moreBtn").style.display = "none";
-  }
-}
+  shownCount += 5;
 
-function showMore() {
-  visibleCount += 5;
-  renderResults();
+  if (shownCount < currentVenues.length) {
+    moreBtn.style.display = "inline-block";
+  } else {
+    moreBtn.style.display = "none";
+  }
 }
