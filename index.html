@@ -70,7 +70,7 @@
       font-family: 'Poppins', sans-serif;
       font-weight: 700;
       font-size: 14px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       display: block;
     }
 
@@ -82,14 +82,14 @@
       background: var(--card);
       color: white;
       font-size: 15px;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
 
     .row {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
 
     .pill {
@@ -107,6 +107,34 @@
       color: black;
       border-color: var(--orange);
       font-weight: 600;
+    }
+
+    /* SEGMENTED SHOW TYPE SELECTOR */
+
+    .segment {
+      display: flex;
+      background: var(--soft);
+      border-radius: 999px;
+      padding: 4px;
+      margin-bottom: 28px;
+      border: 1px solid #333;
+    }
+
+    .segment-option {
+      flex: 1;
+      text-align: center;
+      padding: 10px 0;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .segment-option.active {
+      background: var(--orange);
+      color: black;
     }
 
     .search-btn {
@@ -168,6 +196,7 @@
       font-size: 14px;
       opacity: 0.6;
     }
+
   </style>
 </head>
 
@@ -180,8 +209,14 @@
 
     <div class="search-box">
 
+      <label>What are you booking?</label>
+      <div class="segment" id="showTypeSegment">
+        <div class="segment-option active">Single show</div>
+        <div class="segment-option">Multi-city</div>
+      </div>
+
       <label>City</label>
-      <input id="city" placeholder="Nashville, NYC, Chicago…" />
+      <input id="city" placeholder="Nashville, NYC, Chicago" />
 
       <label>Genre</label>
       <div class="row" id="genreRow">
@@ -194,13 +229,7 @@
       </div>
 
       <label>Audience size</label>
-      <input id="audience" placeholder="20-30 or 45 or fifty" />
-
-      <label>Show type</label>
-      <div class="row" id="showTypeRow">
-        <div class="pill">Single show</div>
-        <div class="pill">Multiple shows</div>
-      </div>
+      <input id="audience" placeholder="20-30" />
 
       <div class="row">
         <div class="pill" id="likelyToggle">Prioritize venues likely to reply</div>
@@ -222,9 +251,10 @@
 <script>
 
 let selectedGenre = null;
-let selectedShowType = null;
+let showType = "Single show";
 let likelyOnly = false;
 
+/* Genre */
 document.querySelectorAll("#genreRow .pill").forEach(btn => {
   btn.addEventListener("click", function() {
     document.querySelectorAll("#genreRow .pill").forEach(b => b.classList.remove("active"));
@@ -233,14 +263,16 @@ document.querySelectorAll("#genreRow .pill").forEach(btn => {
   });
 });
 
-document.querySelectorAll("#showTypeRow .pill").forEach(btn => {
+/* Show Type */
+document.querySelectorAll("#showTypeSegment .segment-option").forEach(btn => {
   btn.addEventListener("click", function() {
-    document.querySelectorAll("#showTypeRow .pill").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll("#showTypeSegment .segment-option").forEach(b => b.classList.remove("active"));
     this.classList.add("active");
-    selectedShowType = this.innerText;
+    showType = this.innerText;
   });
 });
 
+/* Likely toggle */
 document.getElementById("likelyToggle").addEventListener("click", function() {
   likelyOnly = !likelyOnly;
   this.classList.toggle("active");
@@ -255,16 +287,10 @@ function parseAudience(input) {
 }
 
 const quotes = [
-  { text: "The way I see it, if you want the rainbow, you gotta put up with the rain.", author: "Dolly Parton" },
   { text: "You have to be relentless.", author: "Beyoncé" },
   { text: "Play every show like it matters.", author: "Dave Grohl" },
-  { text: "I built my own empire.", author: "Bad Bunny" },
-  { text: "Don’t underestimate the power of your voice.", author: "Jennifer Lopez" },
-  { text: "If you believe in yourself, anything is possible.", author: "Usher" },
-  { text: "Hard work beats talent.", author: "Kendrick Lamar" },
-  { text: "You have to create your own opportunities.", author: "Nicki Minaj" },
-  { text: "I was told no a thousand times.", author: "J. Balvin" },
-  { text: "Nothing worth having comes easy.", author: "Selena Gomez" }
+  { text: "Make your own luck.", author: "Taylor Hawkins" },
+  { text: "You don’t get what you wish for. You get what you work for.", author: "Pitbull" }
 ];
 
 function randomQuote() {
@@ -294,13 +320,12 @@ document.getElementById("searchBtn").addEventListener("click", async function() 
         city,
         genre: selectedGenre,
         audience,
-        showType: selectedShowType,
+        showType,
         likelyOnly
       })
     });
 
     const data = await res.json();
-
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = "";
 
