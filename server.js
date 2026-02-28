@@ -27,13 +27,14 @@ app.post("/api/search", async (req, res) => {
       return res.status(400).json({ error: "City required" });
     }
 
-    const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=live+music+venue+OR+comedy+club+OR+small+theater+in+${encodeURIComponent(city)}&key=${apiKey}`;
+    // Cleaner search query
+    const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=live+music+venue+in+${encodeURIComponent(city)}&key=${apiKey}`;
 
     const searchResponse = await fetch(searchUrl);
     const searchData = await searchResponse.json();
 
-    if (!searchData.results) {
-      return res.status(500).json({ error: "Places search failed" });
+    if (!searchData.results || searchData.results.length === 0) {
+      return res.json({ venues: [] });
     }
 
     const venues = [];
@@ -41,15 +42,16 @@ app.post("/api/search", async (req, res) => {
     for (let place of searchData.results.slice(0, 15)) {
       if (place.business_status !== "OPERATIONAL") continue;
 
-      const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,rating,user_ratings_total,formatted_address,website,opening_hours,photos,reviews,business_status,types&key=${apiKey}`;
+      const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,rating,user_ratings_total,formatted_address,website,opening_hours,photos,reviews,business_status&key=${apiKey}`;
 
       const detailsResponse = await fetch(detailsUrl);
       const detailsData = await detailsResponse.json();
-      const details = detailsData.result;
 
+      const details = detailsData.result;
       if (!details) continue;
 
       let photoUrl = null;
+
       if (details.photos && details.photos.length > 0) {
         photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${details.photos[0].photo_reference}&key=${apiKey}`;
       }
@@ -62,15 +64,14 @@ app.post("/api/search", async (req, res) => {
         website: details.website || null,
         isOpen: details.opening_hours?.open_now ?? null,
         photo: photoUrl,
-        reviewSnippet: details.reviews?.[0]?.text || null,
-        types: details.types || []
+        reviewSnippet: details.reviews?.[0]?.text || null
       });
     }
 
     res.json({ venues });
 
-  } catch (err) {
-    console.error("Google Places error:", err);
+  } catch (error) {
+    console.error("Google Places error:", error);
     res.status(500).json({ error: "Server error" });
   }
 });
