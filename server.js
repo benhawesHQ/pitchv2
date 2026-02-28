@@ -1,53 +1,61 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import fetch from "node-fetch";
-import path from "path";
-import { fileURLToPath } from "url";
-
-dotenv.config();
+const express = require("express");
+const fetch = require("node-fetch");
+require("dotenv").config();
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(express.static("public"));
 
-const PORT = process.env.PORT || 3000;
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-app.use(express.static(__dirname));
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
 app.post("/api/search", async (req, res) => {
   try {
     const { city } = req.body;
-    const apiKey = process.env.GOOGLE_PLACES_API_KEY;
 
-    const geoUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(city)}&key=${apiKey}`;
-    const geoResponse = await fetch(geoUrl);
-    const geoData = await geoResponse.json();
+    if (!city) {
+      return res.status(400).json({ venues: [] });
+    }
 
-    if (!geoData.results || geoData.results.length === 0) {
+    const query = `live music venue in ${city}`;
+
+    const textSearchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(
+      query
+    )}&key=${GOOGLE_API_KEY}`;
+
+    const response = await fetch(textSearchUrl);
+    const data = await response.json();
+
+    console.log("TEXT SEARCH RAW:", data);
+
+    if (!data.results || data.results.length === 0) {
       return res.json({ venues: [] });
     }
 
-    const location = geoData.results[0].geometry.location;
+    const venues = data.results
+      .filter(place => place.business_status === "OPERATIONAL")
+      .map(place => ({
+        name: place.name,
+        address: place.formatted_address,
+        rating: place.rating || "N/A",
+        reviews: place.user_ratings_total || 0,
+        open_now:
+          place.opening_hours?.open_now !== undefined
+            ? place.opening_hours.open_now
+            : null,
+        photo:
+          place.photos && place.photos.length > 0
+            ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${place.photos[0].photo_reference}&key=${GOOGLE_API_KEY}`
+            : null
+      }));
 
-    const nearbyUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.lat},${location.lng}&radius=10000&keyword=music&key=${apiKey}`;
-
-    const nearbyResponse = await fetch(nearbyUrl);
-    const nearbyData = await nearbyResponse.json();
-
-    console.log("NEARBY RAW:", JSON.stringify(nearbyData, null, 2));
-
-    return res.json({ venues: nearbyData.results || [] });
-
+    res.json({ venues });
   } catch (error) {
-    console.error("Google Places error:", error);
-    res.status(500).json({ error: "Server error" });
+    console.error("SEARCH ERROR:", error);
+    res.status(500).json({ venues: [] });
   }
 });
 
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
