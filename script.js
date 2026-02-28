@@ -1,6 +1,7 @@
 async function searchVenues() {
+  console.log("Search clicked");
+
   const city = document.getElementById("cityInput").value.trim();
-  const audience = document.getElementById("audienceInput").value.trim();
 
   if (!city) {
     alert("Please enter a city.");
@@ -16,15 +17,17 @@ async function searchVenues() {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ city, audience })
+      body: JSON.stringify({ city })
     });
 
     const data = await response.json();
 
+    console.log("API Response:", data);
+
     overlay.classList.remove("active");
 
-    if (!data.venues) {
-      alert("Something went wrong connecting to the server.");
+    if (!data.venues || data.venues.length === 0) {
+      alert("No venues found.");
       return;
     }
 
@@ -32,6 +35,7 @@ async function searchVenues() {
 
   } catch (err) {
     overlay.classList.remove("active");
+    console.error(err);
     alert("Something went wrong connecting to the server.");
   }
 }
@@ -51,23 +55,16 @@ function renderVenues(venues, city) {
 
     card.innerHTML = `
       ${venue.photo ? `<img src="${venue.photo}" style="width:100%;border-radius:8px;margin-bottom:15px;">` : ""}
-
       <div class="venue-name">${venue.name}</div>
-
       <div style="font-size:14px;margin-bottom:8px;">
         ⭐ ${venue.rating} (${venue.reviewCount} reviews)
         ${venue.isOpen === true ? 
-          `<span style="color:#00ff88;font-weight:600;margin-left:10px;">● Open Now</span>` : 
-          venue.isOpen === false ? 
-          `<span style="color:#999;margin-left:10px;">Closed</span>` : ""}
+          `<span style="color:#00ff88;font-weight:600;margin-left:10px;">● Open Now</span>` : ""}
       </div>
-
       <div class="venue-description">${venue.address}</div>
-
       ${venue.reviewSnippet ? 
         `<div style="font-size:13px;margin-top:10px;color:#ccc;">“${venue.reviewSnippet.substring(0,150)}...”</div>` 
         : ""}
-
       ${venue.website ? 
         `<a href="${venue.website}" target="_blank" class="see-venue-btn" style="margin-top:15px;">Visit Website</a>` 
         : ""}
