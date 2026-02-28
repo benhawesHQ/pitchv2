@@ -23,40 +23,67 @@ async function searchVenues() {
 
     const data = await res.json();
 
-    data.forEach(venue => {
+    const primary = [];
+    const secondary = [];
 
-      const card = document.createElement("div");
-      card.className = "venue-card";
+    data.forEach(v => {
+      if (v.replyClass === "reply-low") {
+        secondary.push(v);
+      } else {
+        primary.push(v);
+      }
+    });
 
-      const googleLink = `https://www.google.com/search?q=${encodeURIComponent(venue.name + " " + city)}`;
+    function renderVenue(venue) {
 
-      card.innerHTML = `
-        <div class="venue-header">
-          <div class="venue-name">
-            ${venue.emoji || "🎵"} ${venue.name}
+      const googleLink =
+        `https://www.google.com/search?q=${encodeURIComponent(venue.name + " " + city)}`;
+
+      return `
+        <div class="venue-card">
+          <div class="venue-header">
+            <div class="venue-name">
+              ${venue.emoji || "🎵"} ${venue.name}
+            </div>
+            <div class="booking-badge ${venue.replyClass}">
+              ${venue.replyLabel}
+            </div>
           </div>
-          <div class="booking-badge ${venue.replyClass}">
-            ${venue.replyLabel}
+
+          <div class="venue-location">
+            ${venue.neighborhood}, ${city}
           </div>
-        </div>
 
-        <div class="venue-location">
-          ${venue.neighborhood}, ${city}
-        </div>
+          <div class="venue-description">
+            ${venue.description}
+          </div>
 
-        <div class="venue-description">
-          ${venue.description}
-        </div>
+          <div style="font-size:13px; opacity:.7; margin-bottom:12px;">
+            Best fit: ${venue.bestFit || "Similar audience size"}
+          </div>
 
-        <div class="venue-actions">
           <a href="${googleLink}" target="_blank" class="see-venue-btn">
             See Venue
           </a>
         </div>
       `;
+    }
 
-      resultsDiv.appendChild(card);
-    });
+    if (primary.length > 0) {
+      resultsDiv.innerHTML += primary.map(renderVenue).join("");
+    }
+
+    if (secondary.length > 0) {
+      resultsDiv.innerHTML += `
+        <div style="margin-top:40px; font-family:Poppins; font-size:18px;">
+          Additional venues (lower reply likelihood)
+        </div>
+        <div style="opacity:.7; margin-bottom:15px;">
+          These venues host music but may be slower to respond.
+        </div>
+      `;
+      resultsDiv.innerHTML += secondary.map(renderVenue).join("");
+    }
 
   } catch (err) {
     resultsDiv.innerHTML = "Error loading venues.";
