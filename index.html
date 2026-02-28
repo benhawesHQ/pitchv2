@@ -4,221 +4,185 @@
   <title>Pitch.io | Book a show</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 🎸 Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
-      --orange: #f94501;
-      --bg: #111;
-      --card: #181818;
-      --soft: #2a2a2a;
+      --orange:#f94501;
+      --bg:#111;
+      --card:#181818;
+      --soft:#2a2a2a;
     }
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: white;
-      font-family: 'Open Sans', sans-serif;
+    body{
+      margin:0;
+      background:var(--bg);
+      color:white;
+      font-family:'Open Sans',sans-serif;
     }
 
-    /* NAV */
-
-    .nav {
-      position: absolute;
-      top: 20px;
-      left: 40px;
-      right: 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 3;
+    .nav{
+      position:absolute;
+      top:20px;
+      left:40px;
+      right:40px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:3;
     }
 
-    .logo {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 800;
-      font-size: 20px;
-      letter-spacing: 0.5px;
+    .logo{
+      font-family:'Poppins',sans-serif;
+      font-weight:800;
+      font-size:20px;
     }
 
-    .guide-btn {
-      background: var(--orange);
-      color: black;
-      padding: 10px 18px;
-      border-radius: 999px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      text-decoration: none;
+    .guide-btn{
+      background:var(--orange);
+      color:black;
+      padding:10px 18px;
+      border-radius:999px;
+      font-family:'Poppins',sans-serif;
+      font-weight:700;
+      font-size:14px;
+      text-decoration:none;
+      cursor:pointer;
     }
 
-    /* HERO */
-
-    .hero {
-      position: relative;
-      background: url('https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
-      padding: 140px 20px 100px;
-      text-align: center;
+    .hero{
+      position:relative;
+      background:url('https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+      padding:140px 20px 100px;
+      text-align:center;
     }
 
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.65);
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,0.65);
     }
 
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 760px;
-      margin: auto;
+    .hero-content{
+      position:relative;
+      z-index:2;
+      max-width:760px;
+      margin:auto;
     }
 
-    h1 {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 800;
-      font-size: 44px;
-      margin-bottom: 12px;
+    h1{
+      font-family:'Poppins',sans-serif;
+      font-weight:800;
+      font-size:44px;
+      margin-bottom:12px;
     }
 
-    .sub {
-      font-size: 20px;
-      opacity: 0.9;
-      margin-bottom: 50px;
+    .sub{
+      font-size:20px;
+      opacity:.9;
+      margin-bottom:50px;
     }
 
-    .search-box {
-      background: rgba(20,20,20,0.95);
-      padding: 32px;
-      border-radius: 14px;
-      border: 1px solid #222;
-      text-align: left;
+    .search-box{
+      background:rgba(20,20,20,.95);
+      padding:32px;
+      border-radius:14px;
+      border:1px solid #222;
+      text-align:left;
     }
 
-    label {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 10px;
-      display: block;
+    label{
+      font-family:'Poppins',sans-serif;
+      font-weight:700;
+      font-size:14px;
+      margin-bottom:10px;
+      display:block;
     }
 
-    input {
-      width: 100%;
-      padding: 14px;
-      border-radius: 8px;
-      border: 1px solid #2b2b2b;
-      background: var(--card);
-      color: white;
-      font-size: 15px;
-      margin-bottom: 28px;
+    input{
+      width:100%;
+      padding:14px;
+      border-radius:8px;
+      border:1px solid #2b2b2b;
+      background:var(--card);
+      color:white;
+      font-size:15px;
+      margin-bottom:28px;
     }
 
-    .row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 28px;
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:28px;
     }
 
-    .pill {
-      padding: 8px 14px;
-      border-radius: 20px;
-      background: var(--soft);
-      border: 1px solid #333;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.15s ease;
+    .pill{
+      padding:8px 14px;
+      border-radius:20px;
+      background:var(--soft);
+      border:1px solid #333;
+      cursor:pointer;
+      font-size:14px;
+      transition:.15s;
     }
 
-    .pill.active {
-      background: var(--orange);
-      color: black;
-      border-color: var(--orange);
-      font-weight: 600;
+    .pill.active{
+      background:var(--orange);
+      color:black;
+      border-color:var(--orange);
+      font-weight:600;
     }
 
-    .segment {
-      display: flex;
-      background: var(--soft);
-      border-radius: 999px;
-      padding: 4px;
-      margin-bottom: 28px;
-      border: 1px solid #333;
+    .segment{
+      display:flex;
+      background:var(--soft);
+      border-radius:999px;
+      padding:4px;
+      margin-bottom:28px;
+      border:1px solid #333;
     }
 
-    .segment-option {
-      flex: 1;
-      text-align: center;
-      padding: 10px 0;
-      border-radius: 999px;
-      cursor: pointer;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 14px;
-      transition: all 0.2s ease;
+    .segment-option{
+      flex:1;
+      text-align:center;
+      padding:10px 0;
+      border-radius:999px;
+      cursor:pointer;
+      font-family:'Poppins',sans-serif;
+      font-weight:600;
+      font-size:14px;
+      transition:.2s;
     }
 
-    .segment-option.active {
-      background: var(--orange);
-      color: black;
+    .segment-option.active{
+      background:var(--orange);
+      color:black;
     }
 
-    .search-btn {
-      width: 100%;
-      padding: 16px;
-      border-radius: 10px;
-      border: none;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      font-size: 16px;
-      background: var(--orange);
-      color: black;
-      cursor: pointer;
+    .search-btn{
+      width:100%;
+      padding:16px;
+      border-radius:10px;
+      border:none;
+      font-family:'Poppins',sans-serif;
+      font-weight:700;
+      font-size:16px;
+      background:var(--orange);
+      color:black;
+      cursor:pointer;
     }
 
-    /* RESULTS */
-
-    .results {
-      padding: 60px 20px;
-      max-width: 900px;
-      margin: auto;
+    .results{
+      padding:60px 20px;
+      max-width:900px;
+      margin:auto;
     }
-
-    .city-group {
-      margin-bottom: 30px;
-      border: 1px solid #222;
-      border-radius: 10px;
-      background: var(--card);
-    }
-
-    .city-header {
-      padding: 15px 20px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .venue-list {
-      display: none;
-      padding: 0 20px 20px;
-    }
-
-    .venue-item {
-      padding: 8px 0;
-      border-bottom: 1px solid #222;
-    }
-
   </style>
 </head>
 
@@ -247,7 +211,7 @@
       <input id="cityInput" placeholder="Nashville" />
 
       <label>Genre</label>
-      <div class="row" id="genreRow">
+      <div class="row">
         <div class="pill">🎸 Rock</div>
         <div class="pill">🌙 Indie</div>
         <div class="pill">🎷 Jazz</div>
@@ -259,10 +223,6 @@
       <label>Audience size</label>
       <input id="audience" placeholder="20-30" />
 
-      <div class="row">
-        <div class="pill" id="likelyToggle">Prioritize venues likely to reply</div>
-      </div>
-
       <button class="search-btn" id="searchBtn">Search venues</button>
 
     </div>
@@ -273,120 +233,53 @@
 
 <script>
 
-let showType = "Single show";
-
-document.querySelectorAll("#showTypeSegment .segment-option").forEach(btn => {
-  btn.addEventListener("click", function() {
-
-    document.querySelectorAll("#showTypeSegment .segment-option")
-      .forEach(b => b.classList.remove("active"));
-
-    this.classList.add("active");
-    showType = this.innerText;
-
-    if (showType === "Single show") {
-
-      // 🎤 mic burst
-      confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.6 },
-        shapes: ['text'],
-        shapeOptions: {
-          text: { value: '🎤', font: '30px serif' }
-        }
-      });
-
-      document.getElementById("cityLabel").innerText = "City";
-      document.getElementById("cityInput").placeholder = "Nashville";
-
-    }
-
-    if (showType === "Multi-city") {
-
-      // 🎉 confetti celebration
-      confetti({
-        particleCount: 160,
-        spread: 90,
-        origin: { y: 0.6 }
-      });
-
-      setTimeout(() => {
-        confetti({
-          particleCount: 80,
-          spread: 120,
-          origin: { y: 0.5 }
-        });
-      }, 200);
-
-      document.getElementById("cityLabel").innerText = "Cities";
-      document.getElementById("cityInput").placeholder = "Nashville, Chicago, NYC";
-
-    }
-
+/* 🎸 Genre toggle working */
+document.querySelectorAll(".pill").forEach(pill=>{
+  pill.addEventListener("click",()=>{
+    pill.classList.toggle("active");
   });
 });
 
-/* Search grouped results */
+let showType="Single show";
 
-document.getElementById("searchBtn").addEventListener("click", async function() {
+document.querySelectorAll("#showTypeSegment .segment-option").forEach(btn=>{
+  btn.addEventListener("click",function(){
 
-  const input = document.getElementById("cityInput").value;
-  if (!input) return;
+    document.querySelectorAll("#showTypeSegment .segment-option")
+      .forEach(b=>b.classList.remove("active"));
 
-  const cities = showType === "Multi-city"
-    ? input.split(",").map(c => c.trim())
-    : [input.trim()];
+    this.classList.add("active");
+    showType=this.innerText;
 
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "";
+    if(showType==="Single show"){
 
-  for (let city of cities) {
-
-    const group = document.createElement("div");
-    group.className = "city-group";
-
-    const header = document.createElement("div");
-    header.className = "city-header";
-    header.innerHTML = `
-      <span>${city}</span>
-      <span>+</span>
-    `;
-
-    const list = document.createElement("div");
-    list.className = "venue-list";
-
-    header.addEventListener("click", () => {
-      const open = list.style.display === "block";
-      list.style.display = open ? "none" : "block";
-      header.querySelector("span:last-child").innerText = open ? "+" : "–";
-    });
-
-    try {
-      const res = await fetch("/api/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ city })
+      confetti({
+        particleCount:150,
+        spread:80,
+        origin:{y:0.6},
+        shapes:['text'],
+        shapeOptions:{
+          text:{value:'🎤',font:'30px serif'}
+        }
       });
 
-      const data = await res.json();
-
-      data.forEach(v => {
-        const item = document.createElement("div");
-        item.className = "venue-item";
-        item.innerText = v.name;
-        list.appendChild(item);
-      });
-
-    } catch (err) {
-      console.error(err);
+      document.getElementById("cityLabel").innerText="City";
+      document.getElementById("cityInput").placeholder="Nashville";
     }
 
-    group.appendChild(header);
-    group.appendChild(list);
-    resultsDiv.appendChild(group);
-  }
+    if(showType==="Multi-city"){
 
+      confetti({
+        particleCount:160,
+        spread:100,
+        origin:{y:0.6}
+      });
+
+      document.getElementById("cityLabel").innerText="Cities";
+      document.getElementById("cityInput").placeholder="Nashville, Chicago, NYC";
+    }
+
+  });
 });
 
 </script>
