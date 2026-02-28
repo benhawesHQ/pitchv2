@@ -27,27 +27,42 @@ app.post("/api/search", async (req, res) => {
       return res.status(400).json({ error: "City required" });
     }
 
-    // Cleaner search query
-    const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=live+music+venue+in+${encodeURIComponent(city)}&key=${apiKey}`;
+    // 1️⃣ Geocode city
+    const geoUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(city)}&key=${apiKey}`;
+    const geoResponse = await fetch(geoUrl);
+    const geoData = await geoResponse.json();
 
-    const searchResponse = await fetch(searchUrl);
-    const searchData = await searchResponse.json();
-
-    if (!searchData.results || searchData.results.length === 0) {
+    if (!geoData.results || geoData.results.length === 0) {
       return res.json({ venues: [] });
     }
 
+    const location = geoData.results[0].geometry.location;
+
+    // 2️⃣ Broader Nearby Search (no type restriction)
+    const nearbyUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location.lat},${location.lng}&radius=8000&keyword=live+music+venue+club+theater+stage&key=${apiKey}`;
+
+    const nearbyResponse = await fetch(nearbyUrl);
+    const nearbyData = await nearbyResponse.json();
+
+    if (!nearbyData.results) {
+      return res.json({ venues: [] });
+    }
+
+    const seen = new Set();
     const venues = [];
 
-    for (let place of searchData.results.slice(0, 15)) {
+    for (let place of nearbyData.results) {
       if (place.business_status !== "OPERATIONAL") continue;
+      if (seen.has(place.place_id)) continue;
 
-      const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,rating,user_ratings_total,formatted_address,website,opening_hours,photos,reviews,business_status&key=${apiKey}`;
+      seen.add(place.place_id);
+
+      const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,rating,user_ratings_total,formatted_address,website,opening_hours,photos,reviews&key=${apiKey}`;
 
       const detailsResponse = await fetch(detailsUrl);
       const detailsData = await detailsResponse.json();
-
       const details = detailsData.result;
+
       if (!details) continue;
 
       let photoUrl = null;
@@ -66,6 +81,8 @@ app.post("/api/search", async (req, res) => {
         photo: photoUrl,
         reviewSnippet: details.reviews?.[0]?.text || null
       });
+
+      if (venues.length >= 15) break;
     }
 
     res.json({ venues });
