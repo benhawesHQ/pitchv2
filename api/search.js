@@ -12,10 +12,9 @@ function extractAudienceNumber(input) {
 }
 
 function capacityWindow(n) {
-  if (n <= 25) return { min: 15, max: 75, tier: "indie" };
-  if (n <= 75) return { min: 40, max: 150, tier: "indie" };
-  if (n <= 120) return { min: 75, max: 250, tier: "indie" };
-  if (n <= 300) return { min: 150, max: 500, tier: "mixed" };
+  if (n <= 50) return { min: 15, max: 100, tier: "micro" };
+  if (n <= 120) return { min: 40, max: 200, tier: "indie" };
+  if (n <= 300) return { min: 150, max: 500, tier: "mid" };
   if (n <= 1200) return { min: 500, max: 2000, tier: "large" };
   return { mode: "platform" };
 }
@@ -44,75 +43,82 @@ export default async function handler(req, res) {
 
   let priorityLogic = "";
 
+  if (window.tier === "micro") {
+    priorityLogic = `
+Strictly prioritize small rooms, backroom stages, bars with intimate music setups.
+Avoid venues over 120 capacity.
+`;
+  }
+
   if (window.tier === "indie") {
     priorityLogic = `
-Prioritize independent venues and smaller bookable rooms.
-Avoid major touring halls unless capacity clearly requires it.
+Prioritize independent venues and mid-sized rooms.
+Avoid major touring halls.
 `;
   }
 
   if (window.tier === "large") {
     priorityLogic = `
-Larger established theaters are allowed due to audience size.
+Larger established music halls allowed due to audience size.
 `;
   }
 
   let systemPrompt = `
 You are a live music booking researcher in 2026.
 
-CRITICAL FRESHNESS RULE:
-Only include venues that are confirmed to still be operating as of 2024–2026.
-If uncertain whether a venue is open, EXCLUDE it.
+CRITICAL RULES:
+- Return ONLY real, currently operating venues.
+- If uncertain about operational status, exclude the venue.
+- No duplicates.
+- Never invent venues.
 
-Do NOT include:
-- Permanently closed venues
-- Recently closed venues
-- Relocated venues that no longer operate under original name
-- DJ-only clubs
-- Nightlife-only bars
-- Event spaces without recurring live music
-
-Default behavior:
+DEFAULT:
 Only include venues that host LIVE MUSIC with booked performers.
 
+Exclude:
+- DJ-only venues
+- Nightlife-only bars
+- Party bars
+- Event spaces without recurring live music
+
 ${comedyRequested ? `
-Comedy venues allowed only if explicitly requested.
+Comedy venues allowed because user requested comedy.
 ` : `
 Exclude comedy clubs unless live music is core programming.
 `}
 
-Venue must:
+Each venue must:
 - Have active event listings
-- Maintain current online presence
-- Be publicly booking or hosting music
+- Maintain online presence
+- Host live music performers
 
 Each result must include:
 - name
 - neighborhood
-- description (10–15 factual words specific to music programming)
-- emoji
-- replyLabel (High booking signal, Moderate booking signal, Lower booking signal)
+- description (20–30 factual words specific to live music programming)
+- emoji (bright, visible on dark background)
+- replyLabel (High likelihood to reply, Moderate likelihood to reply, Lower likelihood to reply)
 - replyClass (reply-high, reply-medium, reply-low)
+- bestFit (estimated ideal audience range, like "30–80 guests")
 
-BOOKING SIGNAL guidance:
-High booking signal:
-- Active 2024–2026 event listings
-- Visible booking contact
+LIKELIHOOD LOGIC:
+High likelihood:
+- Active calendar
+- Public booking contact
 - Frequent programming
 
-Moderate booking signal:
+Moderate likelihood:
 - Some recurring shows
 - Limited booking visibility
 
-Lower booking signal:
-- Occasional music events
+Lower likelihood:
+- Occasional live music
 
 STRICT OUTPUT:
 Return ONLY a JSON array.
 No markdown.
 No commentary.
 No wrapper.
-No duplicate venues.
 `;
 
   let userPrompt = `
@@ -125,11 +131,11 @@ ${priorityLogic}
 
 Return ${venueCount} venues that:
 - Match capacity range
-- Are currently operating in 2026
+- Are currently operating
 - Regularly host live music
 - Match stated preferences
 
-Descriptions must be factual and specific.
+Descriptions must be specific and factual.
 Include neighborhood.
 `;
 
