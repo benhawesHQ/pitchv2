@@ -1,19 +1,23 @@
 let generatedResults = [];
 let displayedCount = 0;
 
-async function searchVenues() {
-  const city = document.getElementById("cityInput").value.trim();
-  const audience = document.getElementById("audienceInput").value.trim();
-  const vibe = document.getElementById("vibeInput").value.trim();
-  const count = parseInt(document.getElementById("countSelect").value);
+async function generateVenues() {
+  const city = document.querySelector("input[placeholder*='City']").value.trim();
+  const audience = document.querySelector("input[placeholder*='Audience']").value.trim();
+  const vibeField = document.querySelector("#vibeInput");
+  const vibe = vibeField ? vibeField.value.trim() : "";
+  const count = parseInt(document.querySelector("select").value);
 
   if (!city || !audience) {
     alert("Please enter city and audience size.");
     return;
   }
 
-  document.getElementById("resultsWrapper").style.display = "block";
-  document.getElementById("results").innerHTML = "Searching real venues...";
+  const resultsWrapper = document.querySelector(".results-wrapper");
+  const resultsContainer = document.querySelector("#results");
+
+  if (resultsWrapper) resultsWrapper.style.display = "block";
+  if (resultsContainer) resultsContainer.innerHTML = "Searching real venues...";
 
   const response = await fetch("/.netlify/functions/search", {
     method: "POST",
@@ -24,13 +28,13 @@ async function searchVenues() {
 
   generatedResults = data;
   displayedCount = 0;
-  document.getElementById("results").innerHTML = "";
+  resultsContainer.innerHTML = "";
   renderMore(count);
 }
 
 function renderMore(limit) {
-  const results = document.getElementById("results");
-  const moreBtn = document.getElementById("moreBtn");
+  const results = document.querySelector("#results");
+  const moreBtn = document.querySelector("#moreBtn");
 
   const slice = generatedResults.slice(displayedCount, displayedCount + limit);
 
@@ -47,10 +51,9 @@ function renderMore(limit) {
 
   displayedCount += limit;
 
-  if (displayedCount < generatedResults.length) {
-    moreBtn.style.display = "block";
-  } else {
-    moreBtn.style.display = "none";
+  if (moreBtn) {
+    moreBtn.style.display =
+      displayedCount < generatedResults.length ? "block" : "none";
   }
 
   encoreConfetti();
@@ -61,23 +64,23 @@ function showMore() {
 }
 
 function encoreConfetti() {
-  for (let i = 0; i < 30; i++) {
-    const confetti = document.createElement("div");
-    confetti.style.position = "fixed";
-    confetti.style.left = Math.random() * 100 + "%";
-    confetti.style.top = "0";
-    confetti.style.width = "6px";
-    confetti.style.height = "6px";
-    confetti.style.background = "#f94501";
-    confetti.style.transition = "1s ease-out";
-    confetti.style.zIndex = "9999";
-    document.body.appendChild(confetti);
+  for (let i = 0; i < 25; i++) {
+    const piece = document.createElement("div");
+    piece.style.position = "fixed";
+    piece.style.left = Math.random() * 100 + "%";
+    piece.style.top = "0";
+    piece.style.width = "6px";
+    piece.style.height = "6px";
+    piece.style.background = "#f94501";
+    piece.style.transition = "1s ease-out";
+    piece.style.zIndex = "9999";
+    document.body.appendChild(piece);
 
     setTimeout(() => {
-      confetti.style.top = "100%";
-      confetti.style.opacity = "0";
+      piece.style.top = "100%";
+      piece.style.opacity = "0";
     }, 10);
 
-    setTimeout(() => confetti.remove(), 1000);
+    setTimeout(() => piece.remove(), 1000);
   }
 }
