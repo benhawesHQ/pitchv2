@@ -4,40 +4,335 @@
   <meta charset="UTF-8">
   <title>Pitch | Find Your Next Stage</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --orange:#f94501;
+      --bg:#111;
+      --card:#181818;
+      --soft:#222;
+      --border:#2a2a2a;
+    }
+
+    body{
+      margin:0;
+      background:var(--bg);
+      color:white;
+      font-family:'Open Sans',sans-serif;
+    }
+
+    .nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 40px;
+    }
+
+    .logo{
+      font-family:'Poppins';
+      font-weight:800;
+      font-size:28px;
+    }
+
+    .logo span{
+      color:var(--orange);
+    }
+
+    .guide-btn{
+      background:var(--orange);
+      color:black;
+      border:none;
+      padding:10px 16px;
+      border-radius:6px;
+      font-family:'Poppins';
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .hero{
+      background:url('hero.jpg') center/cover no-repeat;
+      position:relative;
+      text-align:center;
+      padding:90px 20px;
+    }
+
+    .hero::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.65);
+    }
+
+    .hero-content{
+      position:relative;
+      max-width:900px;
+      margin:auto;
+    }
+
+    .hero h1{
+      font-family:'Poppins';
+      font-size:46px;
+      margin:10px 0;
+    }
+
+    .hero p{
+      font-size:18px;
+      margin:0 0 30px;
+    }
+
+    .search-panel{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:30px;
+      max-width:720px;
+      margin:0 auto;
+    }
+
+    .field{
+      margin-bottom:20px;
+      text-align:left;
+    }
+
+    .field label{
+      font-family:'Poppins';
+      font-weight:600;
+      font-size:14px;
+      margin-bottom:8px;
+      display:block;
+    }
+
+    .field input,
+    .field select{
+      width:100%;
+      padding:12px;
+      background:var(--soft);
+      border:1px solid var(--border);
+      border-radius:6px;
+      color:white;
+      font-size:14px;
+    }
+
+    .search-btn{
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:8px;
+      font-family:'Poppins';
+      font-weight:700;
+      background:var(--orange);
+      color:black;
+      cursor:pointer;
+    }
+
+    .results-wrapper{
+      display:none;
+      max-width:1000px;
+      margin:70px auto;
+      padding:0 20px;
+    }
+
+    .results-header{
+      font-family:'Poppins';
+      font-size:26px;
+      margin-bottom:10px;
+    }
+
+    .results-sub{
+      font-weight:600;
+      margin-bottom:30px;
+    }
+
+    .results{
+      display:grid;
+      gap:20px;
+    }
+
+    .venue-card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:22px;
+    }
+
+    .venue-name{
+      font-family:'Poppins';
+      font-size:18px;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .venue-description{
+      font-size:14px;
+      margin-bottom:14px;
+      line-height:1.5;
+    }
+
+    .see-venue-btn{
+      padding:8px 14px;
+      border-radius:6px;
+      background:var(--orange);
+      color:black;
+      text-decoration:none;
+      font-weight:600;
+      font-size:14px;
+      display:inline-block;
+    }
+
+    .more-btn{
+      margin-top:30px;
+      padding:14px 20px;
+      background:var(--orange);
+      color:black;
+      border:none;
+      border-radius:8px;
+      font-family:'Poppins';
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .support-note{
+      margin-top:50px;
+      text-align:center;
+      font-size:15px;
+      line-height:1.7;
+    }
+
+    .loading-overlay{
+      position:fixed;
+      inset:0;
+      background:black;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      opacity:0;
+      pointer-events:none;
+      transition:.3s ease;
+      z-index:999;
+    }
+
+    .loading-overlay.active{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    .floating{
+      font-size:40px;
+      animation:float 1.2s infinite alternate;
+    }
+
+    @keyframes float{
+      from{ transform:translateY(-5px); }
+      to{ transform:translateY(5px); }
+    }
+
+    .lore{
+      margin-top:20px;
+      max-width:500px;
+      text-align:center;
+      font-size:16px;
+      line-height:1.6;
+    }
+
+    footer{
+      margin-top:90px;
+      padding:40px 20px;
+      text-align:center;
+      border-top:1px solid var(--border);
+      font-size:14px;
+    }
+
+    footer a{
+      color:var(--orange);
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    @media(max-width:768px){
+      .hero h1{
+        font-size:34px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
   <div class="nav">
-    <h1>🎤 Pitch</h1>
+    <div class="logo">Pitch<span>.</span></div>
+    <button class="guide-btn">Download Guide</button>
   </div>
 
-  <section class="hero">
-    <h2>Find Your Next Stage</h2>
-    <p class="subtitle">Discover real venues that match your audience size and city.</p>
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Find Your Next Stage</h1>
+      <p>Discover venues faster so you can focus on planning the show.</p>
 
-    <form id="searchForm">
-      <input id="city" type="text" placeholder="City (e.g. Nashville)" required>
-      <input id="audience" type="number" placeholder="Audience Size (e.g. 75)" required>
-      <input id="count" type="number" value="10" min="5" max="15">
-      <button type="submit">Search</button>
-    </form>
-  </section>
+      <div class="search-panel">
+        <div class="field">
+          <label>City</label>
+          <input id="cityInput" placeholder="Brooklyn, Portland, Berlin">
+        </div>
 
-  <section id="resultsWrapper" class="results-wrapper"></section>
+        <div class="field">
+          <label>Expected Audience</label>
+          <input id="audienceInput" placeholder="40, 120, 300">
+        </div>
 
-  <!-- LOADING OVERLAY -->
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="stage">
-      <div class="floating-icons">
-        🎸 🎶 🎵 🎸 🎶 🎵
+        <div class="field">
+          <label>Number of Suggestions</label>
+          <select id="countSelect">
+            <option value="10">10 venues</option>
+            <option value="15" selected>15 venues</option>
+          </select>
+        </div>
+
+        <button class="search-btn" onclick="searchVenues()">
+          Search Venues
+        </button>
       </div>
-      <div id="funFact" class="fun-fact"></div>
     </div>
   </div>
 
-  <!-- SCRIPT MUST BE LAST -->
-  <script src="script.js?v=21"></script>
+  <div class="results-wrapper" id="resultsWrapper">
+    <div class="results-header">Your short list of venues</div>
+    <div class="results-sub" id="resultsSub"></div>
+    <div id="results" class="results"></div>
+
+    <button id="moreBtn" class="more-btn" onclick="showMore()" style="display:none;">
+      See a few more
+    </button>
+
+    <div class="support-note">
+      <strong>Pitch is in v1.</strong><br><br>
+      We surface performance spaces based on live programming patterns and research.<br>
+      A venue may occasionally be closed or slow to reply.<br><br>
+      Want live status checks and real-time verification?<br>
+      Support the build by downloading the guide or joining the launch campaign.
+    </div>
+  </div>
+
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="floating">🎸 🎵</div>
+    <div id="loreText" class="lore"></div>
+  </div>
+
+  <footer>
+    Created by NYC musician Ben Hawes.
+    <br>
+    <a href="https://instagram.com/benhaweshq" target="_blank">
+      Connect on Instagram
+    </a>
+  </footer>
+
+  <script src="/script.js?v=10"></script>
 
 </body>
 </html>
