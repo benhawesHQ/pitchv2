@@ -23,11 +23,22 @@ let filteredVenues = [];
 let displayedCount = 0;
 
 const loreMoments = [
-  "One arena artist once played to 14 people in a bookstore.",
-  "A chart-topping singer once handed out their own flyers.",
-  "A Grammy winner once toured in a borrowed van.",
-  "One superstar once opened for a trivia night crowd.",
-  "A festival headliner once begged venues for stage time."
+  const loreMoments = [
+  "Taylor Swift once played small Nashville cafés before headlining stadium tours.",
+  "Lady Gaga performed in downtown New York clubs long before global fame.",
+  "Beyoncé started out performing in small local competitions before selling out arenas.",
+  "Green Day built their fanbase in tiny Bay Area venues before international tours.",
+  "Bruce Springsteen played small Jersey bars before filling stadiums worldwide.",
+  "Billie Eilish recorded songs in her bedroom before topping global charts.",
+  "Madonna performed in New York dance clubs before becoming a pop icon.",
+  "Prince played Minneapolis clubs before becoming a worldwide legend.",
+  "Bad Bunny started releasing music independently before global superstardom.",
+  "Adele performed in small London venues before becoming a household name.",
+  "Ed Sheeran busked on the streets before selling out stadiums.",
+  "The Weeknd uploaded songs online before becoming a festival headliner.",
+  "Kendrick Lamar performed in small LA venues before global tours.",
+  "Cher started performing locally before becoming an international icon.",
+  "Dua Lipa worked small stages before headlining world tours."
 ];
 
 let loreIndex = 0;
