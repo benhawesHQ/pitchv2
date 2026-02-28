@@ -8,7 +8,8 @@ let factInterval;
 
 async function searchVenues() {
   const city = document.getElementById("cityInput").value.trim();
-  const audience = document.getElementById("audienceInput").value.trim();
+  const audience = parseInt(document.getElementById("audienceInput").value.trim());
+  const notes = document.getElementById("notesInput")?.value.trim() || "";
   const count = parseInt(document.getElementById("countSelect").value);
 
   if (!city) {
@@ -22,19 +23,23 @@ async function searchVenues() {
     const res = await fetch("/api/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ city })
+      body: JSON.stringify({ city, notes })
     });
 
     const data = await res.json();
 
-    const unique = [];
-    const names = new Set();
+    if (!data.venues) {
+      hideLoading();
+      alert("No venues found.");
+      return;
+    }
 
-    data.venues.forEach(v => {
-      if (!names.has(v.name)) {
-        names.add(v.name);
-        unique.push(v);
-      }
+    // remove duplicates
+    const seen = new Set();
+    const unique = data.venues.filter(v => {
+      if (seen.has(v.name)) return false;
+      seen.add(v.name);
+      return true;
     });
 
     allVenues = filterByAudience(unique, audience);
@@ -44,9 +49,9 @@ async function searchVenues() {
 
     document.getElementById("resultsWrapper").style.display = "block";
     document.getElementById("resultsSub").innerText =
-      `Live performance spaces in ${city}. We surface the rooms — you make the ask.`;
+      `Live performance spaces in ${city}. We surface the rooms — you reach out directly.`;
 
-    await new Promise(r => setTimeout(r, 1500));
+    await new Promise(r => setTimeout(r, 2200));
     hideLoading();
 
   } catch (err) {
@@ -56,7 +61,7 @@ async function searchVenues() {
 }
 
 /* =========================
-   CLASSIFICATION
+   VENUE CLASSIFICATION
 ========================= */
 
 function classifyVenue(v) {
@@ -69,61 +74,61 @@ function classifyVenue(v) {
   if (name.includes("theatre") || name.includes("theater") || name.includes("opera"))
     return "large_theater";
 
-  if (name.includes("music hall") || name.includes("concert hall") || name.includes("ballroom"))
-    return "mid_music_hall";
-
-  if (types.includes("bar") || types.includes("night_club"))
-    return "small_room";
+  if (
+    name.includes("music hall") ||
+    name.includes("ballroom") ||
+    name.includes("concert hall")
+  )
+    return "mid_hall";
 
   if (
+    types.includes("bar") ||
     name.includes("club") ||
-    name.includes("room") ||
     name.includes("basement") ||
+    name.includes("room") ||
     name.includes("improv") ||
     name.includes("studio")
   )
-    return "intimate_bar";
+    return "small_room";
 
   return "small_room";
 }
 
 /* =========================
-   AUDIENCE MATCHING
+   STRICT AUDIENCE MATCH
 ========================= */
 
-function matchByAudience(bucket, size) {
+function matchesAudience(bucket, size) {
+  if (!size) return true;
+
   if (size <= 20)
-    return bucket === "intimate_bar";
+    return bucket === "small_room";
 
   if (size <= 40)
-    return bucket === "intimate_bar" || bucket === "small_room";
+    return bucket === "small_room";
 
   if (size <= 60)
     return bucket === "small_room";
 
   if (size <= 80)
-    return bucket === "small_room" || bucket === "mid_music_hall";
+    return bucket === "small_room" || bucket === "mid_hall";
 
   if (size <= 150)
-    return bucket === "mid_music_hall";
+    return bucket === "mid_hall";
 
   if (size <= 300)
-    return bucket === "mid_music_hall";
+    return bucket === "mid_hall" || bucket === "large_theater";
 
-  if (size <= 800)
-    return bucket === "large_theater";
-
-  return bucket === "arena";
+  return true;
 }
 
 function filterByAudience(venues, audience) {
-  const size = parseInt(audience);
-  if (!size) return venues;
+  if (!audience) return venues;
 
   return venues.filter(v => {
     const bucket = classifyVenue(v);
     v.bucket = bucket;
-    return matchByAudience(bucket, size);
+    return matchesAudience(bucket, audience);
   });
 }
 
@@ -131,16 +136,16 @@ function filterByAudience(venues, audience) {
    REPLY LIKELIHOOD
 ========================= */
 
-function getReplyLikelihood(v) {
+function getReplyBadge(v) {
   const reviews = v.user_ratings_total || 0;
 
   if (reviews < 400)
-    return { text: "Likely to reply", class: "reply-high" };
+    return { text: "Likely to reply", class: "high" };
 
   if (reviews < 1200)
-    return { text: "Might reply", class: "reply-medium" };
+    return { text: "Might reply", class: "medium" };
 
-  return { text: "Harder to book", class: "reply-low" };
+  return { text: "Harder to book", class: "low" };
 }
 
 /* =========================
@@ -150,17 +155,17 @@ function getReplyLikelihood(v) {
 function buildDescription(v) {
   const bucket = v.bucket;
 
-  if (bucket === "intimate_bar")
-    return "An intimate performance space ideal for stripped-down sets and small audiences.";
-
   if (bucket === "small_room")
-    return "A neighborhood venue hosting live music, comedy, and emerging artists.";
+    return "An intimate performance space ideal for small audiences and emerging artists.";
 
-  if (bucket === "mid_music_hall")
-    return "A larger concert space designed for touring acts and ticketed events.";
+  if (bucket === "mid_hall")
+    return "A larger concert venue hosting touring acts and ticketed live events.";
 
   if (bucket === "large_theater")
-    return "A historic theater space built for large-scale productions and touring performances.";
+    return "A historic theater built for large-scale productions and major performances.";
+
+  if (bucket === "arena")
+    return "A high-capacity venue designed for major touring productions.";
 
   return "A live performance venue.";
 }
@@ -176,42 +181,41 @@ function renderResults() {
   const slice = allVenues.slice(0, visibleCount);
 
   slice.forEach(v => {
-    const reply = getReplyLikelihood(v);
+    const badge = getReplyBadge(v);
     const description = buildDescription(v);
 
     const card = document.createElement("div");
     card.className = "venue-card";
 
     card.innerHTML = `
-      <div class="venue-image-wrapper">
-        <img src="${v.photo || "https://via.placeholder.com/300x375"}"
+      <div class="image-wrap">
+        <img src="${v.photo || "https://via.placeholder.com/280x350"}"
              class="venue-image">
-        <div class="reply-badge ${reply.class}">
-          ${reply.text}
+        <div class="badge ${badge.class}">
+          ${badge.text}
         </div>
       </div>
 
-      <div class="venue-content">
-        <div class="venue-name">${v.name}</div>
-
-        <div class="venue-rating">
-          ⭐ ${v.rating || "N/A"}
+      <div class="venue-info">
+        <div class="venue-header">
+          <div class="venue-name">${v.name}</div>
+          <div class="rating">⭐ ${v.rating || "N/A"}</div>
         </div>
 
         <div class="venue-description">
           ${description}
         </div>
 
-        <div class="venue-actions">
-          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.address)}"
+        <div class="venue-links">
+          <a href="https://www.google.com/maps/place/?q=place_id:${v.place_id}"
              target="_blank"
              class="map-link">
-             View on map
+             View on Google
           </a>
 
-          <a href="${v.website || '#'}"
+          <a href="https://www.google.com/maps/place/?q=place_id:${v.place_id}"
              target="_blank"
-             class="see-venue-btn">
+             class="see-btn">
              See Venue →
           </a>
         </div>
@@ -231,27 +235,26 @@ function showMore() {
 }
 
 /* =========================
-   LOADING EXPERIENCE
+   SEARCH EXPERIENCE
 ========================= */
 
 function showLoading() {
   const overlay = document.getElementById("loadingOverlay");
   const lore = document.getElementById("loreText");
 
-  const facts = [
-    "🎸 Loading your short list...",
-    "✨ Every arena artist started in a room like this.",
-    "🎤 Great shows begin with the right stage.",
-    "🎶 Matching your crowd size...",
-    "🌟 Finding spaces that fit your vibe..."
+  const lines = [
+    "Building your short list…",
+    "Scanning local live venues…",
+    "Matching your crowd size…",
+    "Every great act starts in the right room…"
   ];
 
   let i = 0;
-  lore.innerText = facts[i];
+  lore.innerText = lines[i];
 
   factInterval = setInterval(() => {
-    i = (i + 1) % facts.length;
-    lore.innerText = facts[i];
+    i = (i + 1) % lines.length;
+    lore.innerText = lines[i];
   }, 1600);
 
   overlay.classList.add("active");
