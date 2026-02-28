@@ -1,66 +1,120 @@
 let generatedResults = [];
 let displayedCount = 0;
 
-async function generateVenues() {
-  const city = document.querySelector("input[placeholder*='City']").value.trim();
-  const audience = document.querySelector("input[placeholder*='Audience']").value.trim();
-  const vibeField = document.querySelector("#vibeInput");
-  const vibe = vibeField ? vibeField.value.trim() : "";
-  const count = parseInt(document.querySelector("select").value);
+const loreLines = [
+  "Scanning local show calendars...",
+  "Cross-referencing programming history...",
+  "Checking venue capacity patterns...",
+  "Matching vibe to room acoustics...",
+  "Curating your short list..."
+];
+
+function showLoading() {
+  const overlay = document.getElementById("loadingOverlay");
+  const loreText = document.getElementById("loreText");
+
+  overlay.classList.add("active");
+
+  let i = 0;
+  loreText.textContent = loreLines[i];
+
+  const interval = setInterval(() => {
+    i = (i + 1) % loreLines.length;
+    loreText.textContent = loreLines[i];
+  }, 1500);
+
+  return interval;
+}
+
+function hideLoading(interval) {
+  clearInterval(interval);
+  document.getElementById("loadingOverlay").classList.remove("active");
+}
+
+async function searchVenues() {
+  const city = document.getElementById("cityInput").value.trim();
+  const audience = document.getElementById("audienceInput").value.trim();
+  const count = parseInt(document.getElementById("countSelect").value);
 
   if (!city || !audience) {
     alert("Please enter city and audience size.");
     return;
   }
 
-  const resultsWrapper = document.querySelector(".results-wrapper");
-  const resultsContainer = document.querySelector("#results");
+  const loadingInterval = showLoading();
 
-  if (resultsWrapper) resultsWrapper.style.display = "block";
-  if (resultsContainer) resultsContainer.innerHTML = "Searching real venues...";
+  try {
+    const response = await fetch("/.netlify/functions/search", {
+      method: "POST",
+      body: JSON.stringify({ city, audience, vibe: "", count }),
+    });
 
-  const response = await fetch("/.netlify/functions/search", {
-    method: "POST",
-    body: JSON.stringify({ city, audience, vibe, count }),
-  });
+    const data = await response.json();
 
-  const data = await response.json();
+    generatedResults = data;
+    displayedCount = 0;
 
-  generatedResults = data;
-  displayedCount = 0;
-  resultsContainer.innerHTML = "";
-  renderMore(count);
+    renderResults(count);
+
+  } catch (error) {
+    alert("Something went wrong.");
+  }
+
+  hideLoading(loadingInterval);
 }
 
-function renderMore(limit) {
-  const results = document.querySelector("#results");
-  const moreBtn = document.querySelector("#moreBtn");
+function renderResults(limit) {
+  const wrapper = document.getElementById("resultsWrapper");
+  const results = document.getElementById("results");
+  const moreBtn = document.getElementById("moreBtn");
+  const sub = document.getElementById("resultsSub");
 
-  const slice = generatedResults.slice(displayedCount, displayedCount + limit);
+  wrapper.style.display = "block";
+  results.innerHTML = "";
+
+  const slice = generatedResults.slice(0, limit);
 
   slice.forEach(venue => {
     results.innerHTML += `
       <div class="venue-card">
         <div class="venue-name">${venue.name}</div>
-        <div>${venue.neighborhood}</div>
-        <div>${venue.description}</div>
-        <div>Reply Likelihood: ${venue.replyLikelihood}</div>
+        <div class="venue-description">${venue.description}</div>
+        <div><strong>Reply Likelihood:</strong> ${venue.replyLikelihood}</div>
       </div>
     `;
   });
 
-  displayedCount += limit;
+  displayedCount = limit;
 
-  if (moreBtn) {
-    moreBtn.style.display =
-      displayedCount < generatedResults.length ? "block" : "none";
-  }
+  moreBtn.style.display =
+    displayedCount < generatedResults.length ? "block" : "none";
 
-  encoreConfetti();
+  sub.textContent = `${generatedResults.length} venues surfaced`;
 }
 
 function showMore() {
-  renderMore(5);
+  const results = document.getElementById("results");
+  const moreBtn = document.getElementById("moreBtn");
+
+  const slice = generatedResults.slice(displayedCount, displayedCount + 5);
+
+  slice.forEach(venue => {
+    results.innerHTML += `
+      <div class="venue-card">
+        <div class="venue-name">${venue.name}</div>
+        <div class="venue-description">${venue.description}</div>
+        <div><strong>Reply Likelihood:</strong> ${venue.replyLikelihood}</div>
+      </div>
+    `;
+  });
+
+  displayedCount += 5;
+
+  if (displayedCount >= generatedResults.length) {
+    moreBtn.style.display = "none";
+  }
+
+  encoreConfetti();
 }
 
 function encoreConfetti() {
