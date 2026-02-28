@@ -4,60 +4,58 @@
   <meta charset="UTF-8" />
   <title>Pitch</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
-  <section class="hero">
+<section class="hero">
 
-    <div class="top-bar">
-      <div class="logo">Pitch<span>.</span></div>
-      <button class="guide-btn">Download the Guide</button>
-    </div>
-
-    <div class="hero-content">
-      <h1>Find Your Next Stage</h1>
-      <p>
-        Pitch curates venues based on your audience size and city so you can
-        reach out faster and book more shows.
-      </p>
-
-      <div class="search-panel">
-
-        <div class="field">
-          <label>City</label>
-          <input id="cityInput" placeholder="Brooklyn, Nashville, etc">
-        </div>
-
-        <div class="field">
-          <label>Expected Audience Size</label>
-          <input id="audienceInput" type="number" placeholder="40">
-        </div>
-
-        <div class="field">
-          <label>Desired Vibe</label>
-          <input id="vibeInput" placeholder="Cabaret, rock, jazz, intimate, etc">
-        </div>
-
-        <button class="search-btn" onclick="searchVenues()">
-          Search Venues
-        </button>
-
-      </div>
-    </div>
-  </section>
-
-  <section class="results-wrapper">
-    <div id="results" class="results-grid"></div>
-  </section>
-
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="loading-text">Finding stages...</div>
+  <div class="top-bar">
+    <div class="logo">Pitch<span>.</span></div>
+    <button class="guide-btn">Download the Guide</button>
   </div>
 
-  <script src="script.js"></script>
+  <div class="hero-content">
+    <h1>Find Your Next Stage</h1>
+    <p>
+      Pitch curates venues based on your audience size and city so you can
+      reach out faster and book more shows.
+    </p>
+
+    <div class="search-panel">
+
+      <div class="field">
+        <label>City</label>
+        <input id="cityInput" placeholder="Brooklyn, Nashville, etc">
+      </div>
+
+      <div class="field">
+        <label>Expected Audience Size</label>
+        <input id="audienceInput" type="number" placeholder="40">
+      </div>
+
+      <div class="field">
+        <label>Desired Vibe</label>
+        <input id="vibeInput" placeholder="Cabaret, rock, jazz, intimate, etc">
+      </div>
+
+      <button class="search-btn" onclick="searchVenues()">
+        Search Venues
+      </button>
+
+    </div>
+  </div>
+</section>
+
+<section class="results-wrapper">
+  <div id="results" class="results-grid"></div>
+</section>
+
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loading-text">Finding stages...</div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
