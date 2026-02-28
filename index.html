@@ -23,7 +23,6 @@
       background: var(--bg);
       color: white;
       font-family: 'Open Sans', sans-serif;
-      overflow-x: hidden;
     }
 
     .hero {
@@ -74,7 +73,6 @@
       font-size: 14px;
       margin-bottom: 8px;
       display: block;
-      color: white;
     }
 
     input {
@@ -88,48 +86,6 @@
       margin-bottom: 24px;
     }
 
-    .genre-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-
-    .genre-btn {
-      padding: 8px 14px;
-      border-radius: 20px;
-      background: var(--soft);
-      border: 1px solid #333;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.15s ease;
-    }
-
-    .genre-btn.active {
-      background: var(--orange);
-      color: black;
-      border-color: var(--orange);
-      font-weight: 600;
-    }
-
-    .toggle-btn {
-      display: inline-block;
-      padding: 8px 14px;
-      border-radius: 20px;
-      background: var(--soft);
-      border: 1px solid #333;
-      cursor: pointer;
-      font-size: 14px;
-      margin-bottom: 30px;
-    }
-
-    .toggle-btn.active {
-      background: var(--orange);
-      color: black;
-      border-color: var(--orange);
-      font-weight: 600;
-    }
-
     .search-btn {
       width: 100%;
       padding: 16px;
@@ -141,15 +97,27 @@
       background: var(--orange);
       color: black;
       cursor: pointer;
-      position: relative;
-      transition: transform 0.1s ease;
     }
 
-    .search-btn:active {
-      transform: scale(0.96);
+    .results {
+      padding: 60px 20px;
+      max-width: 900px;
+      margin: auto;
     }
 
-    /* LOADING */
+    .venue-card {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #222;
+    }
+
+    .venue-name {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+    }
 
     .loading-overlay {
       position: fixed;
@@ -159,40 +127,22 @@
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      z-index: 999;
-      padding: 30px;
       text-align: center;
+      padding: 30px;
+      z-index: 999;
     }
 
-    .notes {
-      font-size: 40px;
-      animation: float 1.5s infinite ease-in-out;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0); opacity: 0.7; }
-      50% { transform: translateY(-10px); opacity: 1; }
-      100% { transform: translateY(0); opacity: 0.7; }
-    }
-
-    .loading-text {
-      margin-top: 20px;
-      font-size: 18px;
-      max-width: 500px;
+    .quote {
       font-family: 'Poppins', sans-serif;
+      font-size: 20px;
       font-weight: 600;
+      max-width: 600px;
     }
 
-    .guitar-pop {
-      position: absolute;
-      font-size: 22px;
-      animation: pop 0.5s ease forwards;
-    }
-
-    @keyframes pop {
-      0% { transform: scale(0.5); opacity: 0; }
-      50% { transform: scale(1.3); opacity: 1; }
-      100% { transform: scale(1); opacity: 0; }
+    .author {
+      margin-top: 10px;
+      font-size: 14px;
+      opacity: 0.6;
     }
 
   </style>
@@ -202,111 +152,44 @@
 
 <div class="hero">
   <div class="hero-content">
-
     <h1>Find venues that want to see you play.</h1>
     <div class="sub">Book more shows. Play more music.</div>
 
     <div class="search-box">
-
       <label>City</label>
       <input id="city" placeholder="Nashville, NYC, Chicago…" />
-
-      <label>Genre</label>
-      <div class="genre-row">
-        <div class="genre-btn">🎸 Rock</div>
-        <div class="genre-btn">🌙 Indie</div>
-        <div class="genre-btn">🎷 Jazz</div>
-        <div class="genre-btn">🎭 Cabaret</div>
-        <div class="genre-btn">🎤 Comedy</div>
-        <div class="genre-btn">✨ Pop</div>
-      </div>
-
-      <label>Audience size</label>
-      <input id="audience" placeholder="20–30" />
-
-      <div class="toggle-btn" id="likelyToggle">
-        Prioritize venues likely to reply
-      </div>
-
       <button class="search-btn" id="searchBtn">Search venues</button>
-
     </div>
   </div>
 </div>
 
+<div class="results" id="results"></div>
+
 <div class="loading-overlay" id="loading">
-  <div class="notes">🎶 🎸 🎶</div>
-  <div class="loading-text"></div>
+  <div class="quote" id="quoteText"></div>
+  <div class="author" id="quoteAuthor"></div>
 </div>
 
 <script>
 
-let selectedGenre = null;
-let likelyActive = false;
-
-document.querySelectorAll(".genre-btn").forEach(btn => {
-  btn.addEventListener("click", function() {
-    document.querySelectorAll(".genre-btn").forEach(b => b.classList.remove("active"));
-    this.classList.add("active");
-    selectedGenre = this.innerText;
-  });
-});
-
-document.getElementById("likelyToggle").addEventListener("click", function() {
-  likelyActive = !likelyActive;
-  this.classList.toggle("active");
-});
-
-/* 40 Diverse Artist Quotes */
-
-const legendQuotes = [
-"“The way I see it, if you want the rainbow, you gotta put up with the rain.” — Dolly Parton",
-"“I didn’t have a Plan B.” — Ed Sheeran",
-"“You have to be relentless.” — Beyoncé",
-"“Nobody believed in us at first.” — Brandon Flowers",
-"“Keep showing up.” — Jon Bon Jovi",
-"“Play every show like it matters.” — Dave Grohl",
-"“Dream big and dare to fail.” — Billie Joe Armstrong",
-"“We played anywhere that would have us.” — The Killers",
-"“Confidence is everything.” — Katy Perry",
-"“Stay true to who you are.” — Gwen Stefani",
-"“It takes years to become an overnight success.” — Sheryl Crow",
-"“You’ve got to keep going.” — Shania Twain",
-"“We had nothing to lose.” — Billie Joe Armstrong",
-"“Make your own luck.” — Taylor Hawkins",
-"“I learned that if you want to make it bad enough, you can make it.” — Stevie Nicks",
-"“Every show counts.” — Hayley Williams",
-"“Success is only meaningful when you can give it away.” — Bono",
-"“I built my own empire.” — Bad Bunny",
-"“Don’t underestimate the power of your voice.” — Jennifer Lopez",
-"“If you believe in yourself, anything is possible.” — Usher",
-"“Be fearless in the pursuit of what sets your soul on fire.” — Beyoncé",
-"“The grind never stops.” — Jay-Z",
-"“I wanted to prove people wrong.” — Rihanna",
-"“You have to work harder than anybody else.” — Taylor Swift",
-"“The first 10 years are the hardest.” — Bruce Springsteen",
-"“You can’t fake passion.” — Brandon Flowers",
-"“I was sleeping on couches.” — Lady Gaga",
-"“Write your own story.” — Stevie Nicks",
-"“There’s no elevator to success.” — Dave Grohl",
-"“Make your own path.” — Alicia Keys",
-"“If it feels good, chase it.” — Harry Styles",
-"“We just kept touring.” — The Killers",
-"“You can’t wait for someone to hand it to you.” — Lady Gaga",
-"“Hard work beats talent.” — Kendrick Lamar",
-"“Everything I’ve done has been about proving myself.” — Shakira",
-"“You have to create your own opportunities.” — Nicki Minaj",
-"“Nothing worth having comes easy.” — Selena Gomez",
-"“I was told no a thousand times.” — J. Balvin",
-"“You don’t get what you wish for. You get what you work for.” — Pitbull",
-"“Believe in your craft.” — H.E.R."
+const quotes = [
+  { text: "The way I see it, if you want the rainbow, you gotta put up with the rain.", author: "Dolly Parton" },
+  { text: "You have to be relentless.", author: "Beyoncé" },
+  { text: "Play every show like it matters.", author: "Dave Grohl" },
+  { text: "Nobody believed in us at first.", author: "Brandon Flowers" },
+  { text: "Keep showing up.", author: "Jon Bon Jovi" },
+  { text: "You’ve got to keep going.", author: "Shania Twain" },
+  { text: "Make your own luck.", author: "Taylor Hawkins" },
+  { text: "I didn’t have a plan B.", author: "Ed Sheeran" },
+  { text: "Confidence is everything.", author: "Katy Perry" },
+  { text: "You can’t fake passion.", author: "Brandon Flowers" }
 ];
 
 function randomQuote() {
-  return legendQuotes[Math.floor(Math.random() * legendQuotes.length)];
+  return quotes[Math.floor(Math.random() * quotes.length)];
 }
 
-document.getElementById("searchBtn").addEventListener("click", async function(e) {
+document.getElementById("searchBtn").addEventListener("click", async function() {
 
   const city = document.getElementById("city").value;
   if (!city) {
@@ -314,42 +197,39 @@ document.getElementById("searchBtn").addEventListener("click", async function(e)
     return;
   }
 
-  // 🎸 Guitar pop
-  const guitar = document.createElement("div");
-  guitar.className = "guitar-pop";
-  guitar.innerText = "🎸";
-  guitar.style.left = e.offsetX + "px";
-  guitar.style.top = e.offsetY + "px";
-  this.appendChild(guitar);
-  setTimeout(() => guitar.remove(), 500);
+  const quote = randomQuote();
+  document.getElementById("quoteText").innerText = "“" + quote.text + "”";
+  document.getElementById("quoteAuthor").innerText = "— " + quote.author;
 
-  const loading = document.getElementById("loading");
-  const loadingText = document.querySelector(".loading-text");
-
-  loading.style.display = "flex";
-  loadingText.innerText = randomQuote();
-
-  const interval = setInterval(() => {
-    loadingText.innerText = randomQuote();
-  }, 3000);
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 6000);
+  document.getElementById("loading").style.display = "flex";
 
   try {
-    await fetch("/api/search", {
+    const res = await fetch("/api/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ city }),
-      signal: controller.signal
+      body: JSON.stringify({ city })
     });
+
+    const data = await res.json();
+
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "";
+
+    data.forEach(venue => {
+      const card = document.createElement("div");
+      card.className = "venue-card";
+      card.innerHTML = `
+        <div class="venue-name">${venue.name}</div>
+        <div>${venue.address || ""}</div>
+      `;
+      resultsDiv.appendChild(card);
+    });
+
   } catch (err) {
-    console.log("Search ended.");
+    console.error("Search error:", err);
   }
 
-  clearTimeout(timeout);
-  clearInterval(interval);
-  loading.style.display = "none";
+  document.getElementById("loading").style.display = "none";
 
 });
 
