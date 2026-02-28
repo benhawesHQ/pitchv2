@@ -1,5 +1,30 @@
 import OpenAI from "openai";
 
+function normalizeCity(input) {
+  if (!input) return "";
+
+  const value = input.trim().toLowerCase();
+
+  const majorCities = {
+    "nyc": "New York City",
+    "new york": "New York City",
+    "new york city": "New York City",
+    "la": "Los Angeles",
+    "los angeles": "Los Angeles",
+    "sf": "San Francisco",
+    "san francisco": "San Francisco",
+    "chicago": "Chicago",
+    "nashville": "Nashville",
+    "london": "London",
+    "tokyo": "Tokyo"
+  };
+
+  return majorCities[value] || input
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
 export default async function handler(req, res) {
 
   if (req.method !== "POST") {
@@ -12,6 +37,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "City required" });
   }
 
+  const normalizedCity = normalizeCity(city);
+
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
   });
@@ -19,23 +46,33 @@ export default async function handler(req, res) {
   const vibe = genre || "live music";
 
   const likelihoodNote = likely
-    ? "Focus on venues that book emerging or independent artists."
+    ? "Focus on venues known to book emerging or independent artists."
     : "Include a mix of established and smaller venues.";
 
   const prompt = `
-Generate 6 real venues in ${city} that host ${vibe} performances.
+Generate 8 real venues in ${normalizedCity} that host ${vibe} performances.
 ${likelihoodNote}
 
-Respond ONLY with valid JSON.
-No explanation.
+For each venue include:
+- name
+- neighborhood
+- description (max 12 words)
+- likelihood score 1-10 for responding to emerging artists
+- one emoji that matches the venue vibe
+- instagram handle (without URL)
+- booking email if available
+- phone if available
 
-Format:
+Respond ONLY with valid JSON:
 
 {
   "results": [
     {
       "name": "",
-      "address": "",
+      "neighborhood": "",
+      "description": "",
+      "likelihood": 0,
+      "emoji": "",
       "instagram": "",
       "email": "",
       "phone": ""
@@ -53,13 +90,13 @@ Format:
     });
 
     const text = completion.choices[0].message.content;
-
-    // Safely extract JSON if AI wraps it in code blocks
     const cleaned = text.replace(/```json|```/g, "").trim();
-
     const json = JSON.parse(cleaned);
 
-    res.status(200).json(json);
+    res.status(200).json({
+      city: normalizedCity,
+      results: json.results
+    });
 
   } catch (error) {
     console.error(error);
