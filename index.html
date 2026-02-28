@@ -7,20 +7,21 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
+
     body {
       margin: 0;
-      background: #000;
+      background: #0b0b0b;
       color: white;
       font-family: 'Open Sans', sans-serif;
     }
 
     .hero {
-      position: relative;
-      height: 75vh;
+      height: 85vh;
       background: url('hero.jpg') center/cover no-repeat;
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
 
     .hero::after {
@@ -34,125 +35,128 @@
       position: relative;
       z-index: 2;
       text-align: center;
-      max-width: 700px;
+      max-width: 600px;
       padding: 20px;
     }
 
     h1 {
       font-family: 'Poppins', sans-serif;
-      font-size: 48px;
-      margin-bottom: 15px;
+      font-size: 42px;
+      margin-bottom: 12px;
     }
 
     .sub {
-      font-size: 18px;
-      opacity: 0.85;
-      margin-bottom: 30px;
-    }
-
-    .search-box {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
+      opacity: 0.8;
+      margin-bottom: 28px;
     }
 
     input, select {
+      width: 100%;
       padding: 14px;
       border-radius: 10px;
       border: none;
-      font-size: 16px;
+      margin-bottom: 14px;
+      font-size: 15px;
+    }
+
+    .checkbox-row {
+      margin-bottom: 18px;
+      font-size: 14px;
     }
 
     button {
-      padding: 14px;
-      border-radius: 10px;
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
       border: none;
-      font-weight: 600;
-      font-size: 16px;
-      background: linear-gradient(90deg,#ff5f6d,#ffc371);
+      font-weight: 700;
+      font-size: 15px;
       cursor: pointer;
-      transition: transform .2s ease;
+      background: linear-gradient(90deg,#ff6a88,#ffb86c);
+      color: black;
     }
 
-    button:hover {
-      transform: translateY(-2px);
-    }
-
-    .results {
+    #results {
       padding: 60px 20px;
       max-width: 900px;
       margin: auto;
     }
 
-    .section-title {
-      font-family: 'Poppins', sans-serif;
-      font-size: 24px;
-      margin-bottom: 30px;
-      opacity: 0.9;
+    .venue-card {
+      background: linear-gradient(145deg, #141414, #1f1f1f);
+      padding: 28px;
+      border-radius: 16px;
+      margin-bottom: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      transition: transform 0.2s ease;
     }
 
-    .card {
-      background: #111;
-      padding: 24px;
-      border-radius: 14px;
-      margin-bottom: 25px;
-      transition: all .3s ease;
-      border: 1px solid #1f1f1f;
-    }
-
-    .card:hover {
+    .venue-card:hover {
       transform: translateY(-4px);
-      border-color: #333;
     }
 
-    .card h3 {
-      margin-top: 0;
+    .venue-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .venue-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .venue-title h3 {
+      margin: 0;
+      font-size: 22px;
       font-family: 'Poppins', sans-serif;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 5px 10px;
-      font-size: 12px;
-      border-radius: 20px;
-      background: #222;
-      margin-top: 10px;
-      opacity: 0.8;
+    .venue-emoji {
+      font-size: 22px;
     }
 
-    .stack {
-      margin-top: 18px;
+    .likelihood-badge {
+      background: linear-gradient(90deg,#ff7a7a,#ffb86c);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: black;
+    }
+
+    .venue-location {
+      margin: 10px 0 6px 0;
+      opacity: 0.7;
+    }
+
+    .venue-description {
+      margin-bottom: 16px;
+      opacity: 0.85;
+    }
+
+    .venue-actions {
       display: flex;
-      gap: 15px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
-    .contact-btn {
-      background: #1f1f1f;
+    .action-btn {
       padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 14px;
+      border-radius: 10px;
+      background: #2b2b2b;
       text-decoration: none;
       color: white;
-      transition: background .2s ease;
-    }
-
-    .contact-btn:hover {
-      background: #2c2c2c;
-    }
-
-    footer {
-      padding: 50px 20px;
-      background: #111;
-      text-align: center;
       font-size: 14px;
-      opacity: 0.75;
     }
 
-    @media(max-width: 768px) {
-      h1 { font-size: 32px; }
+    .action-btn.primary {
+      background: linear-gradient(90deg,#ff6a88,#ffb86c);
+      color: black;
+      font-weight: 600;
     }
+
   </style>
 </head>
 
@@ -161,40 +165,98 @@
   <div class="hero">
     <div class="hero-content">
       <h1>🎸 Find venues faster.</h1>
-      <div class="sub">
-        Spend less time searching.  
-        Spend more time booking shows.
+      <div class="sub">Stop searching. Start booking.</div>
+
+      <input id="city" placeholder="City (NYC, Chicago, London)" />
+      
+      <select id="genre">
+        <option value="">Genre</option>
+        <option>Indie</option>
+        <option>Rock</option>
+        <option>Pop</option>
+        <option>Jazz</option>
+        <option>Comedy</option>
+        <option>Cabaret</option>
+      </select>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="likely" />
+        Only show likely to reply 👍
       </div>
 
-      <div class="search-box">
-        <input id="city" placeholder="City (SF, NYC, Chicago...)">
-        <select id="genre">
-          <option value="">Select vibe 🎶</option>
-          <option value="rock">Rock</option>
-          <option value="cabaret">Cabaret</option>
-          <option value="indie">Indie</option>
-          <option value="comedy">Comedy</option>
-        </select>
-
-        <label>
-          <input type="checkbox" id="likely"> Only show likely to reply 👍
-        </label>
-
-        <button onclick="search()">Search venues</button>
-      </div>
+      <button onclick="searchVenues()">Search venues</button>
     </div>
   </div>
 
-  <div class="results" id="results"></div>
+  <div id="results"></div>
 
-  <footer>
-    Created by Ben Hawes in NYC<br><br>
-    @benhawesHQ<br>
-    www.benhawesHQ.com<br>
-    tiktok.com/@benhawesHQ<br>
-    ben@benhawesHQ.com
-  </footer>
+  <script>
 
-  <script src="script.js"></script>
+    async function searchVenues() {
+
+      const city = document.getElementById("city").value;
+      const genre = document.getElementById("genre").value;
+      const likely = document.getElementById("likely").checked;
+
+      if (!city) {
+        alert("Enter a city.");
+        return;
+      }
+
+      const res = await fetch("/api/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ city, genre, likely })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        document.getElementById("results").innerHTML = "<p style='text-align:center;'>Error loading venues.</p>";
+        return;
+      }
+
+      renderResults(data);
+    }
+
+    function renderResults(data) {
+
+      const container = document.getElementById("results");
+      container.innerHTML = `<h2 style="margin-bottom:30px;">🎶 Venues in ${data.city}</h2>`;
+
+      data.results.forEach(venue => {
+
+        const likelihoodPercent = venue.likelihood * 10;
+
+        const card = document.createElement("div");
+        card.className = "venue-card";
+
+        card.innerHTML = `
+          <div class="venue-header">
+            <div class="venue-title">
+              <span class="venue-emoji">${venue.emoji}</span>
+              <h3>${venue.name}</h3>
+            </div>
+            <div class="likelihood-badge">
+              ${likelihoodPercent}% match
+            </div>
+          </div>
+
+          <p class="venue-location">📍 ${venue.neighborhood}, ${data.city}</p>
+          <p class="venue-description">${venue.description}</p>
+
+          <div class="venue-actions">
+            ${venue.instagram ? `<a href="https://instagram.com/${venue.instagram.replace("@","")}" target="_blank" class="action-btn">📸 Instagram</a>` : ""}
+            ${venue.email ? `<a href="mailto:${venue.email}" class="action-btn primary">✉️ Contact Venue</a>` : ""}
+            ${venue.phone ? `<a href="tel:${venue.phone}" class="action-btn">📞 Call</a>` : ""}
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+  </script>
+
 </body>
 </html>
