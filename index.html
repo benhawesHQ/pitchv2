@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pitch</title>
+  <title>Pitch.io | Book a show</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- 🎸 Favicon -->
@@ -25,40 +25,12 @@
       font-family: 'Open Sans', sans-serif;
     }
 
-    /* NAV */
-
-    .nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 18px 30px;
-      border-bottom: 1px solid #222;
-    }
-
-    .logo {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 800;
-      font-size: 20px;
-      letter-spacing: 1px;
-    }
-
-    .nav-btn {
-      background: var(--orange);
-      color: black;
-      padding: 10px 16px;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      border: none;
-    }
-
     /* HERO */
 
     .hero {
       position: relative;
       background: url('https://images.unsplash.com/photo-1507874457470-272b3c8d8ee2?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
-      padding: 120px 20px 100px;
+      padding: 130px 20px 110px;
       text-align: center;
     }
 
@@ -79,7 +51,7 @@
     h1 {
       font-family: 'Poppins', sans-serif;
       font-weight: 800;
-      font-size: 44px;
+      font-size: 46px;
       margin-bottom: 10px;
     }
 
@@ -117,7 +89,7 @@
       margin-bottom: 24px;
     }
 
-    /* GENRE */
+    /* GENRE BUTTONS */
 
     .genre-row {
       display: flex;
@@ -133,7 +105,7 @@
       border: 1px solid #333;
       cursor: pointer;
       font-size: 14px;
-      transition: background 0.15s ease;
+      transition: all 0.15s ease;
     }
 
     .genre-btn.active {
@@ -181,11 +153,6 @@
 
 <body>
 
-  <div class="nav">
-    <div class="logo">PITCH</div>
-    <button class="nav-btn">Plan a tour</button>
-  </div>
-
   <div class="hero">
     <div class="hero-content">
 
@@ -199,19 +166,19 @@
 
         <label>Genre</label>
         <div class="genre-row">
-          <div class="genre-btn">Rock</div>
-          <div class="genre-btn">Indie</div>
-          <div class="genre-btn">Jazz</div>
-          <div class="genre-btn">Cabaret</div>
-          <div class="genre-btn">Comedy</div>
-          <div class="genre-btn">Pop</div>
+          <div class="genre-btn">🎸 Rock</div>
+          <div class="genre-btn">🌙 Indie</div>
+          <div class="genre-btn">🎷 Jazz</div>
+          <div class="genre-btn">🎭 Cabaret</div>
+          <div class="genre-btn">🎤 Comedy</div>
+          <div class="genre-btn">✨ Pop</div>
         </div>
 
-        <label>Audience</label>
-        <input id="audience" placeholder="50 · 40-60 · under 100" />
+        <label>Audience size</label>
+        <input id="audience" placeholder="20–30" />
 
         <div class="toggle-btn" id="likelyToggle">
-          Prioritize likely to reply
+          Prioritize venues likely to reply
         </div>
 
         <button class="search-btn" onclick="searchVenues()">Search venues</button>
