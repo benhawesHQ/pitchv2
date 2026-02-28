@@ -12,13 +12,12 @@ function extractAudienceNumber(input) {
 }
 
 function capacityWindow(n) {
-  if (n <= 25) return { min: 15, max: 75 };
-  if (n <= 75) return { min: 40, max: 150 };
-  if (n <= 200) return { min: 100, max: 300 };
-  if (n <= 500) return { min: 300, max: 700 };
-  if (n <= 1000) return { min: 500, max: 1200 };
-  if (n > 10000) return { mode: "platform" };
-  return { min: 200, max: 500 };
+  if (n <= 25) return { min: 15, max: 75, tier: "indie" };
+  if (n <= 75) return { min: 40, max: 150, tier: "indie" };
+  if (n <= 120) return { min: 75, max: 250, tier: "indie" };
+  if (n <= 300) return { min: 150, max: 500, tier: "mixed" };
+  if (n <= 1200) return { min: 500, max: 2000, tier: "large" };
+  return { mode: "platform" };
 }
 
 export default async function handler(req, res) {
@@ -37,85 +36,108 @@ export default async function handler(req, res) {
   const window = capacityWindow(audienceNumber);
   const venueCount = parseInt(count) || 10;
 
+  const lowerExtra = (extra || "").toLowerCase();
+  const comedyRequested =
+    lowerExtra.includes("comedy") ||
+    lowerExtra.includes("standup") ||
+    lowerExtra.includes("improv");
+
+  let priorityLogic = "";
+
+  if (window.tier === "indie") {
+    priorityLogic = `
+Prioritize independent venues, small rooms, backroom stages, DIY spaces.
+Avoid major touring theaters.
+`;
+  }
+
+  if (window.tier === "large") {
+    priorityLogic = `
+Include larger theaters and established music halls.
+Do not limit to indie rooms.
+`;
+  }
+
   let systemPrompt = `
 You are a live music booking researcher.
 
-Return REAL, currently operating venues only.
+CRITICAL RULES:
+- Return ONLY real, currently operating venues.
+- No duplicates.
+- Never invent venues.
+- Never fabricate details.
 
-Never invent venues.
-Never fabricate details.
-Never guess websites.
-Never include venues that do not exist.
+DEFAULT BEHAVIOR:
+Only include venues that host LIVE MUSIC shows with booked performers.
+Exclude:
+- DJ-only venues
+- Nightlife-only bars
+- Party bars
+- Dance clubs
+- Event spaces without recurring live music programming
+
+${comedyRequested ? `
+Comedy clubs allowed only if user requested comedy.
+` : `
+Exclude comedy clubs unless live music is core programming.
+`}
+
+Each venue must:
+- Have a stage or dedicated performance space
+- Publicly list events
+- Have history of hosting performers
 
 Each result must include:
 - name
-- short description (10-15 words max)
-- emoji representing vibe
-- replyLabel (one of: "High reply signal", "Moderate reply signal", "Low reply signal")
-- replyClass (one of: reply-high, reply-medium, reply-low)
+- neighborhood
+- description (10-15 factual words specific to music programming)
+- emoji
+- replyLabel (High booking signal, Moderate booking signal, Lower booking signal)
+- replyClass (reply-high, reply-medium, reply-low)
 
-Reply signal estimation logic:
-High reply signal:
-- Active Instagram
-- Regular live events
-- Public booking email or DM booking process
+BOOKING SIGNAL:
+High booking signal:
+- Active event calendar
+- Public booking contact
+- Regular weekly music programming
 
-Moderate reply signal:
-- Some event history
+Moderate booking signal:
+- Some live music programming
 - Basic online presence
 
-Low reply signal:
-- Sparse updates
-- Hard-to-find contact method
+Lower booking signal:
+- Infrequent music programming
 
-STRICT OUTPUT FORMAT:
+STRICT FORMAT:
 Return ONLY a JSON array.
 No markdown.
-No explanation.
+No commentary.
 No wrapper object.
 `;
 
-  let userPrompt = "";
-
-  if (window.mode === "platform") {
-
-    userPrompt = `
+  let userPrompt = `
 City: ${city}
+Target capacity range: ${window.min || ""}-${window.max || ""}
+Expected audience: approximately ${audienceNumber}
+Preferences: ${extra || "none"}
 
-The artist is targeting extremely large audiences.
-
-Return ${venueCount} scalable platforms such as:
-- Emerging artist festivals
-- Showcase circuits
-- Regional support pathways
-
-Still follow JSON format rules.
-`;
-
-  } else {
-
-    userPrompt = `
-City: ${city}
-Target capacity range: ${window.min}-${window.max}
-Artist expected audience: approximately ${audienceNumber}
-Preferences: ${extra || "none specified"}
+${priorityLogic}
 
 Return ${venueCount} venues that:
 - Match capacity range
-- Regularly book emerging artists
-- Match preferences when possible
-- Are locally known for live music
+- Regularly host live music performances
+- Are recognized locally for music programming
+- Match stated preferences
 
-Short description must be 10-15 words only.
+Include neighborhood.
+Descriptions must be factual.
 `;
-
-  }
 
   try {
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
-      temperature: 0.3,
+      temperature: 0.2,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt }
