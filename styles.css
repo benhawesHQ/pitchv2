@@ -69,10 +69,13 @@ textarea{
 }
 
 .guide-btn{
+  appearance:none;
+  border:none;
   background:var(--orange);
-  padding:10px 20px;
+  padding:10px 22px;
   border-radius:999px;
   text-decoration:none;
+  font-family:'Poppins';
   font-weight:700;
   color:black;
   transition:.2s ease;
@@ -136,38 +139,43 @@ textarea{
 }
 
 /* =========================
-   FILTER TAGS (FIXED + PREMIUM)
+   FILTER TAGS – MODERN
 ========================= */
 
 .tag-row{
-  margin-top:10px;
-  margin-bottom:20px;
+  margin-top:20px;
+  margin-bottom:24px;
   display:flex;
   flex-wrap:wrap;
-  gap:10px;
+  gap:12px;
   justify-content:center;
 }
 
 .tag-filter{
-  padding:10px 18px;
-  border-radius:999px;
-  background:#1f1f1f;
-  border:1px solid #2a2a2a;
+  appearance:none;
+  -webkit-appearance:none;
+  border:none;
+  background:rgba(255,255,255,0.06);
   color:white;
+  padding:10px 20px;
+  border-radius:999px;
+  font-family:'Poppins';
   font-size:14px;
+  font-weight:600;
   cursor:pointer;
-  transition:all .2s ease;
+  transition:all .25s ease;
+  backdrop-filter:blur(6px);
 }
 
 .tag-filter:hover{
-  background:#2a2a2a;
+  background:rgba(255,255,255,0.12);
   transform:translateY(-2px);
 }
 
 .tag-filter.active{
   background:var(--orange);
   color:black;
-  border:1px solid var(--orange);
+  box-shadow:0 6px 18px rgba(249,69,1,.35);
 }
 
 /* =========================
@@ -175,10 +183,12 @@ textarea{
 ========================= */
 
 .search-btn{
+  appearance:none;
+  border:none;
   width:100%;
   padding:16px;
-  border:none;
   border-radius:999px;
+  font-family:'Poppins';
   font-weight:700;
   background:var(--orange);
   color:black;
@@ -260,16 +270,19 @@ textarea{
 }
 
 /* =========================
-   BUTTONS
+   VENUE BUTTONS
 ========================= */
 
 .cta{
+  appearance:none;
+  border:none;
   display:inline-block;
   margin-top:18px;
   padding:12px 24px;
   border-radius:999px;
-  background:var(--orange);
+  font-family:'Poppins';
   font-weight:700;
+  background:var(--orange);
   color:black;
   text-decoration:none;
   transition:.2s ease;
