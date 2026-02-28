@@ -5,101 +5,68 @@
   <title>Pitch | Find Your Next Stage</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎸</text></svg>">
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <!-- External CSS -->
   <link rel="stylesheet" href="styles.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-  <!-- NAV -->
-  <div class="nav">
-    <div class="logo">Pitch<span>.</span></div>
-    <button class="guide-btn">Download Guide</button>
-  </div>
+<div class="nav">
+  <div class="logo">Pitch<span>.</span></div>
+  <button class="guide-btn">Download Guide</button>
+</div>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-content">
-      <h1>Find Your Next Stage</h1>
-      <p>Discover venues faster so you can focus on planning the show.</p>
+<div class="hero">
+  <div class="hero-content">
+    <h1>Find Your Next Stage</h1>
+    <p>Discover venues faster so you can focus on planning the show.</p>
 
-      <!-- SEARCH PANEL -->
-      <div class="search-panel">
+    <div class="search-panel">
 
-        <div class="field">
-          <label>City</label>
-          <input id="cityInput" placeholder="Brooklyn, Portland, Berlin">
-        </div>
-
-        <div class="field">
-          <label>Expected Audience</label>
-          <input id="audienceInput" placeholder="40, 80, 150">
-        </div>
-
-        <div class="field">
-          <label>Anything else feel important?</label>
-          <input id="notesInput" placeholder="Acoustic-friendly, seated show, queer crowd, etc.">
-        </div>
-
-        <div class="field">
-          <label>Number of Suggestions</label>
-          <select id="countSelect">
-            <option value="5">5 venues</option>
-            <option value="10" selected>10 venues</option>
-            <option value="15">15 venues</option>
-          </select>
-        </div>
-
-        <button class="search-btn" onclick="searchVenues()">
-          Search Venues
-        </button>
-
+      <div class="field">
+        <label>City</label>
+        <input id="cityInput" placeholder="Brooklyn, Portland, Berlin">
       </div>
+
+      <div class="field">
+        <label>Expected Audience</label>
+        <input id="audienceInput" placeholder="40">
+      </div>
+
+      <div class="field">
+        <label>Anything else feel important?</label>
+        <input id="notesInput" placeholder="Intimate vibe, neighborhood bar, DIY energy, listening room">
+      </div>
+
+      <div class="field">
+        <label>Number of Suggestions</label>
+        <select id="countSelect">
+          <option value="5">5 venues</option>
+          <option value="10" selected>10 venues</option>
+          <option value="15">15 venues</option>
+        </select>
+      </div>
+
+      <button class="search-btn" onclick="searchVenues()">
+        Search Venues
+      </button>
+
     </div>
   </div>
+</div>
 
-  <!-- RESULTS -->
-  <div class="results-wrapper" id="resultsWrapper">
+<div class="results-wrapper" id="resultsWrapper">
+  <div class="results-header">Your short list</div>
+  <div class="results-sub">We surface venues. You reach out directly.</div>
+  <div id="results" class="results"></div>
+</div>
 
-    <div class="results-header">
-      Your short list of venues
-    </div>
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="lights">🎸 🎶 🎤 🎵</div>
+  <div class="loading-text">Building your short list...</div>
+</div>
 
-    <div class="results-sub" id="resultsSub">
-    </div>
-
-    <div id="results" class="results">
-    </div>
-
-    <button id="moreBtn" class="more-btn" onclick="showMore()" style="display:none;">
-      See more
-    </button>
-
-  </div>
-
-  <!-- LOADING EXPERIENCE -->
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="floating">🎸 🎵</div>
-    <div id="loreText" class="lore"></div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer>
-    Created by NYC musician Ben Hawes.
-    <br>
-    <a href="https://instagram.com/benhaweshq" target="_blank">
-      Connect on Instagram
-    </a>
-  </footer>
-
-  <!-- SCRIPT -->
-  <script src="script.js?v=21"></script>
-
+<script src="script.js"></script>
 </body>
 </html>
