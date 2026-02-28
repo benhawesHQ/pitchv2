@@ -5,10 +5,9 @@ document.addEventListener("DOMContentLoaded", function(){
 
 const funFacts = [
   "Before selling out arenas, Lizzo played 150-person rooms in Minneapolis.",
-  "Lady Gaga used to perform at The Bitter End in NYC.",
+  "Lady Gaga performed early shows at The Bitter End in NYC.",
   "Brandi Carlile built her audience in intimate Seattle bars.",
-  "Ed Sheeran once played tiny pub gigs with just a loop pedal.",
-  "Taylor Swift started performing at small Nashville coffeehouses."
+  "Ed Sheeran once played tiny pub gigs with just a loop pedal."
 ];
 
 let factInterval;
@@ -19,18 +18,18 @@ async function searchVenues(){
   const audience = parseInt(document.getElementById("audienceInput").value);
   const count = parseInt(document.getElementById("countSelect").value);
 
-  const overlay = document.getElementById("loadingOverlay");
-  const resultsContainer = document.getElementById("results");
-  const wrapper = document.getElementById("resultsWrapper");
+  if(!city) return;
 
+  const overlay = document.getElementById("loadingOverlay");
   overlay.classList.add("active");
+
   startFunFacts();
 
-  try {
-
+  try{
     const response = await fetch(`/api/search?city=${encodeURIComponent(city)}`);
     const data = await response.json();
 
+    const resultsContainer = document.getElementById("results");
     resultsContainer.innerHTML = "";
 
     const filtered = (data.results || [])
@@ -41,9 +40,9 @@ async function searchVenues(){
       resultsContainer.innerHTML += renderVenue(v);
     });
 
-    wrapper.style.display = "block";
+    document.getElementById("resultsWrapper").style.display = "block";
 
-  } catch (err) {
+  }catch(err){
     console.error(err);
   }
 
@@ -53,20 +52,11 @@ async function searchVenues(){
 
 function startFunFacts(){
   const factEl = document.querySelector(".fun-fact");
-
-  if(!factEl) return;
-
   let index = 0;
 
-  factInterval = setInterval(() => {
-    factEl.classList.remove("show");
-
-    setTimeout(() => {
-      factEl.textContent = funFacts[index];
-      factEl.classList.add("show");
-      index = (index + 1) % funFacts.length;
-    },300);
-
+  factInterval = setInterval(()=>{
+    factEl.textContent = funFacts[index];
+    index = (index + 1) % funFacts.length;
   },2500);
 }
 
@@ -89,26 +79,61 @@ function capacityMatch(place, audience){
 }
 
 function renderVenue(v){
+
   const image = v.photo || "hero.jpg";
 
-  const googleUrl =
+  const searchUrl =
+    `https://www.google.com/search?q=${
+      encodeURIComponent(v.name + " " + v.formatted_address)
+    }`;
+
+  const mapUrl =
     `https://www.google.com/maps/search/?api=1&query=${
       encodeURIComponent(v.name + " " + v.formatted_address)
     }`;
 
+  const likelihoodClass =
+    v.user_ratings_total > 100 ? "likely" : "unlikely";
+
+  const likelihoodText =
+    v.user_ratings_total > 100 ?
+    "Likely to Reply" :
+    "Unlikely to Reply";
+
   return `
     <div class="venue-row">
+
+      <div class="likelihood-badge ${likelihoodClass}">
+        ${likelihoodText}
+      </div>
+
       <div class="venue-image"
            style="background-image:url('${image}')">
       </div>
+
       <div class="venue-content">
-        <h3>${v.name}</h3>
-        <div class="meta">
+        <h3 style="font-family:'Poppins';font-weight:700;font-size:24px;">
+          ${v.name}
+        </h3>
+
+        <div style="margin:6px 0 14px 0;">
           ⭐ ${v.rating || "N/A"} • ${v.formatted_address}
         </div>
-        <a href="${googleUrl}" target="_blank" class="cta">
-          View on Google
+
+        <p style="line-height:1.6;">
+          ${v.name} is a live performance venue that regularly hosts music
+          and community-driven events, making it a strong option for artists
+          building audience momentum.
+        </p>
+
+        <a href="${searchUrl}" target="_blank" class="cta">
+          See Venue
         </a>
+
+        <a href="${mapUrl}" target="_blank" class="secondary">
+          View on Map
+        </a>
+
       </div>
     </div>
   `;
