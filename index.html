@@ -1,110 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Pitch | Find Your Next Stage</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Pitch | Find Your Next Stage</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="styles.css" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-  <!-- HERO + LOGO AREA -->
-  <div class="hero">
+<div class="hero">
 
-    <div class="top-bar">
-      <div class="logo">
-        Pitch<span>.</span>
+  <div class="top-bar">
+    <div class="logo">Pitch<span>.</span></div>
+    <a href="#" class="guide-btn">Download the Guide</a>
+  </div>
+
+  <div class="hero-content">
+    <h1>Find Your Next Stage</h1>
+    <p>Discover the right venue faster so you can play more music.</p>
+
+    <div class="search-panel">
+
+      <div class="field">
+        <label>City</label>
+        <input id="cityInput" placeholder="Brooklyn, Portland, Berlin">
       </div>
 
-      <a href="#" class="guide-btn">
-        Download the Guide
-      </a>
-    </div>
-
-    <div class="hero-content">
-      <h1>Find Your Next Stage</h1>
-      <p>Discover the right venue faster so you can focus on playing more music.</p>
-
-      <div class="search-panel">
-
-        <div class="field">
-          <label>City</label>
-          <input id="cityInput" placeholder="Brooklyn, Portland, Berlin" />
-        </div>
-
-        <div class="field">
-          <label>Expected Audience</label>
-          <input id="audienceInput" placeholder="25, 40, 80" />
-        </div>
-
-        <div class="field">
-          <label>Anything else feel important?</label>
-          <input id="vibeInput" placeholder="Intimate, standing room, indie crowd, bar vibe" />
-        </div>
-
-        <div class="field">
-          <label>Number of Suggestions</label>
-          <select id="countSelect">
-            <option value="5">5 venues</option>
-            <option value="10" selected>10 venues</option>
-            <option value="15">15 venues</option>
-          </select>
-        </div>
-
-        <button id="searchBtn" class="search-btn">
-          Search Venues
-        </button>
-
+      <div class="field">
+        <label>Expected Audience</label>
+        <input id="audienceInput" placeholder="25, 40, 80">
       </div>
+
+      <div class="field">
+        <label>Anything else feel important?</label>
+        <input id="vibeInput" placeholder="Intimate, standing room, indie crowd">
+      </div>
+
+      <div class="field">
+        <label>Number of Suggestions</label>
+        <select id="countSelect">
+          <option value="5">5 venues</option>
+          <option value="10" selected>10 venues</option>
+          <option value="15">15 venues</option>
+        </select>
+      </div>
+
+      <button id="searchBtn" class="search-btn">Search Venues</button>
+
     </div>
   </div>
+</div>
 
-  <!-- RESULTS SECTION -->
-  <div class="results-wrapper" id="resultsWrapper" style="display:none;">
+<div class="results-wrapper" id="resultsWrapper" style="display:none;">
 
-    <div class="results-intro">
-      <h2>Your Shortlist</h2>
-      <p>
-        Pitch curates performance spaces based on live venue activity, audience size patterns,
-        and search signals so you can reach out faster and book smarter.
-      </p>
-    </div>
-
-    <div class="results" id="results"></div>
-
+  <div class="results-intro">
+    <h2>Your Shortlist</h2>
+    <p>
+      Pitch curates performance spaces using live venue signals and audience patterns,
+      helping you reach out faster and book smarter.
+    </p>
   </div>
 
-  <!-- LOADING OVERLAY -->
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="lights">🎸 🎤 🎶</div>
-    <div class="fun-fact">
-      Warming up the stage lights...
-    </div>
-  </div>
+  <div id="results" class="results"></div>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-logo">Pitch<span>.</span></div>
+</div>
 
-    <div class="footer-text">
-      Created by NYC musician Ben Hawes in New York City.
-    </div>
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="lights">🎸 🎤 🎶</div>
+  <div class="fun-fact">Warming up the stage lights...</div>
+</div>
 
-    <a
-      href="https://www.instagram.com/benhaweshq"
-      target="_blank"
-      class="footer-link"
-    >
-      Connect on Instagram
-    </a>
-  </footer>
+<footer>
+  <div class="footer-logo">Pitch<span>.</span></div>
+  <div class="footer-text">Created by NYC musician Ben Hawes in New York City.</div>
+  <a href="https://www.instagram.com/benhaweshq" target="_blank" class="footer-link">
+    Connect on Instagram
+  </a>
+</footer>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
