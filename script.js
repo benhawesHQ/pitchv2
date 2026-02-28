@@ -1,24 +1,18 @@
-const searchForm = document.getElementById("searchForm");
-const resultsWrapper = document.getElementById("resultsWrapper");
-const loadingOverlay = document.getElementById("loadingOverlay");
-const funFactEl = document.getElementById("funFact");
+let allVenues = [];
+let visibleCount = 10;
 
 const funFacts = [
-  "🎤 Taylor Swift played tiny Nashville venues before stadium tours.",
-  "🎸 Ed Sheeran busked before Wembley Stadium.",
+  "🎤 Taylor Swift played tiny Nashville venues before selling out stadium tours.",
+  "🎸 Ed Sheeran busked on the streets before Wembley Stadium.",
   "🎶 Lady Gaga performed in Lower East Side clubs before global fame.",
-  "🎵 Billie Eilish recorded in her bedroom before Grammys.",
+  "🎵 Billie Eilish recorded songs in her bedroom before Grammys.",
   "🎤 Harry Styles played 1,000-capacity rooms before arenas.",
   "🎸 Lizzo toured indie venues before Coachella.",
   "🎶 Phoebe Bridgers built her audience in intimate clubs.",
   "🎵 Adele performed in London pubs early on.",
   "🎤 Paramore toured VFW halls before festivals.",
   "🎸 Coldplay played student unions before stadiums.",
-  "🎶 Dua Lipa toured mid-size venues before arenas.",
-  "🎵 The Killers played Vegas bars before world tours.",
-  "🎤 Olivia Rodrigo started in intimate LA rooms.",
-  "🎸 The Lumineers busked before selling out arenas.",
-  "🎶 Arctic Monkeys built buzz in Sheffield clubs."
+  "🎶 Dua Lipa toured mid-size venues before arenas."
 ];
 
 let recentFacts = [];
@@ -31,65 +25,96 @@ function getRandomFact() {
   }
   const fact = available[Math.floor(Math.random() * available.length)];
   recentFacts.push(fact);
-  if (recentFacts.length > 10) recentFacts.shift();
+  if (recentFacts.length > 8) recentFacts.shift();
   return fact;
 }
 
-function startShowLights() {
-  document.body.classList.add("lights-down");
-  loadingOverlay.classList.add("active");
-  loadingOverlay.classList.add("blink");
-  funFactEl.textContent = getRandomFact();
+function showLoading() {
+  const overlay = document.getElementById("loadingOverlay");
+  const lore = document.getElementById("loreText");
+  lore.innerText = getRandomFact();
+  overlay.classList.add("active");
 }
 
-function stopShowLights() {
-  document.body.classList.remove("lights-down");
-  loadingOverlay.classList.remove("active");
-  loadingOverlay.classList.remove("blink");
+function hideLoading() {
+  document.getElementById("loadingOverlay").classList.remove("active");
 }
 
-searchForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
+async function searchVenues() {
+  const city = document.getElementById("cityInput").value;
+  const audience = document.getElementById("audienceInput").value;
+  const count = document.getElementById("countSelect").value;
 
-  const city = document.getElementById("city").value;
-  const audience = document.getElementById("audience").value;
-  const count = document.getElementById("count").value;
+  if (!city || !audience) {
+    alert("Please fill in both fields.");
+    return;
+  }
 
-  startShowLights();
+  showLoading();
 
   try {
-    const res = await fetch("/.netlify/functions/search", {
+    const response = await fetch("/.netlify/functions/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ city, audience, count })
     });
 
-    const data = await res.json();
-    stopShowLights();
-    renderResults(data.venues);
+    const data = await response.json();
+    hideLoading();
+
+    if (!data.venues) {
+      alert("Something went wrong.");
+      return;
+    }
+
+    allVenues = data.venues;
+    visibleCount = 10;
+
+    document.getElementById("resultsWrapper").style.display = "block";
+    document.getElementById("resultsSub").innerText =
+      `${allVenues.length} venues found in ${city}`;
+
+    renderResults();
 
   } catch (err) {
-    stopShowLights();
-    alert("Something went wrong.");
+    hideLoading();
+    alert("Search failed.");
   }
-});
+}
 
-function renderResults(venues) {
-  resultsWrapper.innerHTML = "";
+function renderResults() {
+  const resultsContainer = document.getElementById("results");
+  resultsContainer.innerHTML = "";
 
-  venues.forEach(v => {
+  allVenues.slice(0, visibleCount).forEach(v => {
     const card = document.createElement("div");
     card.className = "venue-card";
+
     card.innerHTML = `
-      <h3>${v.emoji} ${v.name}</h3>
-      <p class="venue-city">${v.city}</p>
-      <p>${v.description}</p>
-      <p class="likelihood">🎯 Likelihood: ${v.likelihood}</p>
-      <a target="_blank" class="venue-btn"
-        href="https://www.google.com/search?q=${encodeURIComponent(v.googleQuery)}">
+      <div class="venue-name">${v.emoji} ${v.name}</div>
+      <div class="venue-description">
+        ${v.description}
+        <br><br>
+        🎯 Likelihood: <strong>${v.likelihood}</strong>
+      </div>
+      <a class="see-venue-btn"
+        href="https://www.google.com/search?q=${encodeURIComponent(v.googleQuery)}"
+        target="_blank">
         View Venue
       </a>
     `;
-    resultsWrapper.appendChild(card);
+
+    resultsContainer.appendChild(card);
   });
+
+  if (visibleCount < allVenues.length) {
+    document.getElementById("moreBtn").style.display = "inline-block";
+  } else {
+    document.getElementById("moreBtn").style.display = "none";
+  }
+}
+
+function showMore() {
+  visibleCount += 5;
+  renderResults();
 }
