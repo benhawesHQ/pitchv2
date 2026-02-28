@@ -1,55 +1,64 @@
-function formatCity(city) {
-  return city
-    .toLowerCase()
-    .split(" ")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
+const searchBtn = document.getElementById("searchBtn");
 
-async function search() {
+searchBtn.addEventListener("click", async () => {
 
-  const cityInput = document.getElementById("city").value;
-  const genre = document.getElementById("genre").value;
-  const likely = document.getElementById("likely").checked;
+  const city = document.getElementById("cityInput").value.trim();
+  const audience = document.getElementById("audienceInput").value.trim();
+  const extra = document.getElementById("extraInput").value.trim();
 
-  const cleanCity = formatCity(cityInput);
+  if(!city) return;
 
-  const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "🎵 Finding venues...";
+  const overlay = document.getElementById("loadingOverlay");
+  overlay.classList.add("active");
 
-  try {
+  const resultsContainer = document.getElementById("results");
+  resultsContainer.innerHTML = "";
 
-    const response = await fetch("/api/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ city: cleanCity, genre, likely })
+  try{
+
+    const res = await fetch("/api/search", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({ city, audience, extra })
     });
 
-    const data = await response.json();
+    const data = await res.json();
 
-    resultsDiv.innerHTML = `<div class="section-title">🎶 Venues in ${cleanCity}</div>`;
-
-    data.results.forEach(venue => {
+    data.forEach(venue => {
 
       const card = document.createElement("div");
-      card.className = "card";
+      card.className = "venue-card";
 
-      card.innerHTML = `
-        <h3>${venue.name}</h3>
-        <div class="badge">${genre || "Live Music Venue"}</div>
-        <div style="margin-top:10px; opacity:.7;">${cleanCity}</div>
+      const info = document.createElement("div");
+      info.className = "venue-info";
 
-        <div class="stack">
-          ${venue.instagram ? `<a class="contact-btn" href="${venue.instagram}" target="_blank">Instagram</a>` : ""}
-          ${venue.email ? `<a class="contact-btn" href="mailto:${venue.email}">Email</a>` : ""}
-          ${venue.phone ? `<a class="contact-btn" href="tel:${venue.phone}">Call</a>` : ""}
-        </div>
-      `;
+      const name = document.createElement("div");
+      name.className = "venue-name";
+      name.innerText = venue.name;
 
-      resultsDiv.appendChild(card);
+      const badge = document.createElement("div");
+      badge.className = "badge";
+      badge.innerText = venue.likelihood || "Active venue";
+
+      info.appendChild(name);
+      info.appendChild(badge);
+
+      const btn = document.createElement("a");
+      btn.className = "view-btn";
+      btn.innerText = "View venue";
+      btn.href = venue.googleUrl;
+      btn.target = "_blank";
+
+      card.appendChild(info);
+      card.appendChild(btn);
+
+      resultsContainer.appendChild(card);
+
     });
 
-  } catch (err) {
-    resultsDiv.innerHTML = "Error loading venues.";
+  }catch(e){
+    console.error(e);
   }
-}
+
+  overlay.classList.remove("active");
+});
