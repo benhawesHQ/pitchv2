@@ -1,106 +1,43 @@
-const searchForm = document.getElementById("searchForm");
-const resultsWrapper = document.getElementById("resultsWrapper");
-const loadingOverlay = document.getElementById("loadingOverlay");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pitch | Find Your Next Stage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
-const funFacts = [
-  "🎤 Taylor Swift once played tiny Nashville venues before selling out stadium tours.",
-  "🎸 Ed Sheeran used to busk on the streets before headlining Wembley Stadium.",
-  "🎶 Lady Gaga performed in Lower East Side clubs before global fame.",
-  "🎵 Billie Eilish recorded songs in her bedroom before winning Grammys.",
-  "🎤 Harry Styles played 1,000-capacity rooms before arenas.",
-  "🎸 Lizzo toured small indie venues before Coachella main stage.",
-  "🎶 Phoebe Bridgers built her audience through intimate club shows.",
-  "🎵 Brandi Carlile toured coffeehouses before amphitheaters.",
-  "🎤 The Killers played Vegas bars before world tours.",
-  "🎸 Hozier gained momentum in small Irish venues.",
-  "🎶 Arctic Monkeys built buzz in Sheffield clubs.",
-  "🎵 Adele performed in London pubs early on.",
-  "🎤 Paramore toured VFW halls before festivals.",
-  "🎸 Coldplay played student unions before stadiums.",
-  "🎶 Kacey Musgraves played Texas honky-tonks.",
-  "🎵 John Mayer toured small blues clubs.",
-  "🎤 Olivia Rodrigo started in intimate LA rooms.",
-  "🎸 The Lumineers busked before selling out arenas.",
-  "🎶 Dua Lipa toured mid-size European venues.",
-  "🎵 Sam Fender played North Shields pubs."
-];
+  <div class="nav">
+    <h1>🎤 Pitch</h1>
+  </div>
 
-let recentFacts = [];
+  <section class="hero">
+    <h2>Find Your Next Stage</h2>
+    <p class="subtitle">Discover real venues that match your audience size and city.</p>
 
-function getRandomFact() {
-  let available = funFacts.filter(f => !recentFacts.includes(f));
-  if (available.length === 0) {
-    recentFacts = [];
-    available = funFacts;
-  }
-  const fact = available[Math.floor(Math.random() * available.length)];
-  recentFacts.push(fact);
-  if (recentFacts.length > 10) recentFacts.shift();
-  return fact;
-}
+    <form id="searchForm">
+      <input id="city" type="text" placeholder="City (e.g. Nashville)" required>
+      <input id="audience" type="number" placeholder="Audience Size (e.g. 75)" required>
+      <input id="count" type="number" value="10" min="5" max="15">
+      <button type="submit">Search</button>
+    </form>
+  </section>
 
-function startShowLights() {
-  loadingOverlay.classList.add("active");
-  document.body.classList.add("lights-down");
+  <section id="resultsWrapper" class="results-wrapper"></section>
 
-  const factEl = document.getElementById("funFact");
-  factEl.textContent = getRandomFact();
+  <!-- LOADING OVERLAY -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="stage">
+      <div class="floating-icons">
+        🎸 🎶 🎵 🎸 🎶 🎵
+      </div>
+      <div id="funFact" class="fun-fact"></div>
+    </div>
+  </div>
 
-  loadingOverlay.classList.add("blink");
-}
+  <!-- SCRIPT MUST BE LAST -->
+  <script src="script.js?v=21"></script>
 
-function stopShowLights() {
-  loadingOverlay.classList.remove("active");
-  document.body.classList.remove("lights-down");
-  loadingOverlay.classList.remove("blink");
-}
-
-searchForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const city = document.getElementById("city").value;
-  const audience = document.getElementById("audience").value;
-  const count = document.getElementById("count").value;
-
-  startShowLights();
-
-  try {
-    const res = await fetch("/.netlify/functions/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ city, audience, count })
-    });
-
-    const data = await res.json();
-
-    stopShowLights();
-
-    renderResults(data.venues);
-
-  } catch (err) {
-    stopShowLights();
-    alert("Something went wrong.");
-  }
-});
-
-function renderResults(venues) {
-  resultsWrapper.innerHTML = "";
-
-  venues.forEach(v => {
-    const card = document.createElement("div");
-    card.className = "venue-card";
-
-    card.innerHTML = `
-      <h3>${v.emoji} ${v.name}</h3>
-      <p class="venue-city">${v.city}</p>
-      <p>${v.description}</p>
-      <p class="likelihood">🎯 Likelihood: ${v.likelihood}</p>
-      <a target="_blank" class="venue-btn"
-        href="https://www.google.com/search?q=${encodeURIComponent(v.googleQuery)}">
-        View Venue
-      </a>
-    `;
-
-    resultsWrapper.appendChild(card);
-  });
-}
+</body>
+</html>
