@@ -20,15 +20,18 @@ color:#fff;
 -webkit-font-smoothing:antialiased;
 }
 
+/* HEADINGS */
+
 h1,h2,h3,h4,h5,h6{
 font-family:'Poppins',sans-serif;
+letter-spacing:-0.02em;
 }
 
 /* HERO */
 
 .hero{
 position:relative;
-height:72vh;
+min-height:88vh;
 background-image:url('hero.jpg');
 background-size:cover;
 background-position:center;
@@ -38,30 +41,37 @@ justify-content:center;
 }
 
 .hero-overlay{
-background:rgba(0,0,0,0.65);
+background:linear-gradient(
+to bottom,
+rgba(0,0,0,0.55),
+rgba(0,0,0,0.75)
+);
 width:100%;
-height:100%;
+min-height:88vh;
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
-padding:40px 20px;
-text-align:center;
+padding:60px 24px 100px 24px;
 }
+
+/* TOP BAR */
 
 .top-bar{
 position:absolute;
-top:30px;
-left:40px;
-right:40px;
+top:28px;
+left:48px;
+right:48px;
 display:flex;
 justify-content:space-between;
 align-items:center;
 }
 
 .logo{
+font-family:'Poppins',sans-serif;
 font-weight:800;
-font-size:28px;
+font-size:32px;
+letter-spacing:-0.04em;
 }
 
 .logo span{
@@ -71,52 +81,82 @@ color:var(--orange);
 .guide-btn{
 background:var(--orange);
 color:#fff;
-padding:12px 20px;
-border-radius:12px;
-font-weight:600;
-text-decoration:none;
+padding:14px 22px;
+border-radius:14px;
 font-family:'Poppins',sans-serif;
+font-weight:600;
+font-size:14px;
+text-decoration:none;
 }
 
-/* FORM */
+/* HERO TEXT */
+
+.hero-content{
+text-align:center;
+max-width:720px;
+margin-bottom:56px;
+}
+
+.hero-content h1{
+font-size:56px;
+font-weight:700;
+margin-bottom:16px;
+}
+
+.hero-content p{
+font-size:18px;
+font-weight:500;
+line-height:1.6;
+}
+
+/* FORM CONTAINER */
 
 .generator-bar{
 background:var(--glass);
-backdrop-filter:blur(18px);
+backdrop-filter:blur(20px);
 border:1px solid var(--border);
 border-radius:28px;
-padding:48px;
+padding:56px;
 display:flex;
 flex-direction:column;
-gap:24px;
-max-width:620px;
+gap:28px;
 width:100%;
-box-shadow:0 30px 80px rgba(0,0,0,0.6);
-text-align:left;
+max-width:640px;
+box-shadow:0 40px 100px rgba(0,0,0,0.7);
 }
+
+/* FIELDS */
 
 .generator-field{
 display:flex;
 flex-direction:column;
-gap:8px;
+gap:10px;
 }
 
 .generator-field label{
 font-family:'Poppins',sans-serif;
-font-size:14px;
+font-size:13px;
 font-weight:600;
+letter-spacing:0.02em;
+text-transform:uppercase;
 }
 
 .generator-field input,
 .generator-field select{
-padding:16px;
-border-radius:14px;
+padding:18px 20px;
+border-radius:16px;
 border:1px solid var(--border);
 background:#000;
 color:#fff;
 font-family:'Open Sans',sans-serif;
 font-size:15px;
 outline:none;
+transition:all 0.2s ease;
+}
+
+.generator-field input:focus,
+.generator-field select:focus{
+border:1px solid var(--orange);
 }
 
 .generator-field input:-webkit-autofill{
@@ -124,10 +164,12 @@ outline:none;
 -webkit-text-fill-color:#fff;
 }
 
+/* BUTTON */
+
 .generate-btn{
-margin-top:8px;
-padding:18px;
-border-radius:18px;
+margin-top:12px;
+padding:20px;
+border-radius:20px;
 background:var(--orange);
 border:none;
 font-family:'Poppins',sans-serif;
@@ -135,12 +177,18 @@ font-size:18px;
 font-weight:600;
 cursor:pointer;
 color:#fff;
+transition:all 0.2s ease;
+}
+
+.generate-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 20px 40px rgba(255,60,0,0.4);
 }
 
 /* RESULTS */
 
 .results-wrapper{
-padding:60px 20px 120px 20px;
+padding:80px 24px 140px 24px;
 max-width:1100px;
 margin:0 auto;
 }
@@ -150,8 +198,8 @@ display:flex;
 background:var(--glass);
 backdrop-filter:blur(20px);
 border:1px solid var(--border);
-border-radius:22px;
-margin-bottom:36px;
+border-radius:24px;
+margin-bottom:40px;
 overflow:hidden;
 box-shadow:0 20px 60px rgba(0,0,0,0.6);
 transition:all 0.25s ease;
@@ -162,38 +210,38 @@ transform:translateY(-6px);
 box-shadow:0 30px 80px rgba(0,0,0,0.7);
 }
 
-/* IMAGE FIXED 4:3 */
+/* IMAGE */
 
 .venue-image-wrapper{
-width:28%;
-padding:24px;
+width:30%;
+padding:28px;
 }
 
 .venue-image-wrapper img{
 width:100%;
 aspect-ratio:4 / 3;
 object-fit:cover;
-border-radius:16px;
+border-radius:18px;
 }
 
 /* CONTENT */
 
 .venue-content{
-width:72%;
-padding:36px;
+width:70%;
+padding:40px;
 display:flex;
 flex-direction:column;
-gap:16px;
+gap:18px;
 }
 
 .venue-top{
 display:flex;
 justify-content:space-between;
-align-items:center;
+align-items:flex-start;
 }
 
 .venue-top h3{
-font-size:22px;
+font-size:24px;
 font-weight:700;
 }
 
@@ -204,15 +252,15 @@ font-weight:500;
 
 .venue-description{
 font-size:15px;
-line-height:1.6;
+line-height:1.7;
 }
 
-/* REPLY BADGE */
+/* BADGE */
 
 .reply-badge{
 font-size:11px;
-padding:4px 12px;
-border-radius:20px;
+padding:6px 14px;
+border-radius:30px;
 background:var(--electric);
 color:#000;
 font-weight:600;
@@ -223,75 +271,29 @@ font-weight:600;
 .btn-orange{
 background:var(--orange);
 color:#fff;
-padding:12px 22px;
-border-radius:14px;
+padding:14px 26px;
+border-radius:16px;
 text-decoration:none;
 font-weight:600;
 font-family:'Poppins',sans-serif;
+transition:all 0.2s ease;
 }
 
-/* STAGE */
-
-.stage-overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.9);
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:9999;
-opacity:0;
-pointer-events:none;
-transition:opacity 0.4s ease;
-}
-
-.stage-overlay.active{
-opacity:1;
-pointer-events:auto;
-}
-
-.spotlights{
-position:absolute;
-width:500px;
-height:500px;
-background:radial-gradient(circle at center, rgba(255,215,0,0.6), transparent 70%);
-animation:spin 3s linear infinite;
-}
-
-@keyframes spin{
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
-}
-
-.floating-emojis{
-font-size:56px;
-margin-top:120px;
-animation:float 2s ease-in-out infinite alternate;
-}
-
-@keyframes float{
-from{transform:translateY(-15px);}
-to{transform:translateY(15px);}
-}
-
-.fun-fact{
-margin-top:40px;
-font-size:20px;
-max-width:600px;
-text-align:center;
-font-family:'Poppins',sans-serif;
+.btn-orange:hover{
+transform:translateY(-2px);
+box-shadow:0 15px 35px rgba(255,60,0,0.4);
 }
 
 /* MOBILE */
 
 @media (max-width:900px){
 
-.hero{
-height:65vh;
+.hero-content h1{
+font-size:40px;
 }
 
 .generator-bar{
-padding:32px;
+padding:40px;
 }
 
 .venue-card-glass{
@@ -304,7 +306,7 @@ width:100%;
 
 .venue-content{
 width:100%;
-padding:28px;
+padding:32px;
 }
 
 }
