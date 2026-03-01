@@ -2,6 +2,10 @@ let allVenues = [];
 let currentIndex = 0;
 const pageSize = 5;
 
+/* ============================= */
+/* SEARCH CLICK */
+/* ============================= */
+
 document.getElementById("searchBtn").addEventListener("click", async function () {
 
   const overlay = document.getElementById("searchOverlay");
@@ -27,20 +31,20 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
 
     const data = await response.json();
 
-    // Add score to each venue
+    /* ============================= */
+    /* SCORE + RANKING */
+    /* ============================= */
+
     const venuesWithScore = (data.venues || []).map(v => ({
       ...v,
       score: calculateScore(v)
     }));
 
-    // Sort by score descending
     venuesWithScore.sort((a, b) => b.score - a.score);
 
-    // Determine top 60% threshold
     const cutoffIndex = Math.floor(venuesWithScore.length * 0.6);
     const thresholdScore = venuesWithScore[cutoffIndex]?.score || 0;
 
-    // Mark which venues get badge
     venuesWithScore.forEach(v => {
       v.showBadge = v.score >= thresholdScore;
     });
@@ -65,6 +69,10 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
 });
 
 
+/* ============================= */
+/* SCORING SYSTEM */
+/* ============================= */
+
 function calculateScore(place) {
   let score = 0;
 
@@ -79,6 +87,10 @@ function calculateScore(place) {
   return score;
 }
 
+
+/* ============================= */
+/* PAGINATION */
+/* ============================= */
 
 function renderNextBatch() {
 
@@ -118,7 +130,38 @@ function renderSeeMoreButton() {
 }
 
 
+/* ============================= */
+/* SMART EMOJI SYSTEM */
+/* ============================= */
+
+function getVenueEmoji(v) {
+
+  const tags = (v.tags || []).join(" ").toLowerCase();
+  const name = (v.name || "").toLowerCase();
+
+  if (tags.includes("jazz") || name.includes("jazz")) return "🎷";
+  if (tags.includes("piano")) return "🎹";
+  if (tags.includes("rock")) return "🎸";
+  if (tags.includes("dj")) return "🎧";
+  if (tags.includes("comedy")) return "🎭";
+  if (tags.includes("cabaret")) return "🪩";
+  if (tags.includes("lounge")) return "🍸";
+  if (tags.includes("theater")) return "🎭";
+  if (tags.includes("bar")) return "🍻";
+  if (tags.includes("restaurant")) return "🍽️";
+  if (tags.includes("outdoor")) return "🌇";
+
+  return "🎤"; // safe colorful fallback
+}
+
+
+/* ============================= */
+/* CARD CREATION */
+/* ============================= */
+
 function createVenueCard(v) {
+
+  const emoji = getVenueEmoji(v);
 
   const card = document.createElement("div");
   card.className = "venue-card";
@@ -132,7 +175,7 @@ function createVenueCard(v) {
 
       <div class="venue-title-row">
         <div>
-          <div class="venue-title">${v.emoji || "🎶"} ${v.name}</div>
+          <div class="venue-title">${emoji} ${v.name}</div>
           <div class="venue-location">${v.neighborhood || ""}</div>
           <div class="venue-address">${v.formatted_address || ""}</div>
         </div>
@@ -148,9 +191,10 @@ function createVenueCard(v) {
         ${(v.tags || []).map(tag => `<span class="venue-tag">${tag}</span>`).join("")}
       </div>
 
-      <a href="${v.googleMapsUrl}" target="_blank" class="venue-btn">
+      <a href="${v.googleMapsUrl || '#'}" target="_blank" class="venue-btn">
         View Venue
       </a>
+
     </div>
   `;
 
