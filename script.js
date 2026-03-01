@@ -1,8 +1,8 @@
 let allVenues = [];
 let currentIndex = 0;
 let seeMoreClicks = 0;
-const pageSize = 5;
-const maxSeeMoreClicks = 5;
+let pageSize = 5; // now dynamic
+
 
 /* ============================= */
 /* SEARCH CLICK */
@@ -17,6 +17,8 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
   const audience = document.getElementById("audience").value;
   const vibe = document.getElementById("vibe").value;
   const count = parseInt(document.getElementById("count").value);
+
+  pageSize = count; // 👈 dropdown now controls pagination
 
   if (!city || !audience) {
     overlay.classList.remove("active");
@@ -47,11 +49,20 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
       v.showBadge = v.score >= thresholdScore;
     });
 
-    allVenues = venuesWithScore;
+    // 👇 limit to dropdown selection
+    allVenues = venuesWithScore.slice(0, count);
+
     currentIndex = 0;
     seeMoreClicks = 0;
 
-    document.getElementById("results").innerHTML = "";
+    const resultsContainer = document.getElementById("results");
+    resultsContainer.innerHTML = "";
+
+    // Optional product polish header
+    resultsContainer.insertAdjacentHTML(
+      "afterbegin",
+      `<h2 style="margin-bottom:40px;">Showing ${allVenues.length} venues in ${city}</h2>`
+    );
 
     renderNextBatch();
 
@@ -118,9 +129,8 @@ function renderSeeMoreButton() {
   if (existingRefine) existingRefine.remove();
 
   const noMoreResults = currentIndex >= allVenues.length;
-  const hitLimit = seeMoreClicks >= maxSeeMoreClicks;
 
-  if (!noMoreResults && !hitLimit) {
+  if (!noMoreResults) {
 
     const btn = document.createElement("button");
     btn.id = "seeMoreBtn";
@@ -130,7 +140,6 @@ function renderSeeMoreButton() {
     btn.innerText = "See More Venues";
 
     btn.addEventListener("click", () => {
-      seeMoreClicks++;
       renderNextBatch();
     });
 
@@ -164,7 +173,7 @@ function renderSeeMoreButton() {
 
 
 /* ============================= */
-/* SMART NAME-BASED EMOJI SYSTEM */
+/* EMOJI SYSTEM */
 /* ============================= */
 
 function getVenueEmoji(v) {
