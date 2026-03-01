@@ -41,7 +41,7 @@ rgba(0,0,0,0.9)
 width:100%;
 display:flex;
 flex-direction:column;
-position:relative;   /* ADD THIS */
+position:relative;
 }
 
 /* NAV */
@@ -138,7 +138,7 @@ gap:8px;
 text-align:left;
 }
 
-/* Clean labels (no all caps) */
+/* Clean labels */
 
 .field label{
 font-size:14px;
@@ -147,8 +147,6 @@ color:#ccc;
 text-transform:none;
 letter-spacing:0;
 }
-
-/* Stronger input contrast */
 
 .field input,
 .field select{
@@ -205,20 +203,19 @@ margin:0 auto;
 }
 
 /* ============================= */
-/* SEARCH LOADING OVERLAY */
+/* STAGE SEARCH ANIMATION */
 /* ============================= */
 
 .search-overlay{
 position:absolute;
 inset:0;
-background:rgba(0,0,0,0.75);
-backdrop-filter:blur(4px);
+background:rgba(0,0,0,0.85);
 display:flex;
 align-items:center;
 justify-content:center;
 opacity:0;
 pointer-events:none;
-transition:opacity 0.25s ease;
+transition:opacity 0.3s ease;
 z-index:10;
 }
 
@@ -227,31 +224,61 @@ opacity:1;
 pointer-events:auto;
 }
 
-.search-loader{
-text-align:center;
+.stage-animation{
+position:relative;
+width:220px;
+height:220px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
 }
 
-.search-loader p{
-margin-top:18px;
-font-size:15px;
+.stage-text{
+margin-top:30px;
+font-size:16px;
 color:#ddd;
-letter-spacing:0.02em;
+letter-spacing:0.03em;
 }
 
-/* Spinner */
-
-.spinner{
-width:48px;
-height:48px;
-border:3px solid rgba(255,255,255,0.2);
-border-top:3px solid var(--orange);
-border-radius:50%;
-animation:spin 0.8s linear infinite;
-margin:0 auto;
+.mic{
+font-size:48px;
+animation:bounce 1s ease-in-out infinite alternate;
 }
 
-@keyframes spin{
-to{
-transform:rotate(360deg);
+/* Spotlights */
+
+.spotlight{
+position:absolute;
+top:-40px;
+width:120px;
+height:220px;
+background:radial-gradient(
+ellipse at center,
+rgba(255,200,0,0.6) 0%,
+rgba(255,200,0,0.2) 40%,
+transparent 70%
+);
+transform-origin:top center;
+animation:sweep 2s ease-in-out infinite alternate;
 }
+
+.spotlight.left{
+left:-60px;
+transform:rotate(-25deg);
+}
+
+.spotlight.right{
+right:-60px;
+transform:rotate(25deg);
+}
+
+@keyframes sweep{
+0%{ transform:rotate(-25deg); }
+100%{ transform:rotate(25deg); }
+}
+
+@keyframes bounce{
+0%{ transform:translateY(0px); }
+100%{ transform:translateY(-10px); }
 }
