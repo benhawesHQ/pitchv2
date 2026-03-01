@@ -1,88 +1,67 @@
-async function searchVenues() {
+let allResults = [];
+let visibleCount = 6;
 
-  const city = document.getElementById("cityInput").value.trim();
-  const audience = document.getElementById("audienceInput").value.trim();
-  const vibe = document.getElementById("vibeInput").value.trim();
+document.getElementById("searchBtn").addEventListener("click", searchVenues);
+document.getElementById("loadMoreBtn").addEventListener("click", showMore);
 
-  if (!city || !audience) {
-    alert("Please enter city and audience size.");
-    return;
-  }
+async function searchVenues(){
 
-  const overlay = document.getElementById("loadingOverlay");
-  const container = document.getElementById("results");
+  document.getElementById("loadingOverlay").style.display = "flex";
 
-  overlay.classList.add("active");
-  container.innerHTML = "";
+  const city = document.getElementById("cityInput").value;
+  const audience = document.getElementById("audienceInput").value;
+  const vibe = document.getElementById("vibeInput").value;
+  const count = document.getElementById("countSelect").value;
 
-  try {
-
-    const response = await fetch("/api/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ city, audience, vibe })
+  try{
+    const response = await fetch("/search",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({ city, audience, vibe, count })
     });
-
-    if (!response.ok) {
-      throw new Error("Server error");
-    }
 
     const data = await response.json();
+    allResults = data.venues || [];
+    visibleCount = 6;
 
-    if (!data.venues || data.venues.length === 0) {
-      container.innerHTML = "<p>No venues found.</p>";
-      return;
-    }
+    renderResults();
 
-    data.venues.forEach(v => {
-      container.innerHTML += renderVenue(v);
-    });
-
-  } catch (err) {
-    console.error("Search failed:", err);
-    container.innerHTML = "<p>Something went wrong. Try again.</p>";
-  } finally {
-    overlay.classList.remove("active");
+  }catch(error){
+    console.error(error);
   }
+
+  document.getElementById("loadingOverlay").style.display = "none";
 }
 
-function renderVenue(v) {
+function renderResults(){
 
-  const statusClass =
-    v.contact_likelihood === "likely"
-      ? "status-good"
-      : v.contact_likelihood === "unlikely"
-      ? "status-hard"
-      : "status-neutral";
+  const container = document.getElementById("results");
+  container.innerHTML = "";
 
-  const statusText =
-    v.contact_likelihood === "likely"
-      ? "Likely to Reply"
-      : v.contact_likelihood === "unlikely"
-      ? "Harder to Book"
-      : "Open";
+  const visibleResults = allResults.slice(0, visibleCount);
 
-  return `
-    <div class="venue-card">
+  visibleResults.forEach(venue=>{
+    const card = document.createElement("div");
+    card.className = "result-card";
+    card.innerHTML = `
+      <h3>${venue.name}</h3>
+      <p><strong>Capacity:</strong> ${venue.capacity}</p>
+      <p>${venue.description || ""}</p>
+    `;
+    container.appendChild(card);
+  });
 
-      <div class="status-badge ${statusClass}">
-        ${statusText}
-      </div>
+  document.getElementById("resultsWrapper").style.display = "block";
 
-      <div class="venue-name">${v.name}</div>
+  if(visibleCount < allResults.length){
+    document.getElementById("loadMoreBtn").style.display = "block";
+  }else{
+    document.getElementById("loadMoreBtn").style.display = "none";
+  }
 
-      <div class="venue-capacity">
-        Estimated capacity: ${v.capacity_estimate || "Unknown"}
-      </div>
+}
 
-      <div class="venue-labels">
-        ${(v.labels || []).map(label =>
-          `<span class="venue-pill">${label}</span>`
-        ).join("")}
-      </div>
-
-    </div>
-  `;
+function showMore(){
+  visibleCount += 6;
+  renderResults();
 }
