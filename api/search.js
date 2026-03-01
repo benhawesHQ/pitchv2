@@ -103,7 +103,7 @@ export default async function handler(req, res) {
         try {
 
           const detailsRes = await fetch(
-            `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=photos,formatted_address,website,formatted_phone_number,rating,user_ratings_total,opening_hours&key=${process.env.GOOGLE_API_KEY}`
+            `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=photos,formatted_address,website,formatted_phone_number,rating,user_ratings_total,opening_hours,editorial_summary,types&key=${process.env.GOOGLE_API_KEY}`
           );
 
           const detailsData = await detailsRes.json();
@@ -118,13 +118,30 @@ export default async function handler(req, res) {
               `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photoRef}&key=${process.env.GOOGLE_API_KEY}`;
           }
 
+          /* ============================= */
+          /* SMART DESCRIPTION LOGIC       */
+          /* ============================= */
+
+          let description = "";
+
+          if (details.editorial_summary && details.editorial_summary.overview) {
+            description = details.editorial_summary.overview;
+          } else if (place.types && place.types.length) {
+            description = `Known locally as a ${place.types
+              .slice(0, 3)
+              .join(", ")
+              .replace(/_/g, " ")} venue.`;
+          } else if (details.rating && details.user_ratings_total) {
+            description = `Rated ${details.rating} stars by ${details.user_ratings_total}+ guests.`;
+          } else {
+            description = `Live performance space in ${city}.`;
+          }
+
           return {
             name: place.name,
             neighborhood: place.vicinity || "",
             formatted_address: details.formatted_address || "",
-            description: vibe
-              ? `Strong fit for ${vibe} shows around ${audience} guests.`
-              : `Potential venue for performances around ${audience} guests.`,
+            description,
             googleMapsUrl: `https://www.google.com/maps/place/?q=place_id:${place.place_id}`,
             website: details.website || null,
             rating: details.rating || null,
