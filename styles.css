@@ -214,8 +214,6 @@ opacity:1;
 pointer-events:auto;
 }
 
-/* Multi-color moving light wash */
-
 .search-overlay::before{
 content:"";
 position:absolute;
@@ -228,8 +226,6 @@ filter:blur(90px);
 animation:lightMove 3.5s ease-in-out infinite alternate;
 }
 
-/* Subtle grain movement for life */
-
 .search-overlay::after{
 content:"";
 position:absolute;
@@ -241,12 +237,8 @@ animation:grainMove 5s linear infinite;
 }
 
 @keyframes lightMove{
-0%{
-transform:translate(-4%, -4%) scale(1);
-}
-100%{
-transform:translate(4%, 4%) scale(1.12);
-}
+0%{ transform:translate(-4%, -4%) scale(1); }
+100%{ transform:translate(4%, 4%) scale(1.12); }
 }
 
 @keyframes grainMove{
@@ -284,4 +276,105 @@ animation:flicker 2s infinite;
 @keyframes flicker{
 0%,18%,22%,25%,53%,57%,100%{opacity:1;}
 20%,24%,55%{opacity:0.85;}
+}
+
+/* ============================= */
+/* VENUE CARDS */
+/* ============================= */
+
+.venue-card{
+display:flex;
+background:#0c0c0c;
+border:1px solid rgba(255,255,255,0.06);
+border-radius:28px;
+overflow:hidden;
+margin-bottom:40px;
+transition:transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.venue-card:hover{
+transform:translateY(-4px);
+box-shadow:0 10px 40px rgba(0,0,0,0.5);
+}
+
+.venue-img-wrap{
+flex:0 0 25%;
+background:#111;
+}
+
+.venue-img-wrap img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+}
+
+.venue-content{
+flex:1;
+padding:32px;
+display:flex;
+flex-direction:column;
+gap:16px;
+}
+
+.venue-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.venue-header h3{
+font-size:22px;
+font-weight:800;
+}
+
+.venue-badge{
+background:#1DB954;
+color:#000;
+padding:6px 12px;
+border-radius:999px;
+font-size:12px;
+font-weight:700;
+}
+
+.venue-location{
+color:#aaa;
+font-size:14px;
+}
+
+.venue-description{
+color:#ddd;
+line-height:1.6;
+}
+
+.venue-tags{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.venue-tag{
+background:#1a1a1a;
+border:1px solid rgba(255,255,255,0.08);
+padding:6px 12px;
+border-radius:999px;
+font-size:12px;
+color:#ccc;
+}
+
+.venue-btn{
+margin-top:auto;
+display:inline-block;
+background:var(--orange);
+color:#fff;
+padding:12px 20px;
+border-radius:14px;
+text-decoration:none;
+font-weight:700;
+font-family:'Poppins',sans-serif;
+transition:background 0.2s ease;
+}
+
+.venue-btn:hover{
+background:#e63600;
 }
