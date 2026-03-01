@@ -1,5 +1,3 @@
-import OpenAI from "openai";
-
 /* ============================= */
 /* AUDIENCE SIZE → QUERY LOGIC  */
 /* ============================= */
@@ -10,37 +8,38 @@ function buildQueries(city, audience) {
 
   if (size <= 25) {
     return [
-      `acoustic cafe live music in ${city}`,
-      `wine bar with live music in ${city}`,
-      `intimate lounge with stage in ${city}`,
-      `small back room bar in ${city}`
+      `acoustic cafe live music near ${city}`,
+      `wine bar with live music near ${city}`,
+      `intimate lounge with stage near ${city}`,
+      `small back room bar near ${city}`
     ];
   }
 
   if (size <= 60) {
     return [
-      `bar with live music in ${city}`,
-      `small concert venue in ${city}`,
-      `listening room in ${city}`,
-      `comedy club with stage in ${city}`
+      `bar with live music near ${city}`,
+      `small concert venue near ${city}`,
+      `listening room near ${city}`,
+      `comedy club with stage near ${city}`
     ];
   }
 
   if (size <= 120) {
     return [
-      `live music venue in ${city}`,
-      `mid size concert venue in ${city}`,
-      `music theater in ${city}`,
-      `performance space with stage in ${city}`
+      `live music venue near ${city}`,
+      `mid size concert venue near ${city}`,
+      `music theater near ${city}`,
+      `performance space with stage near ${city}`
     ];
   }
 
   return [
-    `concert venue in ${city}`,
-    `music hall in ${city}`,
-    `event venue with stage in ${city}`
+    `concert venue near ${city}`,
+    `music hall near ${city}`,
+    `event venue with stage near ${city}`
   ];
 }
+
 
 /* ============================= */
 /* MAIN HANDLER */
@@ -60,36 +59,17 @@ export default async function handler(req, res) {
 
   try {
 
-    /* ============================= */
-    /* STEP 1 — GEOCODE CITY        */
-    /* ============================= */
-
-    const geoRes = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(city)}&key=${process.env.GOOGLE_API_KEY}`
-    );
-
-    const geoData = await geoRes.json();
-
-    if (!geoData.results || !geoData.results.length) {
-      return res.status(400).json({ error: "City not found" });
-    }
-
-    const location = geoData.results[0].geometry.location;
-    const lat = location.lat;
-    const lng = location.lng;
-
-    /* ============================= */
-    /* STEP 2 — MULTIPLE SEARCHES   */
-    /* ============================= */
-
     const queries = buildQueries(city, audience);
-
     let allResults = [];
+
+    /* ============================= */
+    /* GOOGLE TEXT SEARCH ONLY      */
+    /* ============================= */
 
     for (const q of queries) {
 
       const googleRes = await fetch(
-        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(q)}&location=${lat},${lng}&radius=30000&key=${process.env.GOOGLE_API_KEY}`
+        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(q)}&region=us&key=${process.env.GOOGLE_API_KEY}`
       );
 
       const googleData = await googleRes.json();
@@ -100,7 +80,7 @@ export default async function handler(req, res) {
     }
 
     /* ============================= */
-    /* STEP 3 — DEDUPE              */
+    /* DEDUPE RESULTS               */
     /* ============================= */
 
     const uniqueMap = new Map();
@@ -114,7 +94,7 @@ export default async function handler(req, res) {
     const uniqueResults = Array.from(uniqueMap.values()).slice(0, count);
 
     /* ============================= */
-    /* STEP 4 — ENRICH              */
+    /* ENRICH WITH DETAILS          */
     /* ============================= */
 
     const enrichedVenues = await Promise.all(
