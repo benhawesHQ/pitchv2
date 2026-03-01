@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Pitch | Find Your Next Stage</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pitch | Find Your Next Stage</title>
+
+<!-- 🎸 Favicon -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎸</text></svg>">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -11,68 +14,41 @@
 
 <body>
 
-<div class="hero">
+<header class="hero">
 
-  <div class="top-bar">
-    <div class="logo">Pitch<span>.</span></div>
-    <button class="guide-btn">Download the Guide</button>
-  </div>
+  <div class="hero-overlay">
 
-  <div class="hero-content">
-    <h1>Find Your Next Stage</h1>
-    <p>Discover the right venue faster so you can play more music.</p>
-
-    <div class="search-panel">
-
-      <div class="field">
-        <label>City</label>
-        <input id="cityInput" placeholder="Brooklyn, Portland, Berlin">
-      </div>
-
-      <div class="field">
-        <label>Expected Audience</label>
-        <input id="audienceInput" placeholder="25, 40, 80">
-      </div>
-
-      <div class="field">
-        <label>Anything else feel important?</label>
-        <input id="vibeInput" placeholder="Intimate, standing room, indie crowd">
-      </div>
-
-      <div class="field">
-        <label>Number of Suggestions</label>
-        <select id="countSelect">
-          <option value="5">5 venues</option>
-          <option value="10" selected>10 venues</option>
-          <option value="15">15 venues</option>
-        </select>
-      </div>
-
-      <div class="tag-row">
-        <button class="tag-filter" data-tag="rock">🎸 Rock</button>
-        <button class="tag-filter" data-tag="jazz">🎷 Jazz</button>
-        <button class="tag-filter" data-tag="cabaret">🎭 Cabaret</button>
-        <button class="tag-filter" data-tag="lgbt">🏳️‍🌈 LGBTQ+</button>
-        <button class="tag-filter" data-tag="black">✊🏾 Black-Owned</button>
-      </div>
-
-      <button id="searchBtn" class="search-btn">Search Venues</button>
-
+    <div class="top-bar">
+      <div class="logo">Pitch<span>.</span></div>
     </div>
+
+    <div class="hero-content">
+      <h1>Find Your Next Stage</h1>
+      <p>Discover the right venue faster so you can play more music.</p>
+    </div>
+
+    <!-- Search Panel -->
+    <div class="search-panel">
+      <input placeholder="City (Brooklyn, Portland, Berlin)">
+      <input placeholder="Expected Audience (25, 40, 80)">
+      <input placeholder="Vibe (Intimate, standing room, indie crowd)">
+      <select>
+        <option>5 venues</option>
+        <option selected>10 venues</option>
+        <option>15 venues</option>
+      </select>
+      <button class="search-btn">Search Venues</button>
+    </div>
+
   </div>
-</div>
 
-<div class="results-wrapper" id="resultsWrapper">
-  <div id="results" class="results-grid"></div>
-  <button id="loadMoreBtn" class="load-more-btn" style="display:none;">
-    See a few more
-  </button>
-</div>
+</header>
 
-<div id="loadingOverlay" class="loading-overlay">
-  <div class="loading-text">Finding stages...</div>
-</div>
+<section class="results-wrapper">
+  <div class="results-grid">
+    <!-- Result cards will go here later -->
+  </div>
+</section>
 
-<script src="script.js"></script>
 </body>
 </html>
