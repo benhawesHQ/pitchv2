@@ -1,44 +1,5 @@
 import OpenAI from "openai";
 
-function buildQueries(city, audience) {
-
-  if (audience <= 25) {
-    return [
-      `acoustic cafe in ${city}`,
-      `wine bar with live music in ${city}`,
-      `small listening room in ${city}`,
-      `intimate lounge with live music in ${city}`,
-      `back room bar in ${city}`
-    ];
-  }
-
-  if (audience <= 60) {
-    return [
-      `bar with live music in ${city}`,
-      `small concert venue in ${city}`,
-      `intimate music venue in ${city}`,
-      `comedy club with stage in ${city}`,
-      `indie performance space in ${city}`
-    ];
-  }
-
-  if (audience <= 120) {
-    return [
-      `live music venue in ${city}`,
-      `mid size concert venue in ${city}`,
-      `music theater in ${city}`,
-      `event venue with stage in ${city}`
-    ];
-  }
-
-  return [
-    `concert venue in ${city}`,
-    `large music venue in ${city}`,
-    `event venue with stage in ${city}`,
-    `concert hall in ${city}`
-  ];
-}
-
 export default async function handler(req, res) {
 
   if (req.method !== "POST") {
@@ -47,106 +8,136 @@ export default async function handler(req, res) {
 
   const { city, audience, vibe, count } = req.body;
 
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-  });
+  if (!city || !audience) {
+    return res.status(400).json({ error: "Missing city or audience size" });
+  }
+
+  /* ============================= */
+  /* AUDIENCE-BASED SEARCH LOGIC */
+  /* ============================= */
+
+  function buildQueries(city, audience) {
+    const size = Number(audience);
+
+    if (size <= 20) {
+      return [
+        `acoustic cafe in ${city}`,
+        `wine bar live music in ${city}`,
+        `intimate lounge live music in ${city}`,
+        `small back room bar in ${city}`
+      ];
+    }
+
+    if (size <= 50) {
+      return [
+        `bar with live music in ${city}`,
+        `small music venue in ${city}`,
+        `listening room in ${city}`,
+        `comedy club with stage in ${city}`
+      ];
+    }
+
+    if (size <= 120) {
+      return [
+        `live music venue in ${city}`,
+        `indie concert venue in ${city}`,
+        `music theater in ${city}`,
+        `performance space in ${city}`
+      ];
+    }
+
+    return [
+      `concert venue in ${city}`,
+      `music hall in ${city}`,
+      `event venue with stage in ${city}`
+    ];
+  }
 
   try {
 
-    // STEP 1 — Ask AI for venue list
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You return only valid JSON."
-        },
-        {
-          role: "user",
-          content: `
-You are a music booking agent.
+    const queries = buildQueries(city, audience);
+    let allResults = [];
 
-City or area: ${city}
-Expected audience: ${audience}
-Vibe: ${vibe || "any"}
+    /* ============================= */
+    /* MULTIPLE GOOGLE SEARCHES */
+    /* ============================= */
 
-Return ${count} appropriate venues.
+    for (const q of queries) {
+      const googleRes = await fetch(
+        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(q)}&key=${process.env.GOOGLE_API_KEY}`
+      );
 
-Format:
+      const googleData = await googleRes.json();
 
-[
-  {
-    "name": "",
-    "neighborhood": "",
-    "city": "",
-    "description": "",
-    "googleMapsUrl": "",
-    "replyScore": 0
-  }
-]
-`
-        }
-      ],
-      temperature: 0.7
-    });
-
-    let text = completion.choices[0].message.content.trim();
-
-    if (text.startsWith("```")) {
-      text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+      if (googleData.results) {
+        allResults.push(...googleData.results);
+      }
     }
 
-    let venues = JSON.parse(text);
+    /* ============================= */
+    /* DEDUPE BY place_id */
+    /* ============================= */
 
-    // STEP 2 — Enrich each venue with Google image
+    const uniqueMap = new Map();
+
+    for (const place of allResults) {
+      if (!uniqueMap.has(place.place_id)) {
+        uniqueMap.set(place.place_id, place);
+      }
+    }
+
+    const uniqueResults = Array.from(uniqueMap.values()).slice(0, count);
+
+    /* ============================= */
+    /* ENRICH WITH DETAILS */
+    /* ============================= */
+
     const enrichedVenues = await Promise.all(
-      venues.map(async (venue) => {
+      uniqueResults.map(async (place) => {
 
         try {
 
-          // Find place_id
-          const findRes = await fetch(
-            `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(
-              venue.name + " " + venue.city
-            )}&inputtype=textquery&fields=place_id&key=${process.env.GOOGLE_API_KEY}`
-          );
-
-          const findData = await findRes.json();
-
-          if (!findData.candidates || !findData.candidates.length) {
-            return venue;
-          }
-
-          const placeId = findData.candidates[0].place_id;
-
-          // Get place details
           const detailsRes = await fetch(
-            `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=photos,formatted_address,website&key=${process.env.GOOGLE_API_KEY}`
+            `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=photos,formatted_address,website,formatted_phone_number,rating,user_ratings_total,opening_hours&key=${process.env.GOOGLE_API_KEY}`
           );
 
           const detailsData = await detailsRes.json();
+          const details = detailsData.result || {};
 
           let imageUrl = null;
 
-          if (detailsData.result.photos && detailsData.result.photos.length > 0) {
-            const photoRef = detailsData.result.photos[0].photo_reference;
+          if (details.photos && details.photos.length > 0) {
+            const photoRef = details.photos[0].photo_reference;
 
-            imageUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photoRef}&key=${process.env.GOOGLE_API_KEY}`;
+            imageUrl =
+              `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photoRef}&key=${process.env.GOOGLE_API_KEY}`;
           }
 
           return {
-            ...venue,
+            name: place.name,
+            neighborhood: place.formatted_address || "",
+            formatted_address: details.formatted_address || "",
+            description: vibe
+              ? `Good fit for ${vibe} shows around ${audience} guests.`
+              : `A strong option for live performances around ${audience} guests.`,
+            googleMapsUrl: `https://www.google.com/maps/place/?q=place_id:${place.place_id}`,
+            website: details.website || null,
+            rating: details.rating || null,
+            user_ratings_total: details.user_ratings_total || null,
+            opening_hours: details.opening_hours || null,
             image: imageUrl
           };
 
         } catch {
-          return venue;
+          return null;
         }
 
       })
     );
 
-    return res.status(200).json({ venues: enrichedVenues });
+    const cleaned = enrichedVenues.filter(Boolean);
+
+    return res.status(200).json({ venues: cleaned });
 
   } catch (error) {
     return res.status(500).json({ error: error.message });
