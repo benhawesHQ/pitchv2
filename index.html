@@ -6,42 +6,39 @@
 <title>Pitch | Find Your Next Stage</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
 
 <header class="hero">
-  <div class="hero-overlay">
+  <div class="nav">
+    <div class="logo">Pitch<span>.</span></div>
+    <a href="#" class="guide-btn">Download Guide</a>
+  </div>
 
-    <div class="top-bar">
-      <div class="logo">Pitch<span>.</span></div>
-      <a href="#" class="guide-btn">Download Guide</a>
-    </div>
+  <div class="hero-center">
+    <h1>Find Your Next Stage</h1>
+    <p>Discover the right venue faster so you can play more music.</p>
 
-    <div class="hero-content">
-      <h1>Find Your Next Stage</h1>
-      <p>Discover the right venue faster so you can play more music.</p>
-    </div>
+    <div class="generator">
 
-    <div class="generator-bar">
-
-      <div class="generator-field">
+      <div class="field">
         <label>City or Neighborhood</label>
         <input id="city" placeholder="Lower East Side, Brooklyn, Chicago">
       </div>
 
-      <div class="generator-field">
+      <div class="field">
         <label>Audience Size</label>
         <input id="audience" placeholder="40">
       </div>
 
-      <div class="generator-field">
+      <div class="field">
         <label>Vibe (optional)</label>
         <input id="vibe" placeholder="Cabaret, rock, indie">
       </div>
 
-      <div class="generator-field">
+      <div class="field">
         <label>Results</label>
         <select id="count">
           <option value="5">5 venues</option>
@@ -50,76 +47,56 @@
         </select>
       </div>
 
-      <button id="searchBtn" class="generate-btn">
+      <button id="searchBtn" class="primary-btn">
         Generate Venues
       </button>
 
     </div>
-
   </div>
 </header>
 
-<section class="human-anchor">
-  <div class="human-content">
-    <img src="ben-headshot.jpg" alt="Ben Hawes" class="founder-photo">
+<section class="founder">
+  <div class="founder-inner">
+    <img src="ben-headshot.jpg" class="founder-img" alt="Ben Hawes">
     <div>
       <h3>Built by Ben Hawes</h3>
-      <p>NYC musician and performer who got tired of endlessly Googling venues.  
-      Pitch surfaces real places that match your audience size and vibe so you can focus on performing.</p>
+      <p>
+        NYC musician and performer who got tired of endlessly Googling venues.
+        Pitch surfaces real places that match your audience size and vibe so you can focus on performing.
+      </p>
     </div>
   </div>
 </section>
 
-<section class="how-it-works">
-  <h2>How Pitch Works</h2>
-  <div class="steps">
-    <div class="step">
-      <h4>1. Tell us your city and audience size</h4>
-      <p>Be specific. Neighborhoods work great.</p>
+<section class="how">
+  <h2>How It Works</h2>
+  <div class="how-grid">
+    <div>
+      <h4>1. Enter your city and audience size</h4>
+      <p>Neighborhoods work great.</p>
     </div>
-    <div class="step">
+    <div>
       <h4>2. We analyze venue fit and reputation</h4>
       <p>Powered by Google Places and real venue presence data.</p>
     </div>
-    <div class="step">
+    <div>
       <h4>3. Reach out with confidence</h4>
-      <p>See descriptions, context, and likely responsiveness before clicking.</p>
+      <p>See context before clicking through.</p>
     </div>
   </div>
 </section>
 
-<section class="credibility">
-  <p>
-    Data powered by Google Places and venue reputation analysis.  
-    No paid placements. No fake listings.
-  </p>
+<section class="cred">
+  Data powered by Google Places and venue reputation analysis. No paid placements.
 </section>
 
-<section class="results-wrapper">
+<section class="results">
   <div id="results"></div>
-</section>
-
-<section class="recent-venues">
-  <h2>Recently Discovered</h2>
-  <div class="recent-grid">
-    <div class="recent-item">
-      <h4>Rockwood Music Hall</h4>
-      <p>196 Allen St, New York, NY</p>
-    </div>
-    <div class="recent-item">
-      <h4>Club Cumming</h4>
-      <p>505 E 6th St, New York, NY</p>
-    </div>
-    <div class="recent-item">
-      <h4>Pianos</h4>
-      <p>158 Ludlow St, New York, NY</p>
-    </div>
-  </div>
 </section>
 
 <footer class="footer">
   <div class="footer-inner">
-    <div class="footer-brand">
+    <div>
       <h3>Pitch.</h3>
       <p>Built in New York</p>
     </div>
@@ -130,6 +107,6 @@
   </div>
 </footer>
 
-<script src="script.js"></script>
+<script src="/script.js"></script>
 </body>
 </html>
