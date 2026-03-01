@@ -138,14 +138,10 @@ gap:8px;
 text-align:left;
 }
 
-/* Clean labels */
-
 .field label{
 font-size:14px;
 font-weight:600;
 color:#ccc;
-text-transform:none;
-letter-spacing:0;
 }
 
 .field input,
@@ -178,11 +174,12 @@ font-size:17px;
 font-weight:700;
 cursor:pointer;
 color:#fff;
-transition:background 0.2s ease;
+transition:background 0.2s ease, transform 0.15s ease;
 }
 
 .primary-btn:hover{
 background:#e63600;
+transform:translateY(-2px);
 }
 
 /* Trust line */
@@ -203,20 +200,21 @@ margin:0 auto;
 }
 
 /* ============================= */
-/* STAGE SEARCH ANIMATION */
+/* CINEMATIC SEARCH ANIMATION */
 /* ============================= */
 
 .search-overlay{
 position:absolute;
 inset:0;
-background:rgba(0,0,0,0.85);
+background:rgba(0,0,0,0.92);
 display:flex;
 align-items:center;
 justify-content:center;
 opacity:0;
 pointer-events:none;
-transition:opacity 0.3s ease;
-z-index:10;
+transition:opacity 0.35s ease;
+z-index:20;
+overflow:hidden;
 }
 
 .search-overlay.active{
@@ -224,61 +222,52 @@ opacity:1;
 pointer-events:auto;
 }
 
+/* Ambient full-screen stage glow */
+
+.search-overlay::before{
+content:"";
+position:absolute;
+inset:-50%;
+background:
+radial-gradient(circle at 25% 40%, rgba(255,180,0,0.35), transparent 40%),
+radial-gradient(circle at 75% 60%, rgba(255,120,0,0.25), transparent 45%),
+radial-gradient(circle at 50% 30%, rgba(255,200,0,0.15), transparent 50%);
+filter:blur(120px);
+animation:ambientMove 8s ease-in-out infinite alternate;
+opacity:0.9;
+}
+
+@keyframes ambientMove{
+0%{
+transform:translate(-5%, -3%) scale(1);
+}
+100%{
+transform:translate(5%, 3%) scale(1.08);
+}
+}
+
 .stage-animation{
 position:relative;
-width:220px;
-height:220px;
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
-}
-
-.stage-text{
-margin-top:30px;
-font-size:16px;
-color:#ddd;
-letter-spacing:0.03em;
+z-index:2;
 }
 
 .mic{
-font-size:48px;
-animation:bounce 1s ease-in-out infinite alternate;
+font-size:54px;
+animation:pulse 2s ease-in-out infinite;
 }
 
-/* Spotlights */
-
-.spotlight{
-position:absolute;
-top:-40px;
-width:120px;
-height:220px;
-background:radial-gradient(
-ellipse at center,
-rgba(255,200,0,0.6) 0%,
-rgba(255,200,0,0.2) 40%,
-transparent 70%
-);
-transform-origin:top center;
-animation:sweep 2s ease-in-out infinite alternate;
+@keyframes pulse{
+0%,100%{ transform:scale(1); }
+50%{ transform:scale(1.08); }
 }
 
-.spotlight.left{
-left:-60px;
-transform:rotate(-25deg);
-}
-
-.spotlight.right{
-right:-60px;
-transform:rotate(25deg);
-}
-
-@keyframes sweep{
-0%{ transform:rotate(-25deg); }
-100%{ transform:rotate(25deg); }
-}
-
-@keyframes bounce{
-0%{ transform:translateY(0px); }
-100%{ transform:translateY(-10px); }
+.stage-text{
+margin-top:28px;
+font-size:16px;
+color:#eee;
+letter-spacing:0.04em;
 }
