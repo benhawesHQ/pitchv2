@@ -19,14 +19,12 @@ export default async function handler(req, res) {
       messages: [
         {
           role: "system",
-          content: "You return only clean JSON. No commentary."
+          content: "You return ONLY valid JSON. No commentary. No markdown."
         },
         {
           role: "user",
           content: `
-Return ONLY valid JSON.
-
-Format exactly like this:
+Return an array of venues in this exact format:
 
 [
   {
@@ -45,7 +43,14 @@ Vibe: ${vibe || "any"}.
       temperature: 0.7
     });
 
-    const text = completion.choices[0].message.content.trim();
+    let text = completion.choices[0].message.content.trim();
+
+    // 🔥 Remove markdown code fences if they exist
+    if (text.startsWith("```")) {
+      text = text.replace(/```json/g, "")
+                 .replace(/```/g, "")
+                 .trim();
+    }
 
     let venues;
 
@@ -53,7 +58,7 @@ Vibe: ${vibe || "any"}.
       venues = JSON.parse(text);
     } catch (e) {
       return res.status(500).json({
-        error: "Invalid JSON from AI",
+        error: "JSON parse failed",
         raw: text
       });
     }
@@ -61,7 +66,10 @@ Vibe: ${vibe || "any"}.
     return res.status(200).json({ venues });
 
   } catch (error) {
-    return res.status(500).json({ error: "OpenAI failed", details: error.message });
+    return res.status(500).json({
+      error: "OpenAI request failed",
+      details: error.message
+    });
   }
 
 }
