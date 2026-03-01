@@ -1,8 +1,45 @@
 let allVenues = [];
 let currentIndex = 0;
-let seeMoreClicks = 0;
-let pageSize = 5; // now dynamic
 
+let pageSize = 5; // initial from dropdown
+const seeMoreBatchSize = 5;
+const maxSeeMoreClicks = 5;
+let seeMoreClicks = 0;
+
+/* ============================= */
+/* MODERN LOADING MESSAGES */
+/* ============================= */
+
+const loadingMessages = [
+  "Finding venues...",
+  "Analyzing audience fit...",
+  "Scanning neighborhoods...",
+  "Ranking by response likelihood...",
+  "Zeroing in on the best rooms..."
+];
+
+let loadingInterval;
+
+function startLoadingMessages() {
+  let index = 0;
+  const textEl = document.getElementById("loadingText");
+
+  loadingInterval = setInterval(() => {
+    index = (index + 1) % loadingMessages.length;
+
+    textEl.style.opacity = 0;
+
+    setTimeout(() => {
+      textEl.textContent = loadingMessages[index];
+      textEl.style.opacity = 1;
+    }, 200);
+
+  }, 1500);
+}
+
+function stopLoadingMessages() {
+  clearInterval(loadingInterval);
+}
 
 /* ============================= */
 /* SEARCH CLICK */
@@ -12,15 +49,17 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
 
   const overlay = document.getElementById("searchOverlay");
   overlay.classList.add("active");
+  startLoadingMessages();
 
   const city = document.getElementById("city").value;
   const audience = document.getElementById("audience").value;
   const vibe = document.getElementById("vibe").value;
   const count = parseInt(document.getElementById("count").value);
 
-  pageSize = count; // 👈 dropdown now controls pagination
+  pageSize = count;
 
   if (!city || !audience) {
+    stopLoadingMessages();
     overlay.classList.remove("active");
     return;
   }
@@ -49,29 +88,28 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
       v.showBadge = v.score >= thresholdScore;
     });
 
-    // 👇 limit to dropdown selection
-    allVenues = venuesWithScore.slice(0, count);
-
+    allVenues = venuesWithScore;
     currentIndex = 0;
     seeMoreClicks = 0;
 
     const resultsContainer = document.getElementById("results");
     resultsContainer.innerHTML = "";
 
-    // Optional product polish header
     resultsContainer.insertAdjacentHTML(
       "afterbegin",
-      `<h2 style="margin-bottom:40px;">Showing ${allVenues.length} venues in ${city}</h2>`
+      `<h2 style="margin-bottom:40px;">Showing ${Math.min(count, allVenues.length)} venues in ${city}</h2>`
     );
 
     renderNextBatch();
 
+    stopLoadingMessages();
     overlay.classList.remove("active");
 
     document.querySelector(".results-section")
       .scrollIntoView({ behavior: "smooth" });
 
   } catch (err) {
+    stopLoadingMessages();
     overlay.classList.remove("active");
     console.error(err);
   }
@@ -106,13 +144,15 @@ function renderNextBatch() {
 
   const container = document.getElementById("results");
 
-  const nextBatch = allVenues.slice(currentIndex, currentIndex + pageSize);
+  const batchSize = currentIndex === 0 ? pageSize : seeMoreBatchSize;
+
+  const nextBatch = allVenues.slice(currentIndex, currentIndex + batchSize);
 
   nextBatch.forEach(v => {
     container.appendChild(createVenueCard(v));
   });
 
-  currentIndex += pageSize;
+  currentIndex += batchSize;
 
   renderSeeMoreButton();
 }
@@ -129,8 +169,9 @@ function renderSeeMoreButton() {
   if (existingRefine) existingRefine.remove();
 
   const noMoreResults = currentIndex >= allVenues.length;
+  const hitLimit = seeMoreClicks >= maxSeeMoreClicks;
 
-  if (!noMoreResults) {
+  if (!noMoreResults && !hitLimit) {
 
     const btn = document.createElement("button");
     btn.id = "seeMoreBtn";
@@ -140,6 +181,7 @@ function renderSeeMoreButton() {
     btn.innerText = "See More Venues";
 
     btn.addEventListener("click", () => {
+      seeMoreClicks++;
       renderNextBatch();
     });
 
@@ -155,7 +197,7 @@ function renderSeeMoreButton() {
 
     refineBox.innerHTML = `
       <p style="margin-bottom:18px; font-size:16px; color:#ccc;">
-        Looking for something more specific?
+        Want more? Try refining your search.
       </p>
       <button class="primary-btn" style="padding:14px 24px;">
         Refine Your Search
