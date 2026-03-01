@@ -23,7 +23,6 @@ color:#fff;
 -webkit-font-smoothing:antialiased;
 }
 
-/* Remove default blue links */
 a{
 color:var(--orange);
 text-decoration:none;
@@ -108,16 +107,21 @@ margin:0 auto;
 }
 
 .hero-content h1{
-font-size:48px;
+font-size:64px;
 max-width:900px;
-line-height:1.15;
-margin-bottom:18px;
+line-height:1.05;
+margin-bottom:24px;
+font-weight:900;
+letter-spacing:-1px;
 }
 
 .subhead{
-font-size:18px;
-color:#ccc;
-margin-bottom:32px;
+font-size:22px;
+font-weight:600;
+color:#fff;
+opacity:0.9;
+margin-bottom:40px;
+max-width:720px;
 }
 
 /* ============================= */
@@ -151,9 +155,11 @@ gap:8px;
 }
 
 .field label{
-font-size:14px;
-font-weight:600;
-color:#aaa;
+font-size:15px;
+font-weight:700;
+color:#fff;
+letter-spacing:-0.3px;
+text-align:left;
 }
 
 .field input,
@@ -163,7 +169,7 @@ border-radius:14px;
 background:#111;
 border:1px solid rgba(255,255,255,0.12);
 color:#fff;
-font-size:15px;
+font-size:16px;
 }
 
 .field input:focus,
@@ -251,8 +257,6 @@ transform:translateY(-4px);
 box-shadow:0 12px 40px rgba(0,0,0,0.5);
 }
 
-/* IMAGE */
-
 .venue-img-wrap{
 width:200px;
 height:160px;
@@ -266,8 +270,6 @@ height:100%;
 object-fit:cover;
 display:block;
 }
-
-/* CONTENT */
 
 .venue-content{
 display:flex;
@@ -308,8 +310,6 @@ color:#7d7d7d;
 line-height:1.4;
 }
 
-/* BADGE */
-
 .reply-badge{
 background:var(--green);
 color:#000;
@@ -321,16 +321,12 @@ white-space:nowrap;
 align-self:flex-start;
 }
 
-/* DESCRIPTION */
-
 .venue-description{
 font-size:15px;
 line-height:1.6;
 color:#d6d6d6;
 max-width:90%;
 }
-
-/* TAGS */
 
 .venue-tags{
 display:flex;
@@ -347,29 +343,72 @@ font-size:12px;
 color:#aaa;
 }
 
-/* CTA BUTTON */
-
 .venue-btn{
 margin-top:12px;
 display:inline-block;
 width:auto;
 align-self:flex-start;
 white-space:nowrap;
-
 background:var(--orange);
 color:#fff;
-
 padding:8px 16px;
 border-radius:12px;
-
 font-weight:700;
 font-family:'Poppins',sans-serif;
 font-size:14px;
-
 transition:all 0.2s ease;
 }
 
 .venue-btn:hover{
 background:#e63600;
 transform:translateY(-2px);
+}
+
+/* ============================= */
+/* MOBILE OPTIMIZATION */
+/* ============================= */
+
+@media (max-width: 768px){
+
+.nav{
+padding:20px;
+}
+
+.hero-content{
+padding:40px 20px 80px 20px;
+}
+
+.hero-content h1{
+font-size:36px;
+line-height:1.15;
+}
+
+.subhead{
+font-size:18px;
+}
+
+.search-container{
+padding:24px;
+}
+
+.row{
+flex-direction:column;
+gap:18px;
+}
+
+.primary-btn{
+width:100%;
+}
+
+.venue-card{
+grid-template-columns:1fr;
+gap:20px;
+padding:24px;
+}
+
+.venue-img-wrap{
+width:100%;
+height:200px;
+}
+
 }
