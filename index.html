@@ -12,6 +12,7 @@
 <body>
 
 <header class="hero">
+  <header class="hero">
   <div class="hero-overlay">
 
     <div class="nav">
@@ -20,43 +21,60 @@
     </div>
 
     <div class="hero-content">
-      <h1>Find Your Next Stage</h1>
-      <p>Discover the right venue faster so you can play more music.</p>
+
+      <h1>Find Live Music Venues That Fit Your Audience and Sound</h1>
+
+      <p class="subhead">
+        Discover real venues in your city that match your crowd size and vibe.
+      </p>
+
+      <p class="founder-line">
+        Built by an NYC musician who got tired of endlessly Googling venues and guessing capacity.
+      </p>
 
       <div class="search-container">
 
-        <div class="field">
-          <label>City or Neighborhood</label>
-          <input id="city" placeholder="Lower East Side, Brooklyn, Chicago">
+        <div class="row">
+          <div class="field">
+            <label>City or neighborhood</label>
+            <input id="city" placeholder="Lower East Side, Chicago, Sunset District">
+          </div>
+
+          <div class="field">
+            <label>Audience size</label>
+            <input id="audience" placeholder="40">
+          </div>
         </div>
 
-        <div class="field">
-          <label>Audience Size</label>
-          <input id="audience" placeholder="40">
-        </div>
+        <div class="row">
+          <div class="field">
+            <label>Vibe (optional)</label>
+            <input id="vibe" placeholder="Cabaret, rock, indie">
+          </div>
 
-        <div class="field">
-          <label>Vibe (optional)</label>
-          <input id="vibe" placeholder="Cabaret, rock, indie">
-        </div>
-
-        <div class="field">
-          <label>Results</label>
-          <select id="count">
-            <option value="5">5 venues</option>
-            <option value="10" selected>10 venues</option>
-            <option value="15">15 venues</option>
-          </select>
+          <div class="field">
+            <label>Results</label>
+            <select id="count">
+              <option value="5">5 venues</option>
+              <option value="10" selected>10 venues</option>
+              <option value="15">15 venues</option>
+            </select>
+          </div>
         </div>
 
         <button id="searchBtn" class="primary-btn">
-          Generate Venues
+          Find Venues
         </button>
+
+        <div class="trust-line">
+          No spam. No mass emailing. Just real venues you can reach directly.
+        </div>
 
       </div>
     </div>
 
   </div>
+</header>
 </header>
 
 <section class="results-section">
