@@ -226,12 +226,12 @@ animation:lightMove 3.5s ease-in-out infinite alternate;
 }
 
 /* ============================= */
-/* VENUE CARDS (BALANCED) */
+/* VENUE CARDS — TRUE 20 / 80 RATIO */
 /* ============================= */
 
 .venue-card{
 display:flex;
-gap:22px;
+gap:28px;
 background:#0f0f0f;
 border:1px solid rgba(255,255,255,0.05);
 border-radius:24px;
@@ -246,26 +246,26 @@ transform:translateY(-3px);
 box-shadow:0 8px 30px rgba(0,0,0,0.4);
 }
 
-/* Smaller landscape image */
+/* IMAGE = 20% */
 
 .venue-img{
-width:150px;
-height:110px; /* 4:3 ratio */
+width:20%;
+aspect-ratio:4 / 3;
 object-fit:cover;
 border-radius:14px;
 flex-shrink:0;
 }
 
-/* Content */
+/* CONTENT = 80% */
 
 .venue-content{
-flex:1;
+width:80%;
 display:flex;
 flex-direction:column;
 gap:12px;
 }
 
-/* Header */
+/* HEADER */
 
 .venue-title-row{
 display:flex;
@@ -288,7 +288,7 @@ color:#888;
 margin-top:3px;
 }
 
-/* Badge */
+/* BADGE */
 
 .reply-badge{
 background:var(--green);
@@ -300,16 +300,15 @@ font-weight:700;
 white-space:nowrap;
 }
 
-/* Description */
+/* DESCRIPTION */
 
 .venue-description{
 color:#ccc;
 line-height:1.5;
 font-size:14px;
-max-width:95%;
 }
 
-/* Tags */
+/* TAGS */
 
 .venue-tags{
 display:flex;
@@ -327,7 +326,7 @@ font-size:11px;
 color:#aaa;
 }
 
-/* Button */
+/* BUTTON */
 
 .venue-btn{
 margin-top:10px;
