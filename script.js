@@ -1,3 +1,11 @@
+const funFacts = [
+"Did you know? Lady Gaga played tiny NYC clubs before becoming a global star.",
+"Did you know? Ed Sheeran once performed 300 gigs in a single year to build his audience.",
+"Did you know? Taylor Swift opened for other artists in bars at 14.",
+"Did you know? The Beatles were rejected before making it big.",
+"Did you know? Billie Eilish recorded her early hits in her bedroom."
+];
+
 document.getElementById("searchBtn").addEventListener("click", async function () {
 
   const city = document.getElementById("city").value;
@@ -5,16 +13,9 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
   const vibe = document.getElementById("vibe").value;
   const count = document.getElementById("count").value;
 
-  const resultsContainer = document.getElementById("results");
+  if (!city || !audience) return;
 
-  if (!city || !audience) {
-    showError("Please enter a city or neighborhood and estimated audience size.");
-    return;
-  }
-
-  const button = document.getElementById("searchBtn");
-  button.textContent = "Generating...";
-  button.disabled = true;
+  startStageMoment();
 
   try {
 
@@ -26,95 +27,58 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
 
     const data = await response.json();
 
-    if (!data.venues) {
-      showError("Something went wrong generating venues.");
-      console.error(data);
-      return;
-    }
+    setTimeout(() => {
+      stopStageMoment();
+      displayResults(data.venues || []);
+    }, 2200);
 
-    displayResults(data.venues);
-
-  } catch (error) {
-    showError("Server error. Try again.");
-    console.error(error);
+  } catch {
+    stopStageMoment();
   }
-
-  button.textContent = "Generate Venues";
-  button.disabled = false;
 
 });
 
+function startStageMoment(){
+  const overlay = document.getElementById("stage-overlay");
+  const fact = document.getElementById("funFact");
+  overlay.classList.add("active");
+  fact.textContent = funFacts[Math.floor(Math.random() * funFacts.length)];
+}
 
-function displayResults(venues) {
+function stopStageMoment(){
+  document.getElementById("stage-overlay").classList.remove("active");
+}
 
+function displayResults(venues){
   const container = document.getElementById("results");
   container.innerHTML = "";
 
-  venues.forEach(venue => {
-
-    const score = venue.replyScore || 70;
-
-    let badgeClass = "reply-medium";
-    let badgeText = "Likely to Reply";
-
-    if (score >= 80) {
-      badgeClass = "reply-high";
-      badgeText = "Very Likely";
-    } else if (score < 60) {
-      badgeClass = "reply-low";
-      badgeText = "Harder to Reach";
-    }
-
+  venues.forEach(v => {
     const card = document.createElement("div");
     card.className = "venue-card-glass";
 
     card.innerHTML = `
       <div class="venue-image-wrapper">
-        <img src="https://source.unsplash.com/800x600/?live,music,venue" />
+        <img src="${v.image || 'https://picsum.photos/800/600'}" />
       </div>
-
       <div class="venue-content">
-
         <div class="venue-top">
-
           <div>
-            <h3>${venue.name}</h3>
+            <h3>${v.name}</h3>
             <div class="venue-location">
-              ${venue.neighborhood || ""}${venue.neighborhood ? "," : ""} ${venue.city || ""}
+              ${v.neighborhood || ""}${v.neighborhood ? "," : ""} ${v.city || ""}
             </div>
           </div>
-
-          <div class="reply-badge ${badgeClass}">
-            ${badgeText}
-          </div>
-
+          <div class="reply-badge">Likely to Reply</div>
         </div>
-
-        <p class="venue-description">
-          ${venue.description}
-        </p>
-
-        <div class="venue-buttons">
-          <a href="${venue.googleMapsUrl || '#'}" target="_blank" class="btn-orange">
+        <p class="venue-description">${v.description}</p>
+        <div style="margin-top:20px;">
+          <a href="${v.googleMapsUrl || '#'}" target="_blank" class="btn-orange">
             See Venue
           </a>
         </div>
-
       </div>
     `;
-
     container.appendChild(card);
-
   });
-
-}
-
-
-function showError(message) {
-  const container = document.getElementById("results");
-  container.innerHTML = `
-    <div class="error-box">
-      ${message}
-    </div>
-  `;
 }
