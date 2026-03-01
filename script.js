@@ -31,10 +31,6 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
 
     const data = await response.json();
 
-    /* ============================= */
-    /* SCORE + RANKING */
-    /* ============================= */
-
     const venuesWithScore = (data.venues || []).map(v => ({
       ...v,
       score: calculateScore(v)
@@ -169,10 +165,7 @@ function getVenueEmoji(v) {
     }
   }
 
-  // Smart fallback logic
-  const wordCount = name.split(" ").length;
-
-  if (wordCount >= 3) return "✨";
+  if (name.split(" ").length >= 3) return "✨";
   if (name.length > 15) return "🌙";
   if (name.length < 8) return "⭐";
 
@@ -188,12 +181,10 @@ function createVenueCard(v) {
 
   const emoji = getVenueEmoji(v);
 
-  // FIXED Google Maps URL logic
-  const mapsUrl =
-    v.googleMapsUrl ||
-    v.url ||
-    v.website ||
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.name + " " + (v.formatted_address || ""))}`;
+  // FORCE clean Google Maps search URL (no goo.gl, no Firebase)
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    (v.name || "") + " " + (v.formatted_address || "")
+  )}`;
 
   const card = document.createElement("div");
   card.className = "venue-card";
