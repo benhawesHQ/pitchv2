@@ -18,6 +18,7 @@
 
     <div class="top-bar">
       <div class="logo">Pitch<span>.</span></div>
+      <a href="#" class="guide-btn">Download Guide</a>
     </div>
 
     <div class="hero-content">
@@ -28,18 +29,18 @@
     <div class="generator-bar">
 
       <div class="generator-field">
-        <label>📍 City</label>
-        <input id="city" placeholder="Brooklyn, Portland, Berlin">
+        <label>📍 City or Neighborhood</label>
+        <input id="city" placeholder="Lower East Side, Brooklyn, Chicago">
       </div>
 
       <div class="generator-field">
         <label>👥 Audience Size</label>
-        <input id="audience" placeholder="25, 40, 80">
+        <input id="audience" placeholder="40">
       </div>
 
       <div class="generator-field">
         <label>🎶 Vibe (optional)</label>
-        <input id="vibe" placeholder="Rock, jazz, cabaret, comedy">
+        <input id="vibe" placeholder="Cabaret, rock, indie">
       </div>
 
       <div class="generator-field small">
@@ -63,6 +64,15 @@
 <section class="results-wrapper">
   <div id="results" class="results-grid"></div>
 </section>
+
+<!-- STAGE OVERLAY -->
+<div id="stage-overlay" class="stage-overlay">
+  <div class="stage-content">
+    <div class="spotlights"></div>
+    <div class="floating-emojis">🎸 🎶 🎵 🎤 🎼</div>
+    <div class="fun-fact" id="funFact"></div>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
