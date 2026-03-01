@@ -1,28 +1,240 @@
+:root{
+--orange:#FF3C00;
+--black:#000;
+--white:#fff;
+--border:rgba(255,255,255,0.08);
+--green:#1DB954;
+}
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:'Open Sans',sans-serif;
+background:#000;
+color:#fff;
+-webkit-font-smoothing:antialiased;
+}
+
+/* kill default blue links */
+a{
+color:var(--orange);
+text-decoration:none;
+}
+
+a:hover{
+opacity:0.85;
+}
+
+h1,h2,h3,h4{
+font-family:'Poppins',sans-serif;
+}
+
 /* ============================= */
-/* VENUE CARDS — EVENTBRITE INSPIRED */
+/* HERO */
+/* ============================= */
+
+.hero{
+position:relative;
+min-height:75vh;
+background-image:url('hero.jpg');
+background-size:cover;
+background-position:center;
+display:flex;
+}
+
+.hero-overlay{
+background:linear-gradient(
+to bottom,
+rgba(0,0,0,0.65),
+rgba(0,0,0,0.9)
+);
+width:100%;
+display:flex;
+flex-direction:column;
+position:relative;
+}
+
+/* NAV */
+
+.nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:24px 50px;
+}
+
+.logo{
+font-weight:900;
+font-size:36px;
+letter-spacing:-0.02em;
+}
+
+.logo span{
+color:var(--orange);
+}
+
+.guide-btn{
+background:var(--orange);
+color:#fff;
+padding:12px 20px;
+border-radius:14px;
+font-family:'Poppins',sans-serif;
+font-size:14px;
+font-weight:600;
+}
+
+/* HERO CONTENT */
+
+.hero-content{
+display:flex;
+flex-direction:column;
+align-items:center;
+text-align:center;
+padding:60px 20px 100px 20px;
+max-width:1100px;
+margin:0 auto;
+}
+
+.hero-content h1{
+font-size:48px;
+max-width:900px;
+line-height:1.15;
+margin-bottom:18px;
+}
+
+.subhead{
+font-size:18px;
+color:#ccc;
+margin-bottom:32px;
+}
+
+/* ============================= */
+/* SEARCH BOX */
+/* ============================= */
+
+.search-container{
+background:rgba(20,20,20,0.9);
+border:1px solid rgba(255,255,255,0.08);
+padding:40px;
+border-radius:24px;
+display:flex;
+flex-direction:column;
+gap:24px;
+width:100%;
+max-width:850px;
+margin-top:10px;
+}
+
+.row{
+display:flex;
+gap:24px;
+flex-wrap:wrap;
+}
+
+.field{
+flex:1;
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.field label{
+font-size:14px;
+font-weight:600;
+color:#aaa;
+}
+
+.field input,
+.field select{
+padding:16px;
+border-radius:14px;
+background:#111;
+border:1px solid rgba(255,255,255,0.12);
+color:#fff;
+font-size:15px;
+}
+
+.field input:focus,
+.field select:focus{
+outline:none;
+border-color:var(--orange);
+}
+
+.primary-btn{
+padding:18px;
+border-radius:18px;
+background:var(--orange);
+border:none;
+font-family:'Poppins',sans-serif;
+font-size:17px;
+font-weight:700;
+cursor:pointer;
+color:#fff;
+transition:all 0.2s ease;
+}
+
+.primary-btn:hover{
+background:#e63600;
+transform:translateY(-2px);
+}
+
+.trust-line{
+font-size:13px;
+color:#777;
+text-align:center;
+margin-top:6px;
+}
+
+/* ============================= */
+/* RESULTS */
 /* ============================= */
 
 .results-section{
 padding:100px 24px;
-max-width:1000px; /* slightly narrower = more premium */
+max-width:1000px;
 margin:0 auto;
 }
 
-/* Card container */
+/* ============================= */
+/* SEARCH OVERLAY */
+/* ============================= */
+
+.search-overlay{
+position:absolute;
+inset:0;
+background:rgba(0,0,0,0.9);
+display:flex;
+align-items:center;
+justify-content:center;
+opacity:0;
+pointer-events:none;
+transition:opacity 0.25s ease;
+z-index:20;
+}
+
+.search-overlay.active{
+opacity:1;
+pointer-events:auto;
+}
+
+/* ============================= */
+/* VENUE CARDS */
+/* ============================= */
 
 .venue-card{
 display:grid;
-grid-template-columns: 200px 1fr; /* fixed image column = stability */
+grid-template-columns:200px 1fr;
 gap:36px;
-
 background:#0c0c0c;
 border:1px solid rgba(255,255,255,0.06);
 border-radius:28px;
-
 padding:32px;
-margin-bottom:48px; /* MORE breathing room */
-
-transition:transform 0.18s ease, box-shadow 0.18s ease;
+margin-bottom:48px;
+transition:all 0.18s ease;
 align-items:center;
 }
 
@@ -31,16 +243,13 @@ transform:translateY(-4px);
 box-shadow:0 12px 40px rgba(0,0,0,0.5);
 }
 
-/* ============================= */
 /* IMAGE */
-/* ============================= */
 
 .venue-img-wrap{
 width:200px;
-height:160px; /* Taller than before */
+height:160px;
 border-radius:20px;
 overflow:hidden;
-flex-shrink:0;
 }
 
 .venue-img-wrap img{
@@ -50,17 +259,13 @@ object-fit:cover;
 display:block;
 }
 
-/* ============================= */
 /* CONTENT */
-/* ============================= */
 
 .venue-content{
 display:flex;
 flex-direction:column;
-gap:14px;
+gap:16px;
 }
-
-/* Title row */
 
 .venue-title-row{
 display:flex;
@@ -72,17 +277,14 @@ gap:20px;
 .venue-title{
 font-size:24px;
 font-weight:800;
-letter-spacing:-0.01em;
 line-height:1.1;
+color:#fff;
 }
 
 .venue-location{
 font-size:14px;
 color:#9a9a9a;
-font-weight:500;
 }
-
-/* Badge */
 
 .reply-badge{
 background:var(--green);
@@ -92,7 +294,6 @@ border-radius:999px;
 font-size:12px;
 font-weight:700;
 white-space:nowrap;
-height:fit-content;
 }
 
 /* Description */
@@ -101,7 +302,7 @@ height:fit-content;
 font-size:15px;
 line-height:1.6;
 color:#d6d6d6;
-max-width:95%;
+max-width:90%;
 }
 
 /* Tags */
@@ -110,7 +311,6 @@ max-width:95%;
 display:flex;
 flex-wrap:wrap;
 gap:10px;
-margin-top:6px;
 }
 
 .venue-tag{
@@ -125,22 +325,19 @@ color:#aaa;
 /* CTA */
 
 .venue-btn{
-margin-top:12px;
-align-self:flex-start;
-
-background:transparent;
-color:var(--orange);
-
+margin-top:10px;
+display:inline-block;
+background:var(--orange);
+color:#fff;
+padding:10px 18px;
+border-radius:14px;
 font-weight:700;
 font-family:'Poppins',sans-serif;
 font-size:14px;
-
-text-decoration:none;
-border-bottom:2px solid transparent;
-
 transition:all 0.2s ease;
 }
 
 .venue-btn:hover{
-border-color:var(--orange);
+background:#e63600;
+transform:translateY(-2px);
 }
