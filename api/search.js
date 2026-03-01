@@ -1,5 +1,51 @@
 import OpenAI from "openai";
 
+/* ============================= */
+/* AUDIENCE SIZE → QUERY LOGIC  */
+/* ============================= */
+
+function buildQueries(city, audience) {
+
+  const size = Number(audience);
+
+  if (size <= 25) {
+    return [
+      `acoustic cafe live music in ${city}`,
+      `wine bar with live music in ${city}`,
+      `intimate lounge with stage in ${city}`,
+      `small back room bar in ${city}`
+    ];
+  }
+
+  if (size <= 60) {
+    return [
+      `bar with live music in ${city}`,
+      `small concert venue in ${city}`,
+      `listening room in ${city}`,
+      `comedy club with stage in ${city}`
+    ];
+  }
+
+  if (size <= 120) {
+    return [
+      `live music venue in ${city}`,
+      `mid size concert venue in ${city}`,
+      `music theater in ${city}`,
+      `performance space with stage in ${city}`
+    ];
+  }
+
+  return [
+    `concert venue in ${city}`,
+    `music hall in ${city}`,
+    `event venue with stage in ${city}`
+  ];
+}
+
+/* ============================= */
+/* MAIN HANDLER */
+/* ============================= */
+
 export default async function handler(req, res) {
 
   if (req.method !== "POST") {
@@ -12,59 +58,38 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing city or audience size" });
   }
 
-  /* ============================= */
-  /* AUDIENCE-BASED SEARCH LOGIC */
-  /* ============================= */
-
-  function buildQueries(city, audience) {
-    const size = Number(audience);
-
-    if (size <= 20) {
-      return [
-        `acoustic cafe in ${city}`,
-        `wine bar live music in ${city}`,
-        `intimate lounge live music in ${city}`,
-        `small back room bar in ${city}`
-      ];
-    }
-
-    if (size <= 50) {
-      return [
-        `bar with live music in ${city}`,
-        `small music venue in ${city}`,
-        `listening room in ${city}`,
-        `comedy club with stage in ${city}`
-      ];
-    }
-
-    if (size <= 120) {
-      return [
-        `live music venue in ${city}`,
-        `indie concert venue in ${city}`,
-        `music theater in ${city}`,
-        `performance space in ${city}`
-      ];
-    }
-
-    return [
-      `concert venue in ${city}`,
-      `music hall in ${city}`,
-      `event venue with stage in ${city}`
-    ];
-  }
-
   try {
 
+    /* ============================= */
+    /* STEP 1 — GEOCODE CITY        */
+    /* ============================= */
+
+    const geoRes = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(city)}&key=${process.env.GOOGLE_API_KEY}`
+    );
+
+    const geoData = await geoRes.json();
+
+    if (!geoData.results || !geoData.results.length) {
+      return res.status(400).json({ error: "City not found" });
+    }
+
+    const location = geoData.results[0].geometry.location;
+    const lat = location.lat;
+    const lng = location.lng;
+
+    /* ============================= */
+    /* STEP 2 — MULTIPLE SEARCHES   */
+    /* ============================= */
+
     const queries = buildQueries(city, audience);
+
     let allResults = [];
 
-    /* ============================= */
-    /* MULTIPLE GOOGLE SEARCHES */
-    /* ============================= */
-
     for (const q of queries) {
+
       const googleRes = await fetch(
-        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(q)}&key=${process.env.GOOGLE_API_KEY}`
+        `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(q)}&location=${lat},${lng}&radius=30000&key=${process.env.GOOGLE_API_KEY}`
       );
 
       const googleData = await googleRes.json();
@@ -75,7 +100,7 @@ export default async function handler(req, res) {
     }
 
     /* ============================= */
-    /* DEDUPE BY place_id */
+    /* STEP 3 — DEDUPE              */
     /* ============================= */
 
     const uniqueMap = new Map();
@@ -89,7 +114,7 @@ export default async function handler(req, res) {
     const uniqueResults = Array.from(uniqueMap.values()).slice(0, count);
 
     /* ============================= */
-    /* ENRICH WITH DETAILS */
+    /* STEP 4 — ENRICH              */
     /* ============================= */
 
     const enrichedVenues = await Promise.all(
@@ -115,11 +140,11 @@ export default async function handler(req, res) {
 
           return {
             name: place.name,
-            neighborhood: place.formatted_address || "",
+            neighborhood: place.vicinity || "",
             formatted_address: details.formatted_address || "",
             description: vibe
-              ? `Good fit for ${vibe} shows around ${audience} guests.`
-              : `A strong option for live performances around ${audience} guests.`,
+              ? `Strong fit for ${vibe} shows around ${audience} guests.`
+              : `Potential venue for performances around ${audience} guests.`,
             googleMapsUrl: `https://www.google.com/maps/place/?q=place_id:${place.place_id}`,
             website: details.website || null,
             rating: details.rating || null,
