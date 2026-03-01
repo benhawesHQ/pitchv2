@@ -234,7 +234,7 @@ animation:lightMove 3.5s ease-in-out infinite alternate;
 }
 
 /* ============================= */
-/* VENUE CARDS — FINAL GRID */
+/* VENUE CARDS — FIXED CORRECTLY */
 /* ============================= */
 
 .venue-card{
@@ -255,11 +255,22 @@ transform:translateY(-3px);
 box-shadow:0 8px 30px rgba(0,0,0,0.4);
 }
 
-.venue-img{
+/* THIS controls the wrapper you actually have */
+
+.venue-img-wrap{
 width:100%;
 aspect-ratio:4 / 3;
-object-fit:cover;
+overflow:hidden;
 border-radius:14px;
+}
+
+/* THIS controls the image inside */
+
+.venue-img-wrap img{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
 }
 
 /* Content */
