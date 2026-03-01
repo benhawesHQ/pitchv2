@@ -49,6 +49,7 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
 
     allVenues = venuesWithScore;
     currentIndex = 0;
+    seeMoreClicks = 0;
 
     document.getElementById("results").innerHTML = "";
 
@@ -113,18 +114,52 @@ function renderSeeMoreButton() {
   let existingBtn = document.getElementById("seeMoreBtn");
   if (existingBtn) existingBtn.remove();
 
-  if (currentIndex >= allVenues.length) return;
+  let existingRefine = document.getElementById("refineBox");
+  if (existingRefine) existingRefine.remove();
 
-  const btn = document.createElement("button");
-  btn.id = "seeMoreBtn";
-  btn.className = "primary-btn";
-  btn.style.margin = "40px auto 0 auto";
-  btn.style.display = "block";
-  btn.innerText = "See More Venues";
+  const noMoreResults = currentIndex >= allVenues.length;
+  const hitLimit = seeMoreClicks >= maxSeeMoreClicks;
 
-  btn.addEventListener("click", renderNextBatch);
+  if (!noMoreResults && !hitLimit) {
 
-  container.appendChild(btn);
+    const btn = document.createElement("button");
+    btn.id = "seeMoreBtn";
+    btn.className = "primary-btn";
+    btn.style.margin = "40px auto 0 auto";
+    btn.style.display = "block";
+    btn.innerText = "See More Venues";
+
+    btn.addEventListener("click", () => {
+      seeMoreClicks++;
+      renderNextBatch();
+    });
+
+    container.appendChild(btn);
+
+  } else {
+
+    const refineBox = document.createElement("div");
+    refineBox.id = "refineBox";
+    refineBox.style.textAlign = "center";
+    refineBox.style.margin = "60px auto";
+    refineBox.style.opacity = "0.9";
+
+    refineBox.innerHTML = `
+      <p style="margin-bottom:18px; font-size:16px; color:#ccc;">
+        Looking for something more specific?
+      </p>
+      <button class="primary-btn" style="padding:14px 24px;">
+        Refine Your Search
+      </button>
+    `;
+
+    refineBox.querySelector("button").addEventListener("click", () => {
+      document.querySelector(".hero")
+        .scrollIntoView({ behavior: "smooth" });
+    });
+
+    container.appendChild(refineBox);
+  }
 }
 
 
@@ -183,7 +218,6 @@ function createVenueCard(v) {
 
   const emoji = getVenueEmoji(v);
 
-  // FORCE clean Google Maps search URL (no goo.gl, no Firebase)
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     (v.name || "") + " " + (v.formatted_address || "")
   )}`;
@@ -211,10 +245,6 @@ function createVenueCard(v) {
       <p class="venue-description">
         ${v.description || ""}
       </p>
-
-      <div class="venue-tags">
-        ${(v.tags || []).map(tag => `<span class="venue-tag">${tag}</span>`).join("")}
-      </div>
 
       <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="venue-btn">
         View Venue
