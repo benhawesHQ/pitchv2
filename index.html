@@ -6,107 +6,63 @@
 <title>Pitch | Find Your Next Stage</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
 <header class="hero">
-  <div class="nav">
-    <div class="logo">Pitch<span>.</span></div>
-    <a href="#" class="guide-btn">Download Guide</a>
-  </div>
+  <div class="hero-overlay">
 
-  <div class="hero-center">
-    <h1>Find Your Next Stage</h1>
-    <p>Discover the right venue faster so you can play more music.</p>
-
-    <div class="generator">
-
-      <div class="field">
-        <label>City or Neighborhood</label>
-        <input id="city" placeholder="Lower East Side, Brooklyn, Chicago">
-      </div>
-
-      <div class="field">
-        <label>Audience Size</label>
-        <input id="audience" placeholder="40">
-      </div>
-
-      <div class="field">
-        <label>Vibe (optional)</label>
-        <input id="vibe" placeholder="Cabaret, rock, indie">
-      </div>
-
-      <div class="field">
-        <label>Results</label>
-        <select id="count">
-          <option value="5">5 venues</option>
-          <option value="10" selected>10 venues</option>
-          <option value="15">15 venues</option>
-        </select>
-      </div>
-
-      <button id="searchBtn" class="primary-btn">
-        Generate Venues
-      </button>
-
+    <div class="nav">
+      <div class="logo">Pitch<span>.</span></div>
+      <a href="#" class="guide-btn">Download Guide</a>
     </div>
+
+    <div class="hero-content">
+      <h1>Find Your Next Stage</h1>
+      <p>Discover the right venue faster so you can play more music.</p>
+
+      <div class="search-container">
+
+        <div class="field">
+          <label>City or Neighborhood</label>
+          <input id="city" placeholder="Lower East Side, Brooklyn, Chicago">
+        </div>
+
+        <div class="field">
+          <label>Audience Size</label>
+          <input id="audience" placeholder="40">
+        </div>
+
+        <div class="field">
+          <label>Vibe (optional)</label>
+          <input id="vibe" placeholder="Cabaret, rock, indie">
+        </div>
+
+        <div class="field">
+          <label>Results</label>
+          <select id="count">
+            <option value="5">5 venues</option>
+            <option value="10" selected>10 venues</option>
+            <option value="15">15 venues</option>
+          </select>
+        </div>
+
+        <button id="searchBtn" class="primary-btn">
+          Generate Venues
+        </button>
+
+      </div>
+    </div>
+
   </div>
 </header>
 
-<section class="founder">
-  <div class="founder-inner">
-    <img src="ben-headshot.jpg" class="founder-img" alt="Ben Hawes">
-    <div>
-      <h3>Built by Ben Hawes</h3>
-      <p>
-        NYC musician and performer who got tired of endlessly Googling venues.
-        Pitch surfaces real places that match your audience size and vibe so you can focus on performing.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section class="how">
-  <h2>How It Works</h2>
-  <div class="how-grid">
-    <div>
-      <h4>1. Enter your city and audience size</h4>
-      <p>Neighborhoods work great.</p>
-    </div>
-    <div>
-      <h4>2. We analyze venue fit and reputation</h4>
-      <p>Powered by Google Places and real venue presence data.</p>
-    </div>
-    <div>
-      <h4>3. Reach out with confidence</h4>
-      <p>See context before clicking through.</p>
-    </div>
-  </div>
-</section>
-
-<section class="cred">
-  Data powered by Google Places and venue reputation analysis. No paid placements.
-</section>
-
-<section class="results">
+<section class="results-section">
   <div id="results"></div>
 </section>
 
-<footer class="footer">
-  <div class="footer-inner">
-    <div>
-      <h3>Pitch.</h3>
-      <p>Built in New York</p>
-    </div>
-    <div class="footer-links">
-      <a href="#">Contact</a>
-      <a href="#">Privacy</a>
-    </div>
-  </div>
-</footer>
-
-<script src="/script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
