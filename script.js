@@ -5,8 +5,10 @@ document.getElementById("searchBtn").addEventListener("click", async function() 
   const vibe = document.getElementById("vibe").value;
   const count = document.getElementById("count").value;
 
+  const resultsContainer = document.getElementById("results");
+
   if (!city || !audience) {
-    alert("Please enter a city and audience size.");
+    showError("Please enter a city and audience size.");
     return;
   }
 
@@ -25,16 +27,16 @@ document.getElementById("searchBtn").addEventListener("click", async function() 
     const data = await response.json();
 
     if (!data.venues) {
+      showError("Something went wrong generating venues.");
       console.error(data);
-      alert("Error parsing venues.");
       return;
     }
 
     displayResults(data.venues);
 
   } catch (error) {
-    console.error("Error:", error);
-    alert("Something went wrong.");
+    showError("Server error. Try again.");
+    console.error(error);
   }
 
   button.textContent = "Generate Venues";
@@ -62,5 +64,17 @@ function displayResults(venues) {
     container.appendChild(card);
 
   });
+
+}
+
+
+function showError(message) {
+
+  const container = document.getElementById("results");
+  container.innerHTML = `
+    <div class="error-box">
+      ${message}
+    </div>
+  `;
 
 }
