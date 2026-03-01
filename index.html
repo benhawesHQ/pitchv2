@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Pitch</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<title>Pitch | Find Your Next Stage</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
-<section class="hero">
+<div class="hero">
 
   <div class="top-bar">
     <div class="logo">Pitch<span>.</span></div>
@@ -18,39 +20,54 @@
 
   <div class="hero-content">
     <h1>Find Your Next Stage</h1>
-    <p>
-      Pitch curates venues based on your audience size and city so you can
-      reach out faster and book more shows.
-    </p>
+    <p>Discover the right venue faster so you can play more music.</p>
 
     <div class="search-panel">
 
       <div class="field">
         <label>City</label>
-        <input id="cityInput" placeholder="Brooklyn, Nashville, etc">
+        <input id="cityInput" placeholder="Brooklyn, Portland, Berlin">
       </div>
 
       <div class="field">
-        <label>Expected Audience Size</label>
-        <input id="audienceInput" type="number" placeholder="40">
+        <label>Expected Audience</label>
+        <input id="audienceInput" placeholder="25, 40, 80">
       </div>
 
       <div class="field">
-        <label>Desired Vibe</label>
-        <input id="vibeInput" placeholder="Cabaret, rock, jazz, intimate, etc">
+        <label>Anything else feel important?</label>
+        <input id="vibeInput" placeholder="Intimate, standing room, indie crowd">
       </div>
 
-      <button class="search-btn" onclick="searchVenues()">
-        Search Venues
-      </button>
+      <div class="field">
+        <label>Number of Suggestions</label>
+        <select id="countSelect">
+          <option value="5">5 venues</option>
+          <option value="10" selected>10 venues</option>
+          <option value="15">15 venues</option>
+        </select>
+      </div>
+
+      <div class="tag-row">
+        <button class="tag-filter" data-tag="rock">🎸 Rock</button>
+        <button class="tag-filter" data-tag="jazz">🎷 Jazz</button>
+        <button class="tag-filter" data-tag="cabaret">🎭 Cabaret</button>
+        <button class="tag-filter" data-tag="lgbt">🏳️‍🌈 LGBTQ+</button>
+        <button class="tag-filter" data-tag="black">✊🏾 Black-Owned</button>
+      </div>
+
+      <button id="searchBtn" class="search-btn">Search Venues</button>
 
     </div>
   </div>
-</section>
+</div>
 
-<section class="results-wrapper">
+<div class="results-wrapper" id="resultsWrapper">
   <div id="results" class="results-grid"></div>
-</section>
+  <button id="loadMoreBtn" class="load-more-btn" style="display:none;">
+    See a few more
+  </button>
+</div>
 
 <div id="loadingOverlay" class="loading-overlay">
   <div class="loading-text">Finding stages...</div>
