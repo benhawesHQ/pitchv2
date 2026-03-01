@@ -234,20 +234,20 @@ animation:lightMove 3.5s ease-in-out infinite alternate;
 }
 
 /* ============================= */
-/* VENUE CARDS — FIXED CORRECTLY */
+/* VENUE CARDS — POLISHED */
 /* ============================= */
 
 .venue-card{
 display:grid;
-grid-template-columns: 18% 1fr;
-gap:28px;
+grid-template-columns: 20% 1fr;
+gap:32px;
 background:#0f0f0f;
 border:1px solid rgba(255,255,255,0.05);
 border-radius:24px;
 padding:24px;
 margin-bottom:32px;
 transition:transform 0.2s ease, box-shadow 0.2s ease;
-align-items:start;
+align-items:center; /* THIS centers vertically */
 }
 
 .venue-card:hover{
@@ -255,99 +255,21 @@ transform:translateY(-3px);
 box-shadow:0 8px 30px rgba(0,0,0,0.4);
 }
 
-/* THIS controls the wrapper you actually have */
+/* Image wrapper */
 
 .venue-img-wrap{
 width:100%;
-aspect-ratio:4 / 3;
+aspect-ratio:5 / 4; /* slightly taller */
 overflow:hidden;
-border-radius:14px;
+border-radius:16px;
+display:flex;
+align-items:center;
+justify-content:center;
 }
-
-/* THIS controls the image inside */
 
 .venue-img-wrap img{
 width:100%;
 height:100%;
 object-fit:cover;
 display:block;
-}
-
-/* Content */
-
-.venue-content{
-display:flex;
-flex-direction:column;
-gap:12px;
-}
-
-.venue-title-row{
-display:flex;
-justify-content:space-between;
-align-items:flex-start;
-gap:14px;
-}
-
-.venue-title{
-font-size:20px;
-font-weight:800;
-display:flex;
-align-items:center;
-gap:8px;
-}
-
-.venue-location{
-font-size:13px;
-color:#888;
-margin-top:3px;
-}
-
-.reply-badge{
-background:var(--green);
-color:#000;
-padding:5px 10px;
-border-radius:999px;
-font-size:11px;
-font-weight:700;
-white-space:nowrap;
-}
-
-.venue-description{
-color:#ccc;
-line-height:1.5;
-font-size:14px;
-}
-
-.venue-tags{
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-margin-top:4px;
-}
-
-.venue-tag{
-background:#181818;
-border:1px solid rgba(255,255,255,0.06);
-padding:5px 10px;
-border-radius:999px;
-font-size:11px;
-color:#aaa;
-}
-
-.venue-btn{
-margin-top:10px;
-align-self:flex-start;
-background:var(--orange);
-color:#fff;
-padding:8px 14px;
-border-radius:10px;
-text-decoration:none;
-font-weight:700;
-font-family:'Poppins',sans-serif;
-font-size:13px;
-transition:background 0.2s ease;
-}
-
-.venue-btn:hover{
-background:#e63600;
 }
