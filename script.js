@@ -1,6 +1,8 @@
 let allVenues = [];
 let currentIndex = 0;
+let seeMoreClicks = 0;
 const pageSize = 5;
+const maxSeeMoreClicks = 5;
 
 /* ============================= */
 /* SEARCH CLICK */
