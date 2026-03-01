@@ -6,9 +6,13 @@ document.getElementById("searchBtn").addEventListener("click", async function() 
   const count = document.getElementById("count").value;
 
   if (!city || !audience) {
-    alert("Please enter at least a city and audience size.");
+    alert("Please enter a city and audience size.");
     return;
   }
+
+  const button = document.getElementById("searchBtn");
+  button.textContent = "Generating...";
+  button.disabled = true;
 
   try {
 
@@ -18,39 +22,45 @@ document.getElementById("searchBtn").addEventListener("click", async function() 
       body: JSON.stringify({ city, audience, vibe, count })
     });
 
-    if (!response.ok) {
-      throw new Error("Server error");
-    }
-
     const data = await response.json();
 
-    displayResults(data.result);
+    if (!data.venues) {
+      console.error(data);
+      alert("Error parsing venues.");
+      return;
+    }
+
+    displayResults(data.venues);
 
   } catch (error) {
     console.error("Error:", error);
-    alert("Something went wrong. Check console.");
+    alert("Something went wrong.");
   }
+
+  button.textContent = "Generate Venues";
+  button.disabled = false;
 
 });
 
 
-function displayResults(text) {
+function displayResults(venues) {
 
   const container = document.getElementById("results");
   container.innerHTML = "";
 
-  if (!text) {
-    container.innerHTML = "<p>No results returned.</p>";
-    return;
-  }
+  venues.forEach(venue => {
 
-  const card = document.createElement("div");
-  card.className = "result-card";
-  card.innerHTML = `
-    <h3>🎸 Suggested Venues</h3>
-    <pre style="white-space: pre-wrap; font-family: inherit;">${text}</pre>
-  `;
+    const card = document.createElement("div");
+    card.className = "result-card";
 
-  container.appendChild(card);
+    card.innerHTML = `
+      <h3>🎸 ${venue.name}</h3>
+      <p><strong>Capacity:</strong> ${venue.capacity}</p>
+      <p>${venue.description}</p>
+    `;
+
+    container.appendChild(card);
+
+  });
 
 }
