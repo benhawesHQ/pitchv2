@@ -1,9 +1,8 @@
 const funFacts = [
-"Did you know? Lady Gaga played tiny NYC clubs before becoming a global star.",
-"Did you know? Ed Sheeran once performed 300 gigs in a single year to build his audience.",
+"Did you know? Lady Gaga built her early fanbase in small NYC venues.",
+"Did you know? Ed Sheeran played over 300 small gigs before breaking out.",
 "Did you know? Taylor Swift opened for other artists in bars at 14.",
-"Did you know? The Beatles were rejected before making it big.",
-"Did you know? Billie Eilish recorded her early hits in her bedroom."
+"Did you know? Billie Eilish recorded her early songs in her bedroom."
 ];
 
 document.getElementById("searchBtn").addEventListener("click", async function () {
@@ -30,7 +29,7 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
     setTimeout(() => {
       stopStageMoment();
       displayResults(data.venues || []);
-    }, 2200);
+    }, 1800);
 
   } catch {
     stopStageMoment();
@@ -54,26 +53,36 @@ function displayResults(venues){
   container.innerHTML = "";
 
   venues.forEach(v => {
+
+    let pride = "";
+    const text = (v.description || "").toLowerCase();
+
+    if(text.includes("queer") || text.includes("gay") || text.includes("lgbt")){
+      pride = " 🏳️‍🌈";
+    }
+
     const card = document.createElement("div");
     card.className = "venue-card-glass";
 
     card.innerHTML = `
       <div class="venue-image-wrapper">
-        <img src="${v.image || 'https://picsum.photos/800/600'}" />
+        <img src="${v.image}" />
       </div>
       <div class="venue-content">
         <div class="venue-top">
           <div>
-            <h3>${v.name}</h3>
+            <h3>${v.name}${pride}</h3>
             <div class="venue-location">
               ${v.neighborhood || ""}${v.neighborhood ? "," : ""} ${v.city || ""}
             </div>
           </div>
-          <div class="reply-badge">Likely to Reply</div>
+          <div class="reply-badge">
+            Likely to Reply
+          </div>
         </div>
         <p class="venue-description">${v.description}</p>
-        <div style="margin-top:20px;">
-          <a href="${v.googleMapsUrl || '#'}" target="_blank" class="btn-orange">
+        <div>
+          <a href="${v.googleMapsUrl}" target="_blank" class="btn-orange">
             See Venue
           </a>
         </div>
