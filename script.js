@@ -1,4 +1,4 @@
-document.getElementById("searchBtn").addEventListener("click", async function() {
+document.getElementById("searchBtn").addEventListener("click", async function () {
 
   const city = document.getElementById("city").value;
   const audience = document.getElementById("audience").value;
@@ -8,7 +8,7 @@ document.getElementById("searchBtn").addEventListener("click", async function() 
   const resultsContainer = document.getElementById("results");
 
   if (!city || !audience) {
-    showError("Please enter a city and audience size.");
+    showError("Please enter a city or neighborhood and estimated audience size.");
     return;
   }
 
@@ -52,13 +52,55 @@ function displayResults(venues) {
 
   venues.forEach(venue => {
 
+    const score = venue.replyScore || 70;
+
+    let badgeClass = "reply-medium";
+    let badgeText = "Likely to Reply";
+
+    if (score >= 80) {
+      badgeClass = "reply-high";
+      badgeText = "Very Likely";
+    } else if (score < 60) {
+      badgeClass = "reply-low";
+      badgeText = "Harder to Reach";
+    }
+
     const card = document.createElement("div");
-    card.className = "result-card";
+    card.className = "venue-card-glass";
 
     card.innerHTML = `
-      <h3>🎸 ${venue.name}</h3>
-      <p><strong>Capacity:</strong> ${venue.capacity}</p>
-      <p>${venue.description}</p>
+      <div class="venue-image-wrapper">
+        <img src="https://source.unsplash.com/800x600/?live,music,venue" />
+      </div>
+
+      <div class="venue-content">
+
+        <div class="venue-top">
+
+          <div>
+            <h3>${venue.name}</h3>
+            <div class="venue-location">
+              ${venue.neighborhood || ""}${venue.neighborhood ? "," : ""} ${venue.city || ""}
+            </div>
+          </div>
+
+          <div class="reply-badge ${badgeClass}">
+            ${badgeText}
+          </div>
+
+        </div>
+
+        <p class="venue-description">
+          ${venue.description}
+        </p>
+
+        <div class="venue-buttons">
+          <a href="${venue.googleMapsUrl || '#'}" target="_blank" class="btn-orange">
+            See Venue
+          </a>
+        </div>
+
+      </div>
     `;
 
     container.appendChild(card);
@@ -69,12 +111,10 @@ function displayResults(venues) {
 
 
 function showError(message) {
-
   const container = document.getElementById("results");
   container.innerHTML = `
     <div class="error-box">
       ${message}
     </div>
   `;
-
 }
