@@ -27,8 +27,25 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
 
     const data = await response.json();
 
-    // Store full ranked list
-    allVenues = data.venues || [];
+    // Add score to each venue
+    const venuesWithScore = (data.venues || []).map(v => ({
+      ...v,
+      score: calculateScore(v)
+    }));
+
+    // Sort by score descending
+    venuesWithScore.sort((a, b) => b.score - a.score);
+
+    // Determine top 60% threshold
+    const cutoffIndex = Math.floor(venuesWithScore.length * 0.6);
+    const thresholdScore = venuesWithScore[cutoffIndex]?.score || 0;
+
+    // Mark which venues get badge
+    venuesWithScore.forEach(v => {
+      v.showBadge = v.score >= thresholdScore;
+    });
+
+    allVenues = venuesWithScore;
     currentIndex = 0;
 
     document.getElementById("results").innerHTML = "";
@@ -46,6 +63,21 @@ document.getElementById("searchBtn").addEventListener("click", async function ()
   }
 
 });
+
+
+function calculateScore(place) {
+  let score = 0;
+
+  if (place.website) score += 25;
+  if (place.rating && place.rating >= 4) score += 20;
+  if (place.user_ratings_total && place.user_ratings_total > 100) score += 15;
+  if (place.business_status === "OPERATIONAL") score += 10;
+  if (place.opening_hours) score += 10;
+  if (place.formatted_phone_number) score += 10;
+  if (place.user_ratings_total && place.user_ratings_total > 25) score += 10;
+
+  return score;
+}
 
 
 function renderNextBatch() {
@@ -97,13 +129,15 @@ function createVenueCard(v) {
     </div>
 
     <div class="venue-content">
-      <div class="venue-header">
-        <h3>${v.emoji || "🎶"} ${v.name}</h3>
-        ${v.badge ? `<div class="venue-badge">${v.badge}</div>` : ""}
-      </div>
 
-      <div class="venue-location">
-        ${v.neighborhood || ""}
+      <div class="venue-title-row">
+        <div>
+          <div class="venue-title">${v.emoji || "🎶"} ${v.name}</div>
+          <div class="venue-location">${v.neighborhood || ""}</div>
+          <div class="venue-address">${v.formatted_address || ""}</div>
+        </div>
+
+        ${v.showBadge ? `<div class="reply-badge">Likely to respond</div>` : ""}
       </div>
 
       <p class="venue-description">
