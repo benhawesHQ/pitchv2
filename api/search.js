@@ -1,5 +1,44 @@
 import OpenAI from "openai";
 
+function buildQueries(city, audience) {
+
+  if (audience <= 25) {
+    return [
+      `acoustic cafe in ${city}`,
+      `wine bar with live music in ${city}`,
+      `small listening room in ${city}`,
+      `intimate lounge with live music in ${city}`,
+      `back room bar in ${city}`
+    ];
+  }
+
+  if (audience <= 60) {
+    return [
+      `bar with live music in ${city}`,
+      `small concert venue in ${city}`,
+      `intimate music venue in ${city}`,
+      `comedy club with stage in ${city}`,
+      `indie performance space in ${city}`
+    ];
+  }
+
+  if (audience <= 120) {
+    return [
+      `live music venue in ${city}`,
+      `mid size concert venue in ${city}`,
+      `music theater in ${city}`,
+      `event venue with stage in ${city}`
+    ];
+  }
+
+  return [
+    `concert venue in ${city}`,
+    `large music venue in ${city}`,
+    `event venue with stage in ${city}`,
+    `concert hall in ${city}`
+  ];
+}
+
 export default async function handler(req, res) {
 
   if (req.method !== "POST") {
