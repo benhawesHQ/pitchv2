@@ -3,7 +3,7 @@
 --black:#000;
 --dark:#111;
 --border:#222;
---muted:#bbb;
+--muted:#e5e5e5;
 }
 
 *{
@@ -17,6 +17,8 @@ font-family:'Open Sans',sans-serif;
 background:#000;
 color:#fff;
 }
+
+/* ================= HERO ================= */
 
 .hero{
 position:relative;
@@ -65,18 +67,23 @@ margin-bottom:16px;
 }
 
 .hero-content p{
-color:var(--muted);
+color:#fff;
 font-size:18px;
 margin-bottom:40px;
+opacity:0.9;
 }
 
+/* ================= GENERATOR BAR ================= */
+
 .generator-bar{
-background:#111;
-border-radius:18px;
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(14px);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:20px;
 padding:28px;
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:18px;
+gap:20px;
 max-width:1000px;
 width:100%;
 box-shadow:0 20px 60px rgba(0,0,0,0.6);
@@ -94,18 +101,26 @@ max-width:160px;
 
 .generator-field label{
 font-size:13px;
-color:#aaa;
-margin-bottom:6px;
+color:#fff;
+margin-bottom:8px;
+opacity:0.8;
 }
 
 .generator-field input,
 .generator-field select{
-padding:12px;
-border-radius:10px;
-border:1px solid var(--border);
+padding:14px;
+border-radius:12px;
+border:1px solid rgba(255,255,255,0.1);
 background:#000;
 color:#fff;
 font-size:14px;
+outline:none;
+transition:0.2s ease;
+}
+
+.generator-field input:focus,
+.generator-field select:focus{
+border-color:var(--orange);
 }
 
 .generate-btn{
@@ -113,7 +128,7 @@ grid-column:1/-1;
 padding:16px;
 background:var(--orange);
 border:none;
-border-radius:12px;
+border-radius:14px;
 font-weight:600;
 font-size:16px;
 cursor:pointer;
@@ -125,31 +140,162 @@ transition:0.2s ease;
 opacity:0.9;
 }
 
+/* ================= RESULTS SECTION ================= */
+
 .results-wrapper{
 background:#000;
-padding:100px 20px;
+padding:120px 20px;
 max-width:1200px;
 margin:0 auto;
 }
 
 .results-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:24px;
+display:flex;
+flex-direction:column;
 }
 
-@media (max-width:768px){
+/* ================= GLASS VENUE CARD ================= */
+
+.venue-card-glass{
+display:flex;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(16px);
+border:1px solid rgba(255,255,255,0.08);
+border-radius:20px;
+margin-bottom:32px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+transition:transform 0.25s ease;
+}
+
+.venue-card-glass:hover{
+transform:translateY(-6px);
+}
+
+.venue-image-wrapper{
+width:25%;
+padding:20px;
+}
+
+.venue-image-wrapper img{
+width:100%;
+height:100%;
+border-radius:16px;
+object-fit:cover;
+}
+
+.venue-content{
+width:75%;
+padding:32px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+}
+
+.venue-top{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+}
+
+.venue-top h3{
+margin:0;
+font-family:'Poppins',sans-serif;
+font-size:22px;
+}
+
+.venue-location{
+margin-top:6px;
+font-size:14px;
+color:#fff;
+opacity:0.7;
+}
+
+.venue-description{
+margin-top:20px;
+line-height:1.6;
+color:#fff;
+opacity:0.9;
+}
+
+/* ================= REPLY BADGE ================= */
+
+.reply-badge{
+font-size:12px;
+font-weight:600;
+padding:6px 14px;
+border-radius:30px;
+white-space:nowrap;
+}
+
+.reply-high{
+background:#1DB954;
+color:#000;
+}
+
+.reply-medium{
+background:#FFC700;
+color:#000;
+}
+
+.reply-low{
+background:#E63946;
+color:#fff;
+}
+
+/* ================= BUTTON ================= */
+
+.venue-buttons{
+margin-top:28px;
+}
+
+.btn-orange{
+background:var(--orange);
+color:#fff;
+padding:12px 22px;
+border-radius:12px;
+text-decoration:none;
+font-weight:600;
+transition:opacity 0.2s ease;
+}
+
+.btn-orange:hover{
+opacity:0.85;
+}
+
+/* ================= ERROR BOX ================= */
+
+.error-box{
+margin-top:40px;
+padding:24px;
+border-radius:16px;
+background:rgba(255,0,0,0.08);
+border:1px solid rgba(255,0,0,0.25);
+color:#ff4d4d;
+font-weight:600;
+text-align:center;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width:900px){
 
 .hero-content h1{
-font-size:36px;
+font-size:42px;
 }
 
-.generator-bar{
-grid-template-columns:1fr;
+.venue-card-glass{
+flex-direction:column;
 }
 
-.top-bar{
-left:20px;
+.venue-image-wrapper{
+width:100%;
+padding:20px 20px 0 20px;
+}
+
+.venue-content{
+width:100%;
+padding:24px;
 }
 
 }
