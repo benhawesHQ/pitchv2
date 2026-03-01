@@ -131,27 +131,52 @@ function renderSeeMoreButton() {
 
 
 /* ============================= */
-/* SMART EMOJI SYSTEM */
+/* SMART NAME-BASED EMOJI SYSTEM */
 /* ============================= */
 
 function getVenueEmoji(v) {
 
-  const tags = (v.tags || []).join(" ").toLowerCase();
   const name = (v.name || "").toLowerCase();
 
-  if (tags.includes("jazz") || name.includes("jazz")) return "🎷";
-  if (tags.includes("piano")) return "🎹";
-  if (tags.includes("rock")) return "🎸";
-  if (tags.includes("dj")) return "🎧";
-  if (tags.includes("comedy")) return "🎭";
-  if (tags.includes("cabaret")) return "🪩";
-  if (tags.includes("lounge")) return "🍸";
-  if (tags.includes("theater")) return "🎭";
-  if (tags.includes("bar")) return "🍻";
-  if (tags.includes("restaurant")) return "🍽️";
-  if (tags.includes("outdoor")) return "🌇";
+  const emojiRules = [
+    { words: ["blue", "note", "jazz"], emoji: "🎷" },
+    { words: ["piano", "keys"], emoji: "🎹" },
+    { words: ["rock", "electric"], emoji: "🎸" },
+    { words: ["club", "disco"], emoji: "🪩" },
+    { words: ["lounge", "velvet"], emoji: "🍸" },
+    { words: ["theatre", "theater", "stage"], emoji: "🎭" },
+    { words: ["hall", "opera"], emoji: "🏛️" },
+    { words: ["rooftop", "sky"], emoji: "🌇" },
+    { words: ["garden", "park"], emoji: "🌿" },
+    { words: ["cellar", "wine"], emoji: "🍷" },
+    { words: ["basement", "underground"], emoji: "🕯️" },
+    { words: ["factory", "warehouse"], emoji: "🏭" },
+    { words: ["palace"], emoji: "👑" },
+    { words: ["moon"], emoji: "🌙" },
+    { words: ["sun"], emoji: "☀️" },
+    { words: ["star"], emoji: "⭐" },
+    { words: ["fox"], emoji: "🦊" },
+    { words: ["cat"], emoji: "🐈" },
+    { words: ["bird"], emoji: "🕊️" },
+    { words: ["river", "water"], emoji: "🌊" },
+    { words: ["corner"], emoji: "📍" },
+    { words: ["barn"], emoji: "🐎" }
+  ];
 
-  return "🎤"; // safe colorful fallback
+  for (let rule of emojiRules) {
+    if (rule.words.some(word => name.includes(word))) {
+      return rule.emoji;
+    }
+  }
+
+  // Smart fallback logic
+  const wordCount = name.split(" ").length;
+
+  if (wordCount >= 3) return "✨";
+  if (name.length > 15) return "🌙";
+  if (name.length < 8) return "⭐";
+
+  return "🪩";
 }
 
 
@@ -162,6 +187,13 @@ function getVenueEmoji(v) {
 function createVenueCard(v) {
 
   const emoji = getVenueEmoji(v);
+
+  // FIXED Google Maps URL logic
+  const mapsUrl =
+    v.googleMapsUrl ||
+    v.url ||
+    v.website ||
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(v.name + " " + (v.formatted_address || ""))}`;
 
   const card = document.createElement("div");
   card.className = "venue-card";
@@ -191,7 +223,7 @@ function createVenueCard(v) {
         ${(v.tags || []).map(tag => `<span class="venue-tag">${tag}</span>`).join("")}
       </div>
 
-      <a href="${v.googleMapsUrl || '#'}" target="_blank" class="venue-btn">
+      <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="venue-btn">
         View Venue
       </a>
 
